@@ -8,9 +8,9 @@ import ProtectRoutes from "./ProtectRoutes";
 import NotFound from "../pages/main/NotFound";
 import ContactUs from "../pages/main/ContactUs";
 import AdminUser from "../pages/private/AdminUser";
-import AdminDashboard from "../pages/private/AdminDashboard";
 import AdminAnalysis from "../pages/private/AdminAnalysis";
 import AdminPost from "../pages/private/AdminPost";
+import PostAndComment from "../pages/PostAndComment";
 
 // Route ใช้ในการกำหนดเส้นทาง (route) เฉพาะหนึ่งเส้นทาง
 // Routes จะตรวจสอบว่า URL ตรงกับ path ไหน และแสดงคอมโพเนนต์ที่ตรงกับเส้นทางนั้น
@@ -24,7 +24,7 @@ function AppRoutes() {
         <Route path="/" element={<Layout />}>
           <Route index element={"home"} />
           <Route path="contact-us" element={<ContactUs />} />
-          <Route path="post" element={"..."} />
+          <Route path="/post/:postId" element={<PostAndComment />} />
 
         </Route>
 
