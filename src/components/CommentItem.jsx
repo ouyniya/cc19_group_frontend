@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router";
 import CommentForm from "./CommentForm";
 import useCommentStores from "../stores/useCommentStores";
 
 const CommentItem = ({ comment }) => {
+  const { postId } = useParams(); // ดึง postId จาก URL
+
   const [showReply, setShowReply] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
@@ -10,6 +13,7 @@ const CommentItem = ({ comment }) => {
   const addReply = useCommentStores((state) => state.addReply);
   const updateComment = useCommentStores((state) => state.updateComment);
   const deleteComment = useCommentStores((state) => state.deleteComment);
+  const getComments = useCommentStores((state) => state.getComments);
 
   const handleReply = async (newReply) => {
     await addReply(newReply);
@@ -33,6 +37,8 @@ const CommentItem = ({ comment }) => {
   const handleDelete = async () => {
     try {
       await deleteComment(comment.id);
+      await getComments(postId);
+
     } catch (error) {
       console.log(error);
     }
