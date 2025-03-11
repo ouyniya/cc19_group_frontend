@@ -4,11 +4,14 @@ import useCommentStores from "../stores/useCommentStores";
 const CommentForm = ({ postId, parentId = null, setShowReply }) => {
   const [content, setContent] = useState("");
   const addComment = useCommentStores((state) => state.addComment);
-  const getComments = useCommentStores(state => state.getComments)
-  const comments = useCommentStores(state => state.comments)
+  const getComments = useCommentStores((state) => state.getComments);
+  const comments = useCommentStores((state) => state.comments);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!content.trim()) return;
+    // เช็คก่อนทำงานต่อ
 
     try {
       const newComment = {
@@ -19,15 +22,15 @@ const CommentForm = ({ postId, parentId = null, setShowReply }) => {
       }; // เปลี่ยนเป็น userId ที่ login อยู่
 
       const body = newComment;
-    //   console.log(body);
+      //   console.log(body);
       await addComment(body);
-      await getComments(postId)
+      await getComments(postId);
       setContent(""); // ค่าข้างในช่อง comment เป็นค่าว่าง
-      setShowReply(false)
-    } catch (error) {}
-    
-    if (!content.trim()) return;
-};
+      if (setShowReply) setShowReply(false); //  ป้องกัน error ในกรณี setShowReply ไม่ถูกส่งมา
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -36,9 +39,11 @@ const CommentForm = ({ postId, parentId = null, setShowReply }) => {
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="Write a comment..."
-        className="input input-primary"
+        className="border p-1 mr-[10px] rounded-md w-[80%]"
       />
-      <button type="submit" className="btn btn-primary">Post</button>
+      <button type="submit" className="btn btn-primary">
+        Post
+      </button>
     </form>
   );
 };

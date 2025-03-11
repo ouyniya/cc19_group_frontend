@@ -14,6 +14,10 @@ const CommentList = ({ postId }) => {
     getComments(postId);
   }, [postId]);
 
+  useEffect(() => {
+    getComments(postId); // รีโหลดเมื่อ comments เปลี่ยน
+  }, [comments]);
+
   return (
     <div>
       <h3>Comments</h3>
