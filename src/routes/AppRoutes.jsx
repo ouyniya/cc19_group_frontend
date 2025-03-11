@@ -24,8 +24,7 @@ function AppRoutes() {
         <Route path="/" element={<Layout />}>
           <Route index element={"home"} />
           <Route path="contact-us" element={<ContactUs />} />
-          <Route path="contact-us" element={"..."} />
-          <Route path="contact-us" element={"..."} />
+          <Route path="post" element={"..."} />
 
         </Route>
 
