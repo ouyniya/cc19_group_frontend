@@ -47,9 +47,8 @@ function AppRoutes() {
         > */}
         
         <Route path="admin" element={<LayoutAdmin />}>
-          <Route index element={"admin profile"} />
+          <Route index element={<AdminAnalysis />} />
           <Route path="usermanagement" element={<AdminUser />} />
-          <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="analysis" element={<AdminAnalysis />} />
           <Route path="postmanagement" element={<AdminPost/>} />
         </Route>

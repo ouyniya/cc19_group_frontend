@@ -11,14 +11,14 @@ export default function Sidebar() {
       <h1 className="text-xl font-bold text-blue-600 mb-4">VOYAGER</h1>
       <nav>
         <ul className="space-y-2 text-black">
-          <li>
+        <li>
             <button
               className={`flex items-center p-2 w-full text-left rounded-lg ${
-                active === "Dashboard" ? "bg-blue-100 font-bold" : ""
+                active === "Analytics" ? "bg-blue-100 font-bold" : ""
               }`}
-              onClick={() => { setActive("Dashboard"); navigate("/admin/dashboard"); }}
+              onClick={() => { setActive("Analytics"); navigate("/admin/analysis"); }}
             >
-              <FaHome className="mr-2" /> Dashboard
+              <FaChartBar className="mr-2" /> Analytics
             </button>
           </li>
           <li>
@@ -29,16 +29,6 @@ export default function Sidebar() {
               onClick={() => { setActive("User"); navigate("/admin/usermanagement"); }}
             >
               <FaUser className="mr-2" /> User
-            </button>
-          </li>
-          <li>
-            <button
-              className={`flex items-center p-2 w-full text-left rounded-lg ${
-                active === "Analytics" ? "bg-blue-100 font-bold" : ""
-              }`}
-              onClick={() => { setActive("Analytics"); navigate("/admin/analysis"); }}
-            >
-              <FaChartBar className="mr-2" /> Analytics
             </button>
           </li>
           <li>
