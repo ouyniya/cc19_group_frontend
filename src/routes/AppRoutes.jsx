@@ -7,6 +7,10 @@ import LayoutAdmin from "../layouts/LayoutAdmin";
 import ProtectRoutes from "./ProtectRoutes";
 import NotFound from "../pages/main/NotFound";
 import ContactUs from "../pages/main/ContactUs";
+import AdminUser from "../pages/private/AdminUser";
+import AdminDashboard from "../pages/private/AdminDashboard";
+import AdminAnalysis from "../pages/private/AdminAnalysis";
+import AdminPost from "../pages/private/AdminPost";
 
 // Route ใช้ในการกำหนดเส้นทาง (route) เฉพาะหนึ่งเส้นทาง
 // Routes จะตรวจสอบว่า URL ตรงกับ path ไหน และแสดงคอมโพเนนต์ที่ตรงกับเส้นทางนั้น
@@ -37,12 +41,16 @@ function AppRoutes() {
         </Route>
 
         {/* Private: Admin */}
-        <Route
+        {/* <Route
           path="admin"
           element={<ProtectRoutes el={<LayoutAdmin />} allows={["ADMIN"]} />}
-        >
-          <Route index element={"admin profile"} />
-          <Route path="user" element={"other"} />
+        > */}
+        
+        <Route path="admin" element={<LayoutAdmin />}>
+          <Route index element={<AdminAnalysis />} />
+          <Route path="usermanagement" element={<AdminUser />} />
+          <Route path="analysis" element={<AdminAnalysis />} />
+          <Route path="postmanagement" element={<AdminPost/>} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
