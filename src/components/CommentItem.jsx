@@ -27,6 +27,8 @@ const CommentItem = ({ comment }) => {
           content: editContent,
         };
         await updateComment(comment.id, body);
+        await getComments(postId);
+
         setIsEditing(false);
       }
     } catch (error) {
@@ -38,7 +40,6 @@ const CommentItem = ({ comment }) => {
     try {
       await deleteComment(comment.id);
       await getComments(postId);
-
     } catch (error) {
       console.log(error);
     }
