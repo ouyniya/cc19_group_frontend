@@ -1,6 +1,6 @@
 function ProtectRoutes(props) {
-  
-  return <>mmmm</>;
+  const { el } = props
+  return <>{el}</>;
 }
 
 export default ProtectRoutes;
