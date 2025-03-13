@@ -1,15 +1,14 @@
-import React from 'react'
-import { Outlet } from 'react-router'
+import React from "react";
+import { Outlet } from "react-router";
+import NavbarHeader from "../components/NavbarHeader";
 
 function LayoutUser() {
   return (
     <>
-        <div className="flex min-h-screen bg-base-200">
-            side menu
-            <Outlet />
-        </div>
+      <NavbarHeader />
+      <Outlet />
     </>
-  )
+  );
 }
 
-export default LayoutUser
+export default LayoutUser;

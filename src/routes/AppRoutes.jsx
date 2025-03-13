@@ -11,6 +11,12 @@ import AdminUser from "../pages/private/AdminUser";
 import AdminAnalysis from "../pages/private/AdminAnalysis";
 import AdminPost from "../pages/private/AdminPost";
 import PostAndComment from "../pages/PostAndComment";
+import Home from "../pages/Home";
+import LandingPage from "../pages/LandingPage";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
+import UserDashboard from "../pages/UserDashboard";
+import WishList from "../pages/WishList";
 
 // Route ใช้ในการกำหนดเส้นทาง (route) เฉพาะหนึ่งเส้นทาง
 // Routes จะตรวจสอบว่า URL ตรงกับ path ไหน และแสดงคอมโพเนนต์ที่ตรงกับเส้นทางนั้น
@@ -22,34 +28,39 @@ function AppRoutes() {
       <Routes>
         {/* public */}
         <Route path="/" element={<Layout />}>
-          <Route index element={"home"} />
-          <Route path="contact-us" element={<ContactUs />} />
-          <Route path="/post/:postId" element={<PostAndComment />} />
+          <Route index element={<LandingPage />} />
+          <Route path="home" element={<Home />} />
+          {/* soft protect */}
+          <Route path="login" element={<Login />} /> 
+          <Route path="register" element={<Register />} /> 
 
+          <Route path="user-dashboard" element={<UserDashboard />} /> 
+          <Route path="/post/:postId" element={<PostAndComment />} />
         </Route>
 
         {/* Private: user */}
         <Route
-          path="user"
+          path="/user"
           element={<ProtectRoutes el={<LayoutUser />} allows={["USER"]} />}
         >
-          <Route index element={<ContactUs />} />
-
-          <Route path="other" element={"other"} />
-          <Route path="user" element={"other"} />
+          <Route index element={<WishList />} />
+          <Route path="wishlist" element={<WishList />} /> 
+          <Route path="create-post" element={<WishList />} /> 
+          <Route path="edit-profile" element={<WishList />} /> 
+         
         </Route>
 
         {/* Private: Admin */}
-        {/* <Route
+        <Route
           path="admin"
           element={<ProtectRoutes el={<LayoutAdmin />} allows={["ADMIN"]} />}
-        > */}
-        
-        <Route path="admin" element={<LayoutAdmin />}>
+        >
+
+        {/* <Route path="admin" element={<LayoutAdmin />}> */}
           <Route index element={<AdminAnalysis />} />
           <Route path="usermanagement" element={<AdminUser />} />
           <Route path="analysis" element={<AdminAnalysis />} />
-          <Route path="postmanagement" element={<AdminPost/>} />
+          <Route path="postmanagement" element={<AdminPost />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
