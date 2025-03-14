@@ -1,15 +1,71 @@
-import React from "react";
+import React, { useState } from "react";
 import NavbarHeader from "../components/NavbarHeader";
 import facebook from "../icons/facebook.png";
 import google from "../icons/google.png";
 import logo from "../icons/logo.png";
 import destination from "../icons/destination.png";
+import useUserStore from "../stores/userStore";
+import { useNavigate } from "react-router";
+import { ZodError } from "zod";
+import { login } from "../validators/validators";
+
+const initialInput = {
+  email: "",
+  password: "",
+};
 
 function Login() {
+  const [input, setInput] = useState(initialInput);
+  const [errorInput, setErrorInput] = useState(initialInput);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
+  const actionLogin = useUserStore((state) => state.actionLogin);
+  const actionGetMe = useUserStore((state) => state.actionGetMe);
+
+  const handleChange = (e) => {
+    //set ข้อมูลไปใน input
+    setInput((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    //set error
+    setErrorInput((prev) => ({ ...prev, [e.target.name]: " " }));
+  };
+
+  const handleSubmit = async (e) => {
+    try {
+      setIsLoading(true); // เริ่มการทำให้มัน loading เป็น true
+      e.preventDefault(); //กันมัน refresh ข้อมูลเวลากด submit
+      console.log(input);
+
+      //validate
+      login.parse(input);
+      //ยิงของส่งไปหลังบ้านแล้ว หลังจากที่ผ่านการ validate
+      const res = await actionLogin(input);
+      console.log("login success");
+      navigate("/home");
+
+      await actionGetMe(res.token);
+    } catch (error) {
+      console.log(error);
+
+      if (error instanceof ZodError) {
+        console.log("error,errors", error.errors);
+        const errMsg = error.errors.reduce((acc, cur) => {
+          acc[cur.path] = cur.message;
+          return acc;
+        }, {});
+        console.log(errMsg);
+        setErrorInput(errMsg);
+        return console.log("login invalid");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       {/* header */}
-      <NavbarHeader />
+      {/* <NavbarHeader /> */}
       {/* Body  */}
       <div className="flex justify-center gap-20 h-175 items-center ">
         <div className="flex flex-col h-150 w-150 gap-5 ">
@@ -39,46 +95,65 @@ function Login() {
         {/* Right */}
         <div className="flex flex-col h-150 w-150  items-center font-bold gap-1">
           <p className="text-4xl text-[#064D7E]">LOG IN</p>
-          <div className="flex flex-col h-130 w-130 bg-[#EFF4F6] rounded-4xl items-center justify-center gap-10 ">
-            {/* input + button */}
-            <div className="flex flex-col items-center  gap-4">
-              <input
-                type="text"
-                placeholder="   Email Address"
-                className="bg-white border-4 border-[#086BAF] rounded-xl h-15 w-80 placeholder:text-xl placeholder:opacity-50 "
-              />
-              <input
-                type="text"
-                placeholder="    Password"
-                className="bg-white border-4 border-[#086BAF]  rounded-xl h-15 w-80 placeholder:text-xl placeholder:opacity-50  "
-              />
-              <button className="btn border-0 rounded-xl text-2xl text-white w-80 h-15 bg-[#086BAF]">
-                Login
-              </button>
-              <button className="btn border-0 rounded-xl text-2xl text-[#9BA2A5] h-15 w-80 bg-white ">
-                Sign Up
-              </button>
-            </div>
-            {/* or using another platform */}
-            <div className="flex flex-col justify-center gap-5">
-              <p className="text-lg opacity-60">
-                Or Login using another platform
-              </p>
-              <div className="flex flex-row  justify-center gap-5">
-                <img
-                  src={facebook}
-                  alt="facebook logo"
-                  className=" h-10 hover:cursor-pointer"
+          <form action="" onSubmit={handleSubmit}>
+            <div className="flex flex-col h-130 w-130 bg-[#EFF4F6] rounded-4xl items-center justify-center gap-10 ">
+              {/* input + button */}
+              <div className="flex flex-col items-center  gap-4">
+                <input
+                  name="email"
+                  onChange={handleChange}
+                  type="text"
+                  placeholder="   Email Address"
+                  className="bg-white border-4 border-[#086BAF] rounded-xl h-15 w-80 placeholder:text-xl placeholder:opacity-50 "
                 />
+                {errorInput.email && (
+                  <p className="text-red-500 text-xs">{errorInput.email}</p>
+                )}
+                <input
+                  name="password"
+                  onChange={handleChange}
+                  type="text"
+                  placeholder="    Password"
+                  className="bg-white border-4 border-[#086BAF]  rounded-xl h-15 w-80 placeholder:text-xl placeholder:opacity-50  "
+                />
+                {errorInput.password && (
+                  <p className="text-red-500 text-xs">{errorInput.password}</p>
+                )}
+                <button
+                  disabled={isLoading}
+                  className="btn border-0 rounded-xl text-2xl text-white w-80 h-15 bg-[#086BAF]"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={() => navigate("/register")}
+                  type="button"
+                  className="btn border-0 rounded-xl text-2xl text-[#9BA2A5] h-15 w-80 bg-white "
+                >
+                  Sign Up
+                </button>
+              </div>
+              {/* or using another platform */}
+              <div className="flex flex-col justify-center gap-5">
+                <p className="text-lg opacity-60">
+                  Or Login using another platform
+                </p>
+                <div className="flex flex-row  justify-center gap-5">
+                  <img
+                    src={facebook}
+                    alt="facebook logo"
+                    className=" h-10 hover:cursor-pointer"
+                  />
 
-                <img
-                  src={google}
-                  alt="google logo"
-                  className="h-10 hover:cursor-pointer"
-                />
+                  <img
+                    src={google}
+                    alt="google logo"
+                    className="h-10 hover:cursor-pointer"
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
 
