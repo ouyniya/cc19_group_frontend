@@ -35,7 +35,8 @@ function RightBar() {
         Home
       </button>
       {/* Conditional Rendering */}
-      {user ? (
+
+      {user?.role === "USER" ? (
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate("/user/plan")}
@@ -48,6 +49,18 @@ function RightBar() {
             className="btn border-0 bg-[#aecee5] text-white rounded-full"
           >
             Wish List
+          </button>
+        </div>
+      ) : ""}
+
+
+      {user ? (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => navigate("/admin")}
+            className="btn border-0 bg-[#aecee5] text-white rounded-full"
+          >
+            Dashboard
           </button>
           <div className="w-9 h-9 rounded-full bg-gray-300 flex justify-center items-center">
             {user.profileImage ? (
