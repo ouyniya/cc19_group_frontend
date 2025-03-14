@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import FormInput from "../components/form/FormInput";
 import Buttons from "../components/form/Buttons";
 import logo from "../icons/logo.png";
@@ -8,24 +9,30 @@ import destination from "../icons/destination.png";
 import { registerSchema } from "../utils/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import userApi from "../api/authApi";
+import { createAlert } from "../utils/createAlert";
 
 function Register() {
-  const { actionRegister } = userApi
+  const { actionRegister } = userApi;
   const { register, handleSubmit, formState, reset } = useForm({
     resolver: zodResolver(registerSchema),
   });
   const { isSubmitting, errors } = formState;
   // console.log(errors)
+  const navigate = useNavigate();
 
   const hdlSubmit = async (value) => {
     //   e.preventDefault()
     await new Promise((resolve) => setTimeout(resolve, 1000));
+
     try {
       const res = await actionRegister(value);
       reset();
-      console.log("register success");
+      // console.log("register success");
+      createAlert("success", "Register success");
+      navigate("/login");
     } catch (error) {
-      console.log(error.response.data.message);
+      // console.log(error.response.data.message);
+      createAlert("info", error.response.data.message);
     }
   };
 
