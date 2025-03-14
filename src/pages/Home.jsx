@@ -8,6 +8,7 @@ import Post from "../components/Home/post";
 import TopLocation from "../components/Home/TopLocation";
 import MoreExplore from "../components/Home/MoreExplore";
 import Region from "../components/Home/Region";
+import LoginGoogle from "./LoginGoogle";
 
 function Home() {
   return (
@@ -18,6 +19,8 @@ function Home() {
       <div>
         {/* Body top */}
         <div>
+
+        {/* <LoginGoogle /> */}
           {/* Where is your destination */}
           <div className="flex justify-center gap-2 mt-5">
             <p className="text-3xl font-bold text-[#193B53]"> WHERE IS YOUR </p>
