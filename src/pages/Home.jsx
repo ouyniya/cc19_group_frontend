@@ -1,5 +1,5 @@
 import React from "react";
-import NavbarHeader from "../components/NavbarHeader";
+// import NavbarHeader from "../components/NavbarHeader";
 import Search from "../components/Search";
 import logo from "../icons/logo.png";
 
