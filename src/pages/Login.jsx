@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import NavbarHeader from "../components/NavbarHeader";
 import facebook from "../icons/facebook.png";
 import google from "../icons/google.png";
 import logo from "../icons/logo.png";
@@ -7,7 +6,9 @@ import destination from "../icons/destination.png";
 import useUserStore from "../stores/userStore";
 import { useNavigate } from "react-router";
 import { ZodError } from "zod";
-import { login } from "../validators/validators";
+import { login } from "../utils/validators";
+import { createAlert } from "../utils/createAlert";
+import { User } from "lucide-react";
 
 const initialInput = {
   email: "",
@@ -30,20 +31,22 @@ function Login() {
     setErrorInput((prev) => ({ ...prev, [e.target.name]: " " }));
   };
 
+  // console.log(actionGetMe())
+
   const handleSubmit = async (e) => {
     try {
       setIsLoading(true); // เริ่มการทำให้มัน loading เป็น true
       e.preventDefault(); //กันมัน refresh ข้อมูลเวลากด submit
-      console.log(input);
 
       //validate
       login.parse(input);
       //ยิงของส่งไปหลังบ้านแล้ว หลังจากที่ผ่านการ validate
       const res = await actionLogin(input);
-      console.log("login success");
+      // console.log("login success");
       navigate("/home");
-
+      
       await actionGetMe(res.token);
+      return createAlert("success", `Login Success`);
     } catch (error) {
       console.log(error);
 
@@ -65,7 +68,6 @@ function Login() {
   return (
     <>
       {/* header */}
-      {/* <NavbarHeader /> */}
       {/* Body  */}
       <div className="flex justify-center gap-20 h-175 items-center ">
         <div className="flex flex-col h-150 w-150 gap-5 ">
@@ -94,7 +96,7 @@ function Login() {
 
         {/* Right */}
         <div className="flex flex-col h-150 w-150  items-center font-bold gap-1">
-          <p className="text-4xl text-[#064D7E]">LOG IN</p>
+          <p className="text-4xl text-[#064D7E]">Log in</p>
           <form action="" onSubmit={handleSubmit}>
             <div className="flex flex-col h-130 w-130 bg-[#EFF4F6] rounded-4xl items-center justify-center gap-10 ">
               {/* input + button */}

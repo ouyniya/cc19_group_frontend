@@ -5,7 +5,6 @@ import Layout from "../layouts/Layout";
 import LayoutUser from "../layouts/LayoutUser";
 import LayoutAdmin from "../layouts/LayoutAdmin";
 import ProtectRoutes from "./ProtectRoutes";
-import NotFound from "../pages/main/NotFound";
 import ContactUs from "../pages/main/ContactUs";
 import AdminUser from "../pages/private/AdminUser";
 import AdminAnalysis from "../pages/private/AdminAnalysis";
@@ -19,6 +18,8 @@ import UserDashboard from "../pages/UserDashboard";
 import WishList from "../pages/WishList";
 import CreatePost from "../pages/CreatePost";
 import EditProfile from "../pages/EditProfile";
+import ErrorNotFound from "../pages/ErrorNotFound";
+import ProtectRoutesGuest from "./ProtectRoutesGuest";
 
 // Route ใช้ในการกำหนดเส้นทาง (route) เฉพาะหนึ่งเส้นทาง
 // Routes จะตรวจสอบว่า URL ตรงกับ path ไหน และแสดงคอมโพเนนต์ที่ตรงกับเส้นทางนั้น
@@ -32,17 +33,20 @@ function AppRoutes() {
         <Route path="/" element={<Layout />}>
           <Route index element={<LandingPage />} />
           <Route path="home" element={<Home />} />
+
           {/* soft protect */}
           <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-
+          <Route
+            path="register"
+            element={<ProtectRoutesGuest el={<Register />} />}
+          />
           <Route path="user-dashboard" element={<UserDashboard />} />
           <Route path="/post/:postId" element={<PostAndComment />} />
         </Route>
 
         {/* Private: user */}
         <Route
-          path="/user"
+          path="user"
           element={<ProtectRoutes el={<LayoutUser />} allows={["USER"]} />}
         >
           <Route index element={<WishList />} />
@@ -64,7 +68,7 @@ function AppRoutes() {
           <Route path="postmanagement" element={<AdminPost />} />
         </Route>
 
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<ErrorNotFound />} />
       </Routes>
     </>
   );
