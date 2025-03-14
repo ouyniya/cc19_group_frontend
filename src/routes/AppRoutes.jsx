@@ -19,6 +19,7 @@ import UserDashboard from "../pages/UserDashboard";
 import WishList from "../pages/WishList";
 import CreatePost from "../pages/CreatePost";
 import EditProfile from "../pages/EditProfile";
+import ErrorNotFound from "../pages/ErrorNotFound";
 
 // Route ใช้ในการกำหนดเส้นทาง (route) เฉพาะหนึ่งเส้นทาง
 // Routes จะตรวจสอบว่า URL ตรงกับ path ไหน และแสดงคอมโพเนนต์ที่ตรงกับเส้นทางนั้น
@@ -63,7 +64,7 @@ function AppRoutes() {
           <Route path="postmanagement" element={<AdminPost />} />
         </Route>
 
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<ErrorNotFound />} />
       </Routes>
     </>
   );
