@@ -53,8 +53,7 @@ function RightBar() {
         </div>
       ) : ""}
 
-
-      {user ? (
+      {user?.role === "ADMIN" ? (
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate("/admin")}
@@ -62,6 +61,12 @@ function RightBar() {
           >
             Dashboard
           </button>
+        </div>
+      ) : ""}
+
+
+      {user ? (
+        <div className="flex items-center gap-2">
           <div className="w-9 h-9 rounded-full bg-gray-300 flex justify-center items-center">
             {user.profileImage ? (
               <img
