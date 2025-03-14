@@ -35,14 +35,13 @@ function AppRoutes() {
           {/* soft protect */}
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
-
           <Route path="user-dashboard" element={<UserDashboard />} />
           <Route path="/post/:postId" element={<PostAndComment />} />
         </Route>
 
         {/* Private: user */}
         <Route
-          path="/user"
+          path="user"
           element={<ProtectRoutes el={<LayoutUser />} allows={["USER"]} />}
         >
           <Route index element={<WishList />} />

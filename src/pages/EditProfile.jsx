@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import profile from "../pictures/profile.png";
 import picture from "../icons/picture.png";
 import ChangeProfile from "../components/UserDashboard/ChangeProfile";
-import { updateProfile } from "../validators/validators";
+import { updateProfile } from "../utils/validators";
 import useUserStore from "../stores/userStore";
 import { AxiosError } from "axios";
 import { ZodError } from "zod";

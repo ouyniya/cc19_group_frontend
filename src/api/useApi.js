@@ -1,12 +1,12 @@
-import axios from "../configs/axios";
+// import axios from "../configs/axiosInstance";
 
-const userApi = {};
+// const userApi = {};
 
-userApi.login = (body) => axios.post("/auth/login", body);
-userApi.register = (body) => axios.post("/auth/register", body);
-userApi.getMe = () => axios.get("/user");
-userApi.updateProfile = (body) => axios.patch("/user/profile", body);
-userApi.updateProfileInformation = (body) =>
-  axios.patch("/user/information", body);
+// userApi.login = (body) => axios.post("/api/auth/login", body);
+// userApi.register = (body) => axios.post("/api/auth/register", body);
+// userApi.getMe = () => axios.get("/api/auth/current-user");
+// userApi.updateProfile = (body) => axios.patch("/api/user/profile", body);
+// userApi.updateProfileInformation = (body) =>
+//   axios.patch("/user/information", body);
 
-export default userApi;
+// export default userApi;

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import NavbarHeader from "../components/NavbarHeader";
 import facebook from "../icons/facebook.png";
 import google from "../icons/google.png";
 import logo from "../icons/logo.png";
@@ -7,7 +6,7 @@ import destination from "../icons/destination.png";
 import useUserStore from "../stores/userStore";
 import { useNavigate } from "react-router";
 import { ZodError } from "zod";
-import { login } from "../validators/validators";
+import { login } from "../utils/validators";
 
 const initialInput = {
   email: "",
@@ -34,7 +33,6 @@ function Login() {
     try {
       setIsLoading(true); // เริ่มการทำให้มัน loading เป็น true
       e.preventDefault(); //กันมัน refresh ข้อมูลเวลากด submit
-      console.log(input);
 
       //validate
       login.parse(input);
@@ -65,7 +63,6 @@ function Login() {
   return (
     <>
       {/* header */}
-      {/* <NavbarHeader /> */}
       {/* Body  */}
       <div className="flex justify-center gap-20 h-175 items-center ">
         <div className="flex flex-col h-150 w-150 gap-5 ">
