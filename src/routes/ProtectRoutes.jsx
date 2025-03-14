@@ -26,28 +26,20 @@ function ProtectRoute({ el, allows }) {
 
   useEffect(() => {
     if (user) {
-      setOk(allows.includes(user.role));
-    } else {
-      setOk(false);
-    }
-  }, [user, allows]);
-
-  useEffect(() => {
-    if (user) {
       setTimeout(() => {
         setOk(allows.includes(user.role));
         setLoading(false); // ปิด loading หลัง 1 วินาที
-      }, 2000);
+      }, 1500);
     } else {
       setTimeout(() => {
         setOk(false);
         setLoading(false); // ปิด loading หลัง 1 วินาที
-      }, 2000);
+      }, 1500);
     }
   }, [user, allows]);
 
   if (loading) return <LoadingAnimation />; // แสดง Loading Animation
-  if (!ok) return <ErrorUnauthorized />;
+  if (ok === false) return <ErrorUnauthorized />;
 
   return <>{el}</>;
 }

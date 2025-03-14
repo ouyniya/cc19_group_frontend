@@ -1,4 +1,3 @@
-import axios from "axios";
 import { createJSONStorage, persist } from "zustand/middleware";
 import userApi from "../api/authApi";
 import { create } from "zustand";
@@ -10,17 +9,17 @@ const useUserStore = create(
       token: "",
       getCurrentUser: () => get().user,
       actionLogin: async (input) => {
-        const result = await userApi.login(input);
+        const result = await userApi.actionLogin(input);
         set({ token: result.data.token });
         return { token: result.data.token };
       },
 
       actionRegister: async (input) => {
-        await userApi.register(input);
+        await userApi.actionRegister(input);
       },
       actionGetMe: async () => {
         const result = await userApi.actionCurrentUser();
-        console.log(result.data)
+        // console.log(result.data)
         set({ user: result.data.user }); 
         return { user: result.data.user };
       },

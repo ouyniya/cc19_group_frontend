@@ -2,7 +2,7 @@
 function LoadingAnimation() {
   return (
     <div className="loading-container">
-      <div class="loader"></div>
+      <div className="loader"></div>
       {/* <p>Loading...</p> */}
       <style jsx>{`
         /* HTML: <div class="loader"></div> */
@@ -18,7 +18,7 @@ function LoadingAnimation() {
           padding: 8px;
           aspect-ratio: 1;
           border-radius: 50%;
-          background: #25b09b;
+          background: #5CAFF0;
           --_m: conic-gradient(#0000 10%, #000),
             linear-gradient(#000 0 0) content-box;
           -webkit-mask: var(--_m);
