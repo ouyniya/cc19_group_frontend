@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import CommentForm from "./CommentForm";
 import useCommentStores from "../stores/useCommentStores";
+import useUserStore from "../stores/userStore";
+import Swal from "sweetalert2";
+import { createAlert } from "../utils/createAlert";
 
 const CommentItem = ({ comment }) => {
   const { postId } = useParams(); // ดึง postId จาก URL
@@ -14,6 +17,18 @@ const CommentItem = ({ comment }) => {
   const updateComment = useCommentStores((state) => state.updateComment);
   const deleteComment = useCommentStores((state) => state.deleteComment);
   const getComments = useCommentStores((state) => state.getComments);
+
+  const actionGetMe = useUserStore((state) => state.actionGetMe);
+  const user = useUserStore((state) => state.user);
+  const token = useUserStore((state) => state.token);
+
+  useEffect(() => {
+    if (!user && token) {
+      actionGetMe();
+    }
+  }, []);
+
+  // console.log(user)
 
   const handleReply = async (newReply) => {
     await addReply(newReply);
@@ -30,6 +45,7 @@ const CommentItem = ({ comment }) => {
         await getComments(postId);
 
         setIsEditing(false);
+        createAlert("success", "Comment Edited")
       }
     } catch (error) {
       console.log(error);
@@ -38,8 +54,26 @@ const CommentItem = ({ comment }) => {
 
   const handleDelete = async () => {
     try {
-      await deleteComment(comment.id);
-      await getComments(postId);
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await deleteComment(comment.id);
+          await getComments(postId);
+
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your comment has been deleted.",
+            icon: "success",
+          });
+        }
+      });
     } catch (error) {
       console.log(error);
     }
@@ -75,7 +109,9 @@ const CommentItem = ({ comment }) => {
             </button>
           </div>
         ) : (
-          <p className="text-gray-800">{comment.content}</p>
+          <p className="text-gray-800">
+            {comment.content}, {comment.userId}, {Number(user?.id)}
+          </p>
         )}
 
         <div className="flex gap-2 mt-2">
@@ -88,7 +124,7 @@ const CommentItem = ({ comment }) => {
           </button>
           <button
             className="btn btn-xs btn-warning"
-            hidden={comment.userId === 1 ? false : true} // แก้ไขเป็น user ของเราเอง
+            hidden={Number(comment.userId) === Number(user?.id) ? false : true} // แก้ไขเป็น user ของเราเอง
             onClick={() => setIsEditing(true)}
           >
             Edit
@@ -96,7 +132,7 @@ const CommentItem = ({ comment }) => {
           <button
             className="btn btn-xs btn-error"
             onClick={handleDelete}
-            hidden={comment.userId === 1 ? false : true} // แก้ไขเป็น user ของเราเอง
+            hidden={comment.userId === user?.id ? false : true} // แก้ไขเป็น user ของเราเอง
           >
             Delete
           </button>
