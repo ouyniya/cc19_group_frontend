@@ -1,8 +1,10 @@
 import React from "react";
 import NavbarHeader from "../components/NavbarHeader";
 import Fuji from "../pictures/Fuji.jpg";
+import { useNavigate } from "react-router";
 
 function LandingPage() {
+  const navigate = useNavigate();
   return (
     <>
       {/* header */}
@@ -25,7 +27,10 @@ function LandingPage() {
         </div>
       </div>
       <div className="flex justify-center mt-45">
-        <button className="btn bg-[#A1BDCB] rounded-full h-15 w-30 text-white text-xl">
+        <button
+          onClick={() => navigate("/home")}
+          className="btn bg-[#A1BDCB] rounded-full h-15 w-30 text-white text-xl"
+        >
           Home
         </button>
       </div>

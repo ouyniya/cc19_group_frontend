@@ -17,6 +17,8 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import UserDashboard from "../pages/UserDashboard";
 import WishList from "../pages/WishList";
+import CreatePost from "../pages/CreatePost";
+import EditProfile from "../pages/EditProfile";
 
 // Route ใช้ในการกำหนดเส้นทาง (route) เฉพาะหนึ่งเส้นทาง
 // Routes จะตรวจสอบว่า URL ตรงกับ path ไหน และแสดงคอมโพเนนต์ที่ตรงกับเส้นทางนั้น
@@ -31,10 +33,10 @@ function AppRoutes() {
           <Route index element={<LandingPage />} />
           <Route path="home" element={<Home />} />
           {/* soft protect */}
-          <Route path="login" element={<Login />} /> 
-          <Route path="register" element={<Register />} /> 
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
 
-          <Route path="user-dashboard" element={<UserDashboard />} /> 
+          <Route path="user-dashboard" element={<UserDashboard />} />
           <Route path="/post/:postId" element={<PostAndComment />} />
         </Route>
 
@@ -44,10 +46,10 @@ function AppRoutes() {
           element={<ProtectRoutes el={<LayoutUser />} allows={["USER"]} />}
         >
           <Route index element={<WishList />} />
-          <Route path="wishlist" element={<WishList />} /> 
-          <Route path="create-post" element={<WishList />} /> 
-          <Route path="edit-profile" element={<WishList />} /> 
-         
+          <Route path="wishlist" element={<WishList />} />
+          <Route path="plan" element={<WishList />} />
+          <Route path="create-post" element={<CreatePost />} />
+          <Route path="edit-profile" element={<EditProfile />} />
         </Route>
 
         {/* Private: Admin */}
@@ -55,8 +57,7 @@ function AppRoutes() {
           path="admin"
           element={<ProtectRoutes el={<LayoutAdmin />} allows={["ADMIN"]} />}
         >
-
-        {/* <Route path="admin" element={<LayoutAdmin />}> */}
+          {/* <Route path="admin" element={<LayoutAdmin />}> */}
           <Route index element={<AdminAnalysis />} />
           <Route path="usermanagement" element={<AdminUser />} />
           <Route path="analysis" element={<AdminAnalysis />} />

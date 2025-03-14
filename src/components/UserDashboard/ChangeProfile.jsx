@@ -1,10 +1,18 @@
 import React, { useRef, useState } from "react";
 import picture from "../../icons/picture.png";
+import useUserStore from "../../stores/userStore";
+import { Axios, AxiosError } from "axios";
 
 function ChangeProfile() {
+  const actionUpdateProfile = useUserStore(
+    (state) => state.actionUpdateProfile
+  );
+
   const fileInputRef = useRef(null);
   const [previewImageUrl, setPreviewImageUrl] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // State สำหรับควบคุม modal
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorInput, setErrorInput] = useState("");
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -25,9 +33,38 @@ function ChangeProfile() {
     setIsModalOpen(false);
   };
 
+  const handleClickCancel = () => {
+    document.getElementById("my_modal_5").close();
+    setPreviewImageUrl(null);
+  };
+
+  // ปุ่ม Save รูป profileImage เข้า backend
+  const handleSave = async () => {
+    try {
+      setIsLoading(true);
+      const data = new FormData();
+      if (previewImageUrl) {
+        data.append("profileImage", previewImageUrl);
+      }
+      // await actionUpdateProfile(data);
+      console.log("update profile success");
+
+      handleClickCancel();
+    } catch (error) {
+      console.log(error);
+      if (error instanceof AxiosError) {
+        console.log("axiosError", error.response.data);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // console.log("previewImageUrl", previewImageUrl);
+
   return (
     <div className=" w-100 h-50 flex gap-5 mt-5 ml-5">
-      <div className="h-25 w-25 rounded-full overflow-hidden">
+      <div className="h-25 w-25 mt-5 rounded-full overflow-hidden">
         {previewImageUrl && (
           <img
             src={previewImageUrl}
@@ -43,7 +80,12 @@ function ChangeProfile() {
           className=" border-dashed border-1 border-gray-400 h-30 w-60 mt-2 "
         >
           <label htmlFor="file-input" className="cursor-pointer">
-            <img src={picture} alt="" className="w-8 mt-8 ml-23 opacity-70 " />
+            <img
+              onClick={() => (fileInputRef.current.value = "")}
+              src={picture}
+              alt=""
+              className="w-8 mt-8 ml-23 opacity-70 "
+            />
           </label>
           <input
             type="file"
@@ -57,6 +99,22 @@ function ChangeProfile() {
           <div className="flex gap-1 mt-5 ml-2">
             <p className=" text-[#086BAF]">Upload</p>
             <p className="text-gray-400">or drop your file here </p>
+          </div>
+          {/* button */}
+          <div className="flex gap-2 mt-5 justify-center">
+            <button
+              disabled={isLoading}
+              onClick={handleSave}
+              className="btn bg-[#086BAF] rounded-4xl text-white"
+            >
+              {isLoading ? "Loading..." : "Save"}
+            </button>
+            <button
+              onClick={handleClickCancel}
+              className="btn bg-white border-1 border-[#086BAF] rounded-4xl text-[#9BA2A5]"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </div>
