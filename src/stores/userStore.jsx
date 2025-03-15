@@ -13,9 +13,13 @@ const useUserStore = create(
         set({ token: result.data.token });
         return { token: result.data.token };
       },
-
       actionRegister: async (input) => {
         await userApi.actionRegister(input);
+      },
+      actionGoogleLogin: async (input) => {
+        const result = await userApi.actionGoogleLogin(input);
+        set({ user: result.data.user }); 
+        return { user: result.data.user };
       },
       actionGetMe: async () => {
         const result = await userApi.actionCurrentUser();
