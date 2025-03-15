@@ -20,6 +20,8 @@ function Home() {
     actionGoogleLogin()
   }, []);
 
+  console.log(user)
+
   return (
     <>
       {/* header */}
