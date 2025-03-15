@@ -11,25 +11,14 @@ import Region from "../components/Home/Region";
 import LoginGoogle1 from "./LoginGoogle1";
 import SignUpGoogle from "./SignUpGoogle";
 import axios from "axios";
+import useUserStore from "../stores/userStore";
 
 function Home() {
-  const [user, setUser] = useState(null);
-
-  const getUser = async () => {
-    try {
-      const url = `http://localhost:8899/auth/login/success`;
-      const { data } = await axios.get(url, { withCredentials: true });
-      setUser(data.user._json)
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { user, actionGoogleLogin } = useUserStore();
 
   useEffect(() => {
-    getUser()
-  }, [])
-
-  console.log(user)
+    actionGoogleLogin()
+  }, []);
 
   return (
     <>

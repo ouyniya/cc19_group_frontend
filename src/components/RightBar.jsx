@@ -51,7 +51,9 @@ function RightBar() {
             Wish List
           </button>
         </div>
-      ) : ""}
+      ) : (
+        ""
+      )}
 
       {user?.role === "ADMIN" ? (
         <div className="flex items-center gap-2">
@@ -62,8 +64,9 @@ function RightBar() {
             Dashboard
           </button>
         </div>
-      ) : ""}
-
+      ) : (
+        ""
+      )}
 
       {user ? (
         <div className="flex items-center gap-2">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import facebook from "../icons/facebook.png";
 import google from "../icons/google.png";
 import logo from "../icons/logo.png";
@@ -9,6 +9,7 @@ import { ZodError } from "zod";
 import { login } from "../utils/validators";
 import { createAlert } from "../utils/createAlert";
 import { User } from "lucide-react";
+
 
 const initialInput = {
   email: "",
@@ -23,6 +24,7 @@ function Login() {
   const navigate = useNavigate();
   const actionLogin = useUserStore((state) => state.actionLogin);
   const actionGetMe = useUserStore((state) => state.actionGetMe);
+
 
   const handleChange = (e) => {
     //set ข้อมูลไปใน input
