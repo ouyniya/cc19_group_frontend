@@ -116,7 +116,7 @@ const CommentItem = ({ comment }) => {
           </div>
         ) : (
           <p className="text-gray-800">
-            {comment.content}, {comment.userId}, {Number(user?.id)}
+            {comment.content}
           </p>
         )}
 
