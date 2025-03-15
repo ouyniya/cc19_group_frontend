@@ -24,6 +24,8 @@ const CommentItem = ({ comment }) => {
 
   useEffect(() => {
     if (!user && token) {
+      // the user is not logged in or the user data hasn't been fetched yet
+      // the user is authenticated but the data hasn't been fetched
       actionGetMe();
     }
   }, []);
@@ -31,7 +33,11 @@ const CommentItem = ({ comment }) => {
   // console.log(user)
 
   const handleReply = async (newReply) => {
-    await addReply(newReply);
+    try {
+      await addReply(newReply);
+    } catch (error) {
+      
+    }
   };
 
   const handleEdit = async () => {
@@ -45,7 +51,7 @@ const CommentItem = ({ comment }) => {
         await getComments(postId);
 
         setIsEditing(false);
-        createAlert("success", "Comment Edited")
+        createAlert("success", "Comment Edited");
       }
     } catch (error) {
       console.log(error);
