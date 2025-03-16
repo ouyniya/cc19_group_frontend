@@ -14,13 +14,13 @@ import axios from "axios";
 import useUserStore from "../stores/userStore";
 
 function Home() {
-  const { user, actionGoogleLogin } = useUserStore();
+  const { user, actionGetMeOrGoogleLogin } = useUserStore();
 
   useEffect(() => {
-    actionGoogleLogin()
+    actionGetMeOrGoogleLogin()
   }, []);
 
-  console.log(user)
+  // console.log(user)
 
   return (
     <>

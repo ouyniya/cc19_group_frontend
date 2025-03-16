@@ -1,36 +1,40 @@
 import React, { useEffect, useState, useMemo } from "react";
 import useUserStore from "../stores/userStore";
 import LoadingAnimation from "../components/LoadingAnimation";
+import { useNavigate } from "react-router";
 
-
-function ProtectRoutesGuest({ el }) {
-  const [loading, setLoading] = useState(true);
+function ProtectRoutesGuest({ el, redirectTo = "/home" }) {
+  const navigate = useNavigate();
   const actionGetMeOrGoogleLogin = useUserStore((state) => state.actionGetMeOrGoogleLogin);
-  const user = useUserStore((state) => state.user);
-  const token = useUserStore((state) => state.token);
-
+  const { user, token, actionGetMe } = useUserStore();
+  
+  const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
-    if (!user || !token) {
-      actionGetMeOrGoogleLogin().catch((error) =>
-        console.error("Failed to fetch user:", error)
-      );
-    }
-  }, [token, user, actionGetMeOrGoogleLogin]);
-
-  const isAuthorized = useMemo(
-    () => user,
-    [user]
-  );
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
+    const fetchUser = async () => {
+      if (!user || !token) {
+        try {
+          await actionGetMeOrGoogleLogin();
+        } catch (error) {
+          console.error("Failed to fetch user:", error);
+        }
+      }
+      setLoading(false);
+    };
+    
+    fetchUser();
+  }, [user, token, actionGetMeOrGoogleLogin]);
+  
   if (loading) return <LoadingAnimation />;
-  if (!isAuthorized) <>{el}</>;
+  
+  // Redirect if user is logged in
+  console.log('***', user)
+  if (user) {
+    navigate(redirectTo, { replace: true });
+    return null;
+  }
 
-  return <>{el}</>;
+  return el;
 }
 
 export default ProtectRoutesGuest;
