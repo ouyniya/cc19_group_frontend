@@ -29,21 +29,6 @@ const useUserStore = create(
         }
       },
 
-      // // Google Login
-      // actionGoogleLogin: async () => {
-      //   try {
-      //     const url = `http://localhost:8899/auth/login/success`;
-      //     const { data } = await axios.get(url, { withCredentials: true });
-
-      //     if (data.user) {
-      //       set({ user: data.user });
-      //     }
-      //   } catch (error) {
-      //     console.error("Google Login Error:", error);
-      //     throw error;
-      //   }
-      // },
-
       // Register action
       actionRegister: async (input) => {
         try {
@@ -69,6 +54,7 @@ const useUserStore = create(
           set({ isLoading: false });
         }
       },
+
 
       actionGetMeOrGoogleLogin: async () => {
         set({ isLoading: true });
@@ -108,6 +94,7 @@ const useUserStore = create(
           console.error("Logout Error:", error);
         }
       },
+
 
       // Update profile photo
       actionUpdateProfile: async (input) => {

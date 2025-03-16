@@ -20,6 +20,7 @@ import CreatePost from "../pages/CreatePost";
 import EditProfile from "../pages/EditProfile";
 import ErrorNotFound from "../pages/ErrorNotFound";
 import ProtectRoutesGuest from "./ProtectRoutesGuest";
+import ErrorUnauthorized from "../pages/ErrorUnauthorized";
 
 // Route ใช้ในการกำหนดเส้นทาง (route) เฉพาะหนึ่งเส้นทาง
 // Routes จะตรวจสอบว่า URL ตรงกับ path ไหน และแสดงคอมโพเนนต์ที่ตรงกับเส้นทางนั้น
@@ -35,6 +36,7 @@ function AppRoutes() {
           <Route path="home" element={<Home />} />
 
           {/* soft protect */}
+
           <Route
             path="register"
             element={<ProtectRoutesGuest el={<Register />} />}
@@ -72,6 +74,7 @@ function AppRoutes() {
         </Route>
 
         <Route path="*" element={<ErrorNotFound />} />
+        <Route path="403" element={<ErrorUnauthorized />} />
       </Routes>
     </>
   );

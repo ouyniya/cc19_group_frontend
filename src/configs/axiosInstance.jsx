@@ -28,8 +28,8 @@ axios.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      useUserStore.getState().actionLogout(); // Logout user on 401 error
-      window.location.assign("/"); // Redirect to login page
+      useUserStore.getState().actionLogout(); 
+      // window.location.assign("/"); 
     }
     return Promise.reject(error);
   }

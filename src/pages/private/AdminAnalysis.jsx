@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bar, Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -11,6 +11,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { createAlert } from "../../utils/createAlert";
+import useAdminStores from "../../stores/useAdminStores";
 
 ChartJS.register(
   CategoryScale,
@@ -23,62 +25,61 @@ ChartJS.register(
   Legend
 );
 
-const mockData = {
-  totalUsers: 12430,
-  totalViews: 52340,
-  topMostViewedPosts: [
-    { title: "Exploring Bangkok", views: 15340 },
-    { title: "Discovering Chiang Mai", views: 13450 },
-    { title: "Phuket Island Paradise", views: 9800 },
-    { title: "Pattaya Nightlife", views: 11230 },
-    { title: "Hidden Gems of Krabi", views: 10200 },
-  ],
-  topDestinations: ["Bangkok", "Chiang Mai", "Pattaya"],
-  viewsPerPlace: {
-    labels: [
-      "Bangkok",
-      "Chiang Mai",
-      "Phuket",
-      "Pattaya",
-      "Krabi",
-      "Hua Hin",
-      "Koh Samui",
-      "Chiang Rai",
-      "Ayutthaya",
-      "Sukhothai",
-    ],
-    values: [15340, 13450, 12340, 11230, 10320, 9800, 8700, 7600, 6900, 5800],
-  },
-  viewsOverTime: {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May"],
-    values: [3000, 4500, 6000, 7500, 9200],
-  },
-};
-
 export default function AnalysisDashboard() {
+  const store = useAdminStores();
+  const {
+    allUsers,
+    actionAllUsers,
+    totalViews,
+    actionAllViews,
+    actionTopDestination,
+    topDestination,
+    isLoading,
+  } = store;
+
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        await actionAllUsers();
+        await actionAllViews();
+        await actionTopDestination();
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+
+      // Delay hiding loading animation
+      // setTimeout(() => setLoading(false), 1500);
+    };
+
+    fetchAllUsers();
+  }, [actionAllUsers, actionAllViews, actionTopDestination]);
+
+  const data = {
+    allUsers,
+    totalViews,
+    topDestination,
+  };
+
   return (
     <div className="p-6 bg-gray-50 w-full min-h-screen">
       <div className="flex justify-between gap-6 mb-6 text-center">
         <div className="flex-1 p-4 bg-white shadow rounded-lg">
           <h2 className="text-lg font-semibold text-gray-700">Total Users</h2>
-          <p className="text-2xl font-bold text-blue-500">
-            {mockData.totalUsers}
-          </p>
+          <p className="text-2xl font-bold text-blue-500">{data?.allUsers}</p>
           <p className="text-xs text-gray-500">Updated from latest data</p>
         </div>
         <div className="flex-1 p-4 bg-white shadow rounded-lg">
           <h2 className="text-lg font-semibold text-gray-700">Total Views</h2>
-          <p className="text-2xl font-bold text-blue-500">
-            {mockData.totalViews}
-          </p>
+          <p className="text-2xl font-bold text-blue-500">{data?.totalViews}</p>
           <p className="text-xs text-gray-500">Updated from latest data</p>
         </div>
+
         <div className="flex-1 p-4 bg-white shadow rounded-lg">
           <h2 className="text-lg font-semibold text-gray-700">
             Top Destination
           </h2>
           <p className="text-2xl font-bold text-orange-500">
-            {mockData.topDestinations[0]}
+            {data?.topDestination?.topProvinces?.[0]?.name}
           </p>
           <p className="text-xs text-gray-500">Updated from latest data</p>
         </div>
@@ -92,11 +93,16 @@ export default function AnalysisDashboard() {
           <div className="h-[300px]">
             <Bar
               data={{
-                labels: mockData.viewsPerPlace.labels,
+                labels:
+                  data?.topDestination?.topProvinces?.map((el) => el?.name) ||
+                  [],
                 datasets: [
                   {
                     label: "Number of Views",
-                    data: mockData.viewsPerPlace.values,
+                    data:
+                      data?.topDestination?.topProvinces?.map(
+                        (el) => el?.totalViews
+                      ) || [],
                     backgroundColor: "rgba(75, 192, 192, 0.5)",
                   },
                 ],
@@ -106,16 +112,21 @@ export default function AnalysisDashboard() {
           </div>
         </div>
 
-        <div className="flex-1 p-4 bg-white shadow rounded-lg text-center h-[350px]">
+        <div className="flex-1 p-9 bg-white shadow rounded-lg text-left h-[350px]">
           <h2 className="text-lg font-semibold text-gray-700 mb-3">
             Top 5 Most Viewed Posts
           </h2>
           <ul className="text-gray-600 text-lg mt-6">
-            {mockData.topMostViewedPosts.map((post, index) => (
-              <li key={index} className="mb-2">
-                {index + 1}. {post.title} - {post.views} views
-              </li>
-            ))}
+            {data?.topDestination?.topProvinces?.map((el, index) => {
+              if (index <= 5) {
+                return (
+                  <li key={index} className="mb-2">
+                    {index + 1}. {el?.name} -
+                    <strong>{el?.totalViews} views</strong>
+                  </li>
+                );
+              }
+            })}
           </ul>
         </div>
       </div>

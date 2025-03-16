@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import useUserStore from "../stores/userStore";
 import LoadingAnimation from "../components/LoadingAnimation";
 import { useNavigate } from "react-router";
@@ -15,6 +16,7 @@ function ProtectRoutesGuest({ el, redirectTo = "/home" }) {
       if (!user || !token) {
         try {
           await actionGetMeOrGoogleLogin();
+
         } catch (error) {
           console.error("Failed to fetch user:", error);
         }
@@ -29,6 +31,7 @@ function ProtectRoutesGuest({ el, redirectTo = "/home" }) {
   
   // Redirect if user is logged in
   console.log('***', user)
+
   if (user) {
     navigate(redirectTo, { replace: true });
     return null;
