@@ -8,21 +8,23 @@ function RightBar() {
   const navigate = useNavigate();
   const user = useUserStore((state) => state.user);
   const token = useUserStore((state) => state.token);
-  const actionGetMeOrGoogleLogin = useUserStore((state) => state.actionGetMeOrGoogleLogin);
+  const googleLoginSuccessful = useUserStore((state) => state.googleLoginSuccessful);
+  const actionGetMeOrGoogleLogin = useUserStore(
+    (state) => state.actionGetMeOrGoogleLogin
+  );
 
   useEffect(() => {
-    if (!user || !token) {
+    if (!user && (!googleLoginSuccessful || !!token)) {
       actionGetMeOrGoogleLogin();
     }
   }, []);
-
 
   // Function to handle logout
   const handleLogout = () => {
     // Perform any logout logic here (like clearing the user and token)
     useUserStore.getState().actionLogout();
-    navigate("/login"); // Redirect to login page after logout
-  }; 
+    navigate("/home"); // Redirect to login page after logout
+  };
 
   return (
     <div className="flex items-center mt-3 gap-1 ">

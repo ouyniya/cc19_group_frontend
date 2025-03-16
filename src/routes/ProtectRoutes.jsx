@@ -6,41 +6,61 @@ import LoadingAnimation from "../components/LoadingAnimation";
 
 function ProtectRoute({ el, allows }) {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(null);
+  const [loading, setLoading] = useState(true); // Independent loading state
+  const {
+    user,
+    actionGetMeOrGoogleLogin,
+    isLoading,
+    token,
+    googleLoginSuccessful,
+  } = useUserStore();
 
-  const { user, token, actionGetMeOrGoogleLogin, googleLoginSuccessful } = useUserStore();
-
+  // Fetch user data once the component mounts
   useEffect(() => {
+    // Fetch user details if not already logged in
+
     const fetchUser = async () => {
-      if (!user && !googleLoginSuccessful) {
-        try {
-          await actionGetMeOrGoogleLogin();
-        } catch (error) {
-          console.error("Failed to fetch user:", error);
-        }
+      try {
+        console.log("Fetching user...");
+        await actionGetMeOrGoogleLogin(); // Trigger Google login
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      } finally {
+        setLoading(false); // Stop loading state
       }
-      setTimeout(() => setLoading(false), 1500); 
     };
 
-    fetchUser();
-  }, [user, token, actionGetMeOrGoogleLogin]);
-
-  // console.log(user)
-
-  useEffect(() => {
-    if (!loading) {
-      const authorized = user ? allows.includes(user.role) : false;
-      setIsAuthorized(authorized);
-      if (!authorized) {
-        navigate("/403"); // Redirect if unauthorized
-      }
+    if (!user && (!googleLoginSuccessful || !!token)) {
+      fetchUser();
+    } else {
+      setLoading(false); // Skip fetching if the user is already logged in
     }
-  }, [user, allows, loading, navigate]);
+  }, [user, googleLoginSuccessful, actionGetMeOrGoogleLogin]);
 
+  // Check if the user is authorized once the user data is fetched
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!isLoading && user) {
+        const authorized = allows.includes(user.role);
+        setIsAuthorized(authorized);
+
+        if (!authorized) {
+          navigate("/403"); // Redirect to 403 if unauthorized
+        }
+      }
+    }, 1500); // Wait for 1500ms before checking authorization
+
+    return () => clearTimeout(timeout); // Cleanup timeout on unmount
+  }, [user, isLoading, allows, navigate]);
+
+  // Show loading animation while user data is being fetched
   if (loading) return <LoadingAnimation />;
-  if (isAuthorized === false) return <ErrorUnauthorized />;
 
+  // If no user is available or user is unauthorized, show the error page
+  if (!user || isAuthorized === false) return <ErrorUnauthorized />;
+
+  // Render the component if authorized
   return <>{el}</>;
 }
 

@@ -2,41 +2,55 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import useUserStore from "../stores/userStore";
 import LoadingAnimation from "../components/LoadingAnimation";
+import axios from "axios";
 
 function ProtectRoutesGuest({ el, redirectTo = "/home" }) {
   const navigate = useNavigate();
-  const actionGetMeOrGoogleLogin = useUserStore((state) => state.actionGetMeOrGoogleLogin);
-  const { user, googleLoginSuccessful } = useUserStore();
-  
-  const [loading, setLoading] = useState(true);
-  
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (!user && !googleLoginSuccessful) {
-        try {
-          await actionGetMeOrGoogleLogin();
+  const actionGetMeOrGoogleLogin = useUserStore(
+    (state) => state.actionGetMeOrGoogleLogin
+  );
+  const { user, googleLoginSuccessful, token } = useUserStore();
 
-        } catch (error) {
-          console.error("Failed to fetch user:", error);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch user details if not already logged in
+
+    const fetchUser = async () => {
+      try {
+        console.log("Fetching user...");
+
+        if (!user && token) {
+          await actionGetMeOrGoogleLogin(); // Trigger Google login
+          return;
         }
+
+        if (response.status === 200) {
+          console.log("User fetched successfully:", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      } finally {
+        setLoading(false); // Stop loading state
       }
-      setLoading(false);
     };
-    
-    fetchUser();
+
+    if (!user && (!googleLoginSuccessful || !!token)) {
+      fetchUser();
+    } else {
+      setLoading(false); // Skip fetching if the user is already logged in
+    }
   }, [user, googleLoginSuccessful, actionGetMeOrGoogleLogin]);
-  
+
   if (loading) return <LoadingAnimation />;
-  
-  // Redirect if user is logged in
-  console.log('***', user)
 
   if (user) {
+    console.log("Redirecting to:", redirectTo);
     navigate(redirectTo, { replace: true });
-    return null;
+    return null; // Prevent rendering the element if redirected
   }
 
-  return el;
+  return el; // Render the element if the user is not logged in
 }
 
 export default ProtectRoutesGuest;

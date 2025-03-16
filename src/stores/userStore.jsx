@@ -66,7 +66,6 @@ const useUserStore = create(
           return { user: data.user };
         } catch (error) {
           console.warn("Fetching user failed, trying Google login...");
-
           try {
             const url = `http://localhost:8899/auth/login/success`;
             const { data } = await axios.get(url, { withCredentials: true });
@@ -78,7 +77,7 @@ const useUserStore = create(
           } catch (googleError) {
             console.error("Google Login Error:", googleError);
             throw googleError;
-          }
+          } 
         } finally {
           set({ isLoading: false });
         }

@@ -14,10 +14,13 @@ import axios from "axios";
 import useUserStore from "../stores/userStore";
 
 function Home() {
-  const { user, actionGetMeOrGoogleLogin } = useUserStore();
+  const { user, token, actionGetMeOrGoogleLogin, googleLoginSuccessful } =
+    useUserStore();
 
   useEffect(() => {
-    actionGetMeOrGoogleLogin()
+    if (!user && (!googleLoginSuccessful || !!token)) {
+      actionGetMeOrGoogleLogin();
+    }
   }, []);
 
   // console.log(user)
