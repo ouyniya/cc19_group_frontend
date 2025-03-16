@@ -5,17 +5,17 @@ import LoadingAnimation from "../components/LoadingAnimation";
 
 function ProtectRoutesGuest({ el }) {
   const [loading, setLoading] = useState(true);
-  const actionGetMe = useUserStore((state) => state.actionGetMe);
+  const actionGetMeOrGoogleLogin = useUserStore((state) => state.actionGetMeOrGoogleLogin);
   const user = useUserStore((state) => state.user);
   const token = useUserStore((state) => state.token);
 
   useEffect(() => {
-    if (!user && token) {
-      actionGetMe().catch((error) =>
+    if (!user || !token) {
+      actionGetMeOrGoogleLogin().catch((error) =>
         console.error("Failed to fetch user:", error)
       );
     }
-  }, [token, user, actionGetMe]);
+  }, [token, user, actionGetMeOrGoogleLogin]);
 
   const isAuthorized = useMemo(
     () => user,

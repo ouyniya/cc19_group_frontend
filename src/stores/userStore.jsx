@@ -70,6 +70,34 @@ const useUserStore = create(
         }
       },
 
+      actionGetMeOrGoogleLogin: async () => {
+        set({ isLoading: true });
+      
+        try {
+          // Try to get the current user
+          const { data } = await userApi.actionCurrentUser();
+          set({ user: data.user });
+          return { user: data.user };
+        } catch (error) {
+          console.warn("Fetching user failed, trying Google login...");
+      
+          try {
+            const url = `http://localhost:8899/auth/login/success`;
+            const { data } = await axios.get(url, { withCredentials: true });
+      
+            if (data.user) {
+              set({ user: data.user });
+              return { user: data.user };
+            }
+          } catch (googleError) {
+            console.error("Google Login Error:", googleError);
+            throw googleError;
+          }
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
       // Logout action
       actionLogout: async () => {
         try {
