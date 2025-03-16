@@ -1,22 +1,27 @@
 import { create } from "zustand";
-import axios from "axios";
+import commentApi from "../api/commentApi";
 
 const useCommentStores = create((set, get) => ({
   comments: [],
+  isLoading: false,
   getUpdatedComment: () => get().comments, //  ใช้เป็นฟังก์ชันแทนค่าเริ่มต้น
   getComments: async (postId) => {
-    const res = await axios.get(`http://localhost:8899/api/comments/${postId}`);
-    set({ comments: res.data });
+    set({ isLoading: true });
+    try {
+      const res = await commentApi.actionGetComments(postId);
+      set({ comments: res.data });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      set({ isLoading: false });
+    }
   },
   addComment: async (body) => {
-    const res = await axios.post(`http://localhost:8899/api/comments/`, body);
+    const res = await commentApi.actionAddComment(body);
     set({ comments: [...get().comments, res.data] }); // ดึง comments จาก state ก่อนอัปเดต
   },
   updateComment: async (commentId, body) => {
-    const res = await axios.put(
-      `http://localhost:8899/api/comments/${commentId}`,
-      body
-    );
+    const res = await commentApi.actionUpdateComment(commentId, body);
     set({
       comments: get().comments.map((comment) =>
         comment.id === commentId ? res.data : comment
@@ -25,7 +30,7 @@ const useCommentStores = create((set, get) => ({
   },
   deleteComment: async (commentId) => {
     try {
-      await axios.delete(`http://localhost:8899/api/comments/${commentId}`);
+      await commentApi.actionDeleteComment(commentId);
       set((state) => ({
         comments: state.comments.filter((comment) => comment.id !== commentId),
       }));
@@ -34,7 +39,7 @@ const useCommentStores = create((set, get) => ({
     }
   },
   addReply: async (parentId, body) => {
-    const res = await axios.post(`http://localhost:8899/api/comments/`, body);
+    const res = await commentApi.actionAddReply(body);
     set({
       comments: get().comments.map(
         (

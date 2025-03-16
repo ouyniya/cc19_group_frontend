@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useCommentStores from "../stores/useCommentStores";
 import useUserStore from "../stores/userStore";
+import { createAlert } from "../utils/createAlert";
 
 const CommentForm = ({ postId, parentId = null, setShowReply }) => {
   const [content, setContent] = useState("");
@@ -21,7 +22,11 @@ const CommentForm = ({ postId, parentId = null, setShowReply }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!content.trim()) return;
+    if (!content.trim()) return createAlert("info", "Please add some comments.");
+    // เช็คก่อนทำงานต่อ
+
+    if (!user?.id)
+      return createAlert("info", "Please log in before leaving a comment.");
     // เช็คก่อนทำงานต่อ
 
     try {
@@ -33,13 +38,14 @@ const CommentForm = ({ postId, parentId = null, setShowReply }) => {
       }; // เปลี่ยนเป็น userId ที่ login อยู่
 
       const body = newComment;
-      //   console.log(body);
       await addComment(body);
       await getComments(postId);
       setContent(""); // ค่าข้างในช่อง comment เป็นค่าว่าง
       if (setShowReply) setShowReply(false); //  ป้องกัน error ในกรณี setShowReply ไม่ถูกส่งมา
+      
     } catch (error) {
-      console.error("Error adding comment:", error);
+      const errorMsg = error?.response?.data?.message;
+      createAlert("info", errorMsg);
     }
   };
 

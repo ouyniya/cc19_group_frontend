@@ -42,13 +42,13 @@ function Login() {
       login.parse(input);
       //ยิงของส่งไปหลังบ้านแล้ว หลังจากที่ผ่านการ validate
       const res = await actionLogin(input);
-      // console.log("login success");
+      createAlert("success", `Login Success`);
       navigate("/home");
       
       await actionGetMe(res.token);
-      return createAlert("success", `Login Success`);
     } catch (error) {
-      console.log(error);
+      const errorMsg = error.response.data.message
+      createAlert("info", errorMsg)
 
       if (error instanceof ZodError) {
         console.log("error,errors", error.errors);
