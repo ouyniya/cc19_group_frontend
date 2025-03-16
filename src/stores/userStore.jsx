@@ -1,7 +1,9 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import userApi from "../api/authApi";
+import profileApi from "../api/profileApi";
 import axios from "axios";
+import { createAlert } from "../utils/createAlert";
 
 const useUserStore = create(
   persist(
@@ -10,7 +12,7 @@ const useUserStore = create(
       token: "",
       isLoading: false,
       googleLoginSuccessful: false, // Flag to track Google login success
-
+      currentUser: null,
       // Get the current user
       getCurrentUser: () => get().user,
 
@@ -77,7 +79,7 @@ const useUserStore = create(
           } catch (googleError) {
             console.error("Google Login Error:", googleError);
             throw googleError;
-          } 
+          }
         } finally {
           set({ isLoading: false });
         }
@@ -97,26 +99,32 @@ const useUserStore = create(
       },
 
       // Update profile photo
-      actionUpdateProfile: async (input) => {
+      actionUpdateProfileImage: async (input) => {
+        set({ isLoading: true });
         try {
-          const { data } = await userApi.updateProfile(input);
-          set({ user: data.updateUser });
+          const { data } = await profileApi.actionUpdateProfileImage(input);
+          // console.log("***", input)
+          set({ user: data });
         } catch (error) {
-          console.error("Profile Update Error:", error);
-          throw error;
+          console.log(error);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+      // Update profile information
+      actionUpdateProfileInfo: async (input) => {
+        set({ isLoading: true });
+        try {
+          const { data } = await profileApi.actionUpdateProfileInfo(input);
+          // console.log(data)
+          set({ user: data });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          set({ isLoading: false });
         }
       },
 
-      // Update profile information
-      actionUpdateProfileInformation: async (input) => {
-        try {
-          const { data } = await userApi.updateProfileInformation(input);
-          set({ user: data.updateUser });
-        } catch (error) {
-          console.error("Profile Information Update Error:", error);
-          throw error;
-        }
-      },
     }),
     {
       name: "state",

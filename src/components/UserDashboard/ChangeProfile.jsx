@@ -2,13 +2,22 @@ import React, { useRef, useState } from "react";
 import picture from "../../icons/picture.png";
 import useUserStore from "../../stores/userStore";
 import { Axios, AxiosError } from "axios";
+import { createAlert } from "../../utils/createAlert";
 
 function ChangeProfile() {
-  const actionUpdateProfile = useUserStore(
-    (state) => state.actionUpdateProfile
+  const actionUpdateProfileImage = useUserStore(
+    (state) => state.actionUpdateProfileImage
+  );
+  const getCurrentUser = useUserStore(
+    (state) => state.getCurrentUser
+  );
+  const user = useUserStore(
+    (state) => state.user
   );
 
+
   const fileInputRef = useRef(null);
+  const [file, setFile] = useState(null);
   const [previewImageUrl, setPreviewImageUrl] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // State สำหรับควบคุม modal
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +26,7 @@ function ChangeProfile() {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      setFile(file)
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImageUrl(reader.result);
@@ -42,12 +52,16 @@ function ChangeProfile() {
   const handleSave = async () => {
     try {
       setIsLoading(true);
-      const data = new FormData();
-      if (previewImageUrl) {
-        data.append("profileImage", previewImageUrl);
+      let data = new FormData();
+      if (file) {
+        // console.log(file)
+        data.append("profileImage", file);
       }
-      // await actionUpdateProfile(data);
-      console.log("update profile success");
+
+      await actionUpdateProfileImage(data);
+      await getCurrentUser();
+      // console.log("update profile success");
+      createAlert("success", "update profile success")
 
       handleClickCancel();
     } catch (error) {
