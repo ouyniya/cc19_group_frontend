@@ -49,7 +49,7 @@ const baseUrl = axios.defaults.baseURL
   const handleSubmit = async (e) => {
     try {
       setIsLoading(true); // เริ่มการทำให้มัน loading เป็น true
-      e.preventDefault(); //กันมัน refresh ข้อมูลเวลากด submit
+      e.preventDefault(); // กัน refresh ข้อมูลเวลากด submit
 
       //validate
       login.parse(input);
@@ -58,7 +58,6 @@ const baseUrl = axios.defaults.baseURL
       createAlert("success", `Login Success`);
       navigate("/home");
       
-
       await actionGetMeOrGoogleLogin();
       return createAlert("success", `Login Success`);
 
