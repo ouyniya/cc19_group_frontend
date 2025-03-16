@@ -8,17 +8,16 @@ import Post from "../components/Home/post";
 import TopLocation from "../components/Home/TopLocation";
 import MoreExplore from "../components/Home/MoreExplore";
 import Region from "../components/Home/Region";
-import LoginGoogle1 from "./LoginGoogle1";
-import SignUpGoogle from "./SignUpGoogle";
-import axios from "axios";
 import useUserStore from "../stores/userStore";
 
 function Home() {
-  const { user, actionGetMeOrGoogleLogin } = useUserStore();
+  // const { user, token } = useUserStore();
 
-  useEffect(() => {
-    actionGetMeOrGoogleLogin()
-  }, []);
+  // useEffect(() => {
+  //   if (!user && token) {
+  //     actionGetMeOrGoogleLogin();
+  //   }
+  // }, []);
 
   // console.log(user)
 
@@ -30,8 +29,6 @@ function Home() {
       <div>
         {/* Body top */}
         <div>
-          <LoginGoogle1 />
-          <SignUpGoogle />
           {/* Where is your destination */}
           <div className="flex justify-center gap-2 mt-5">
             <p className="text-3xl font-bold text-[#193B53]"> WHERE IS YOUR </p>

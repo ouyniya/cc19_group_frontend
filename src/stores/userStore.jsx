@@ -9,6 +9,7 @@ const useUserStore = create(
       user: null,
       token: "",
       isLoading: false,
+      googleLoginSuccessful: false, // Flag to track Google login success
 
       // Get the current user
       getCurrentUser: () => get().user,
@@ -19,8 +20,8 @@ const useUserStore = create(
 
         try {
           const { data } = await userApi.actionLogin(input);
-          set({ token: data.token });
-          return { token: data.token };
+          set({ token: data.token, user: data.user });
+          return { token: data.token, user: data.user };
         } catch (error) {
           // console.error("Login Error:", error);
           throw error;
@@ -55,10 +56,9 @@ const useUserStore = create(
         }
       },
 
-
       actionGetMeOrGoogleLogin: async () => {
         set({ isLoading: true });
-      
+
         try {
           // Try to get the current user
           const { data } = await userApi.actionCurrentUser();
@@ -66,19 +66,18 @@ const useUserStore = create(
           return { user: data.user };
         } catch (error) {
           console.warn("Fetching user failed, trying Google login...");
-      
           try {
             const url = `http://localhost:8899/auth/login/success`;
             const { data } = await axios.get(url, { withCredentials: true });
-      
+
             if (data.user) {
-              set({ user: data.user });
+              set({ user: data.user, googleLoginSuccessful: true });
               return { user: data.user };
             }
           } catch (googleError) {
             console.error("Google Login Error:", googleError);
             throw googleError;
-          }
+          } 
         } finally {
           set({ isLoading: false });
         }
@@ -87,14 +86,15 @@ const useUserStore = create(
       // Logout action
       actionLogout: async () => {
         try {
-          await axios.get("http://localhost:8899/auth/logout", { withCredentials: true });
-          set({ token: "", user: null });
+          await axios.get("http://localhost:8899/auth/logout", {
+            withCredentials: true,
+          });
+          set({ token: "", user: null, googleLoginSuccessful: false });
           localStorage.removeItem("state");
         } catch (error) {
           console.error("Logout Error:", error);
         }
       },
-
 
       // Update profile photo
       actionUpdateProfile: async (input) => {
@@ -121,7 +121,7 @@ const useUserStore = create(
     {
       name: "state",
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ token: state.token }), // Persist only token
+      partialize: (state) => ({ token: state.token, user: state.user }), // Persist only token
     }
   )
 );

@@ -6,38 +6,25 @@ import LoadingAnimation from "../components/LoadingAnimation";
 
 function ProtectRoute({ el, allows }) {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(null);
-
-  const { user, token, actionGetMe } = useUserStore();
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (!user && token) {
-        try {
-          await actionGetMe();
-        } catch (error) {
-          console.error("Failed to fetch user:", error);
-        }
-      }
-      setTimeout(() => setLoading(false), 1500); 
-    };
-
-    fetchUser();
-  }, [user, token, actionGetMe]);
+  const [loading, setLoading] = useState(true); // Independent loading state
+  const { user } = useUserStore();
 
   useEffect(() => {
-    if (!loading) {
-      const authorized = user ? allows.includes(user.role) : false;
-      setIsAuthorized(authorized);
-      if (!authorized) {
-        navigate("/403"); // Redirect if unauthorized
-      }
-    }
-  }, [user, allows, loading, navigate]);
+    const authorized = allows.includes(user?.role);
+    setIsAuthorized(authorized);
+    setLoading(false);
+  }, []);
 
+  // console.log(isAuthorized);
+
+  // Show loading animation while user data is being fetched
   if (loading) return <LoadingAnimation />;
-  if (isAuthorized === false) return <ErrorUnauthorized />;
+
+  // If no user is available or user is unauthorized, show the error page
+  if (!user || !isAuthorized) {
+    return <ErrorUnauthorized />;
+  }
 
   return <>{el}</>;
 }
