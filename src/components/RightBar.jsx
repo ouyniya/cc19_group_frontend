@@ -22,7 +22,7 @@ function RightBar() {
     // Perform any logout logic here (like clearing the user and token)
     useUserStore.getState().actionLogout();
     navigate("/login"); // Redirect to login page after logout
-  };
+  }; 
 
   return (
     <div className="flex items-center mt-3 gap-1 ">
