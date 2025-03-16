@@ -9,7 +9,7 @@ function ProtectRoutesGuest({ el, redirectTo = "/home" }) {
   const actionGetMeOrGoogleLogin = useUserStore(
     (state) => state.actionGetMeOrGoogleLogin
   );
-  const { user, googleLoginSuccessful, token } = useUserStore();
+  const { user, token } = useUserStore();
 
   const [loading, setLoading] = useState(true);
 
@@ -19,15 +19,7 @@ function ProtectRoutesGuest({ el, redirectTo = "/home" }) {
     const fetchUser = async () => {
       try {
         console.log("Fetching user...");
-
-        if (!user && token) {
-          await actionGetMeOrGoogleLogin(); // Trigger Google login
-          return;
-        }
-
-        if (response.status === 200) {
-          console.log("User fetched successfully:", response.data);
-        }
+        await actionGetMeOrGoogleLogin(); // Trigger Google login
       } catch (error) {
         console.error("Error fetching user:", error);
       } finally {
@@ -35,12 +27,12 @@ function ProtectRoutesGuest({ el, redirectTo = "/home" }) {
       }
     };
 
-    if (!user && (!googleLoginSuccessful || !!token)) {
+    if (!user && token) {
       fetchUser();
     } else {
       setLoading(false); // Skip fetching if the user is already logged in
     }
-  }, [user, googleLoginSuccessful, actionGetMeOrGoogleLogin]);
+  }, []);
 
   if (loading) return <LoadingAnimation />;
 

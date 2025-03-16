@@ -20,8 +20,8 @@ const useUserStore = create(
 
         try {
           const { data } = await userApi.actionLogin(input);
-          set({ token: data.token });
-          return { token: data.token };
+          set({ token: data.token, user: data.user });
+          return { token: data.token, user: data.user };
         } catch (error) {
           // console.error("Login Error:", error);
           throw error;
@@ -121,7 +121,7 @@ const useUserStore = create(
     {
       name: "state",
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ token: state.token }), // Persist only token
+      partialize: (state) => ({ token: state.token, user: state.user }), // Persist only token
     }
   )
 );
