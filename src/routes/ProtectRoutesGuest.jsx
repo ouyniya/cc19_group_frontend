@@ -6,13 +6,13 @@ import LoadingAnimation from "../components/LoadingAnimation";
 function ProtectRoutesGuest({ el, redirectTo = "/home" }) {
   const navigate = useNavigate();
   const actionGetMeOrGoogleLogin = useUserStore((state) => state.actionGetMeOrGoogleLogin);
-  const { user, token, actionGetMe } = useUserStore();
+  const { user, token } = useUserStore();
   
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
     const fetchUser = async () => {
-      if (!user || !token) {
+      if (!user && token) {
         try {
           await actionGetMeOrGoogleLogin();
 
