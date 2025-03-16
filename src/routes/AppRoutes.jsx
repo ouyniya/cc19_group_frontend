@@ -36,7 +36,7 @@ function AppRoutes() {
           <Route path="home" element={<Home />} />
 
           {/* soft protect */}
-          {/* <Route path="login" element={<Login />} /> */}
+
           <Route
             path="register"
             element={<ProtectRoutesGuest el={<Register />} />}

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import userApi from "../api/authApi";
+import axios from "axios";
 
 const useUserStore = create(
   persist(
@@ -54,11 +55,46 @@ const useUserStore = create(
         }
       },
 
-      // Logout action
-      actionLogout: () => {
-        set({ token: "", user: null });
-        localStorage.removeItem("state");
+
+      actionGetMeOrGoogleLogin: async () => {
+        set({ isLoading: true });
+      
+        try {
+          // Try to get the current user
+          const { data } = await userApi.actionCurrentUser();
+          set({ user: data.user });
+          return { user: data.user };
+        } catch (error) {
+          console.warn("Fetching user failed, trying Google login...");
+      
+          try {
+            const url = `http://localhost:8899/auth/login/success`;
+            const { data } = await axios.get(url, { withCredentials: true });
+      
+            if (data.user) {
+              set({ user: data.user });
+              return { user: data.user };
+            }
+          } catch (googleError) {
+            console.error("Google Login Error:", googleError);
+            throw googleError;
+          }
+        } finally {
+          set({ isLoading: false });
+        }
       },
+
+      // Logout action
+      actionLogout: async () => {
+        try {
+          await axios.get("http://localhost:8899/auth/logout", { withCredentials: true });
+          set({ token: "", user: null });
+          localStorage.removeItem("state");
+        } catch (error) {
+          console.error("Logout Error:", error);
+        }
+      },
+
 
       // Update profile photo
       actionUpdateProfile: async (input) => {

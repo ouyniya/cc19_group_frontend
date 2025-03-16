@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import facebook from "../icons/facebook.png";
 import google from "../icons/google.png";
 import logo from "../icons/logo.png";
@@ -9,6 +9,9 @@ import { ZodError } from "zod";
 import { login } from "../utils/validators";
 import { createAlert } from "../utils/createAlert";
 import { User } from "lucide-react";
+import { axios, getAccessToken } from "../configs/axiosInstance";
+
+
 
 const initialInput = {
   email: "",
@@ -23,7 +26,17 @@ function Login() {
   const navigate = useNavigate();
   const actionLogin = useUserStore((state) => state.actionLogin);
   const actionGetMe = useUserStore((state) => state.actionGetMe);
+  const actionGetMeOrGoogleLogin = useUserStore((state) => state.actionGetMeOrGoogleLogin);
 
+const baseUrl = axios.defaults.baseURL
+
+  const googleAuth = () => {
+		window.open(
+			`${baseUrl}/auth/google/callback`,
+			"_self"
+		);
+	};
+  
   const handleChange = (e) => {
     //set ข้อมูลไปใน input
     setInput((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -45,7 +58,10 @@ function Login() {
       createAlert("success", `Login Success`);
       navigate("/home");
       
-      await actionGetMe(res.token);
+
+      await actionGetMeOrGoogleLogin();
+      return createAlert("success", `Login Success`);
+
     } catch (error) {
       const errorMsg = error.response.data.message
       createAlert("info", errorMsg)
@@ -148,6 +164,7 @@ function Login() {
                   />
 
                   <img
+                  onClick={googleAuth}
                     src={google}
                     alt="google logo"
                     className="h-10 hover:cursor-pointer"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 // import NavbarHeader from "../components/NavbarHeader";
 import Search from "../components/Search";
 import logo from "../icons/logo.png";
@@ -8,9 +8,20 @@ import Post from "../components/Home/post";
 import TopLocation from "../components/Home/TopLocation";
 import MoreExplore from "../components/Home/MoreExplore";
 import Region from "../components/Home/Region";
-import LoginGoogle from "./LoginGoogle";
+import LoginGoogle1 from "./LoginGoogle1";
+import SignUpGoogle from "./SignUpGoogle";
+import axios from "axios";
+import useUserStore from "../stores/userStore";
 
 function Home() {
+  const { user, actionGetMeOrGoogleLogin } = useUserStore();
+
+  useEffect(() => {
+    actionGetMeOrGoogleLogin()
+  }, []);
+
+  // console.log(user)
+
   return (
     <>
       {/* header */}
@@ -19,8 +30,8 @@ function Home() {
       <div>
         {/* Body top */}
         <div>
-
-        {/* <LoginGoogle /> */}
+          <LoginGoogle1 />
+          <SignUpGoogle />
           {/* Where is your destination */}
           <div className="flex justify-center gap-2 mt-5">
             <p className="text-3xl font-bold text-[#193B53]"> WHERE IS YOUR </p>

@@ -8,13 +8,14 @@ function RightBar() {
   const navigate = useNavigate();
   const user = useUserStore((state) => state.user);
   const token = useUserStore((state) => state.token);
-  const actionGetMe = useUserStore((state) => state.actionGetMe);
+  const actionGetMeOrGoogleLogin = useUserStore((state) => state.actionGetMeOrGoogleLogin);
 
   useEffect(() => {
-    if (!user && token) {
-      actionGetMe();
+    if (!user || !token) {
+      actionGetMeOrGoogleLogin();
     }
   }, []);
+
 
   // Function to handle logout
   const handleLogout = () => {
@@ -51,7 +52,9 @@ function RightBar() {
             Wish List
           </button>
         </div>
-      ) : ""}
+      ) : (
+        ""
+      )}
 
       {user?.role === "ADMIN" ? (
         <div className="flex items-center gap-2">
@@ -62,8 +65,9 @@ function RightBar() {
             Dashboard
           </button>
         </div>
-      ) : ""}
-
+      ) : (
+        ""
+      )}
 
       {user ? (
         <div className="flex items-center gap-2">
