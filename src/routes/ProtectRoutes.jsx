@@ -9,13 +9,13 @@ function ProtectRoute({ el, allows }) {
   const [loading, setLoading] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(null);
 
-  const { user, token, actionGetMe } = useUserStore();
+  const { user, token, actionGetMeOrGoogleLogin, googleLoginSuccessful } = useUserStore();
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (!user && token) {
+      if (!user && !googleLoginSuccessful) {
         try {
-          await actionGetMe();
+          await actionGetMeOrGoogleLogin();
         } catch (error) {
           console.error("Failed to fetch user:", error);
         }
@@ -24,7 +24,9 @@ function ProtectRoute({ el, allows }) {
     };
 
     fetchUser();
-  }, [user, token, actionGetMe]);
+  }, [user, token, actionGetMeOrGoogleLogin]);
+
+  // console.log(user)
 
   useEffect(() => {
     if (!loading) {

@@ -9,13 +9,13 @@ const CommentForm = ({ postId, parentId = null, setShowReply }) => {
   const getComments = useCommentStores((state) => state.getComments);
   const comments = useCommentStores((state) => state.comments);
 
-  const actionGetMe = useUserStore((state) => state.actionGetMe);
+  const actionGetMeOrGoogleLogin = useUserStore((state) => state.actionGetMeOrGoogleLogin);
   const user = useUserStore((state) => state.user);
-  const token = useUserStore((state) => state.token);
+  const googleLoginSuccessful = useUserStore((state) => state.googleLoginSuccessful);
 
   useEffect(() => {
-    if (!user && token) {
-      actionGetMe();
+    if (!user && !googleLoginSuccessful) {
+      actionGetMeOrGoogleLogin();
     }
   }, []);
 

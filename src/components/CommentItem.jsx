@@ -18,15 +18,15 @@ const CommentItem = ({ comment }) => {
   const deleteComment = useCommentStores((state) => state.deleteComment);
   const getComments = useCommentStores((state) => state.getComments);
 
-  const actionGetMe = useUserStore((state) => state.actionGetMe);
+  const actionGetMeOrGoogleLogin = useUserStore((state) => state.actionGetMeOrGoogleLogin);
   const user = useUserStore((state) => state.user);
-  const token = useUserStore((state) => state.token);
+  const googleLoginSuccessful = useUserStore((state) => state.googleLoginSuccessful);
 
   useEffect(() => {
-    if (!user && token) {
+    if (!user && !googleLoginSuccessful) {
       // the user is not logged in or the user data hasn't been fetched yet
       // the user is authenticated but the data hasn't been fetched
-      actionGetMe();
+      actionGetMeOrGoogleLogin();
     }
   }, []);
 
