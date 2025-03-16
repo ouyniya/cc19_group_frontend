@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import useUserStore from "../stores/userStore";
 import LoadingAnimation from "../components/LoadingAnimation";
-import { useNavigate } from "react-router";
 
 function ProtectRoutesGuest({ el, redirectTo = "/home" }) {
   const navigate = useNavigate();
