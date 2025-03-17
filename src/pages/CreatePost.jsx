@@ -1,12 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import profile from "../pictures/profile.png";
 import map from "../icons/map.png";
 import picture from "../icons/picture.png";
 import trash from "../icons/trash.png";
 import uploading from "../icons/up-loading.png";
 import MapCanvas from "../components/MapCanvas";
+import useLocationStores from "../stores/useLocationStores";
 
 function CreatePost() {
+  const provinces = useLocationStores((state) => state.provinces);
+  const districts = useLocationStores((state) => state.districts);
+  const actionGetProvince = useLocationStores(
+    (state) => state.actionGetProvince
+  );
+  const actionGetDistrict = useLocationStores(
+    (state) => state.actionGetDistrict
+  );
+
+  const [province, setProvince] = useState([]);
+  const [district, setDistrict] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState("");
+
+  useEffect(() => {
+    callActionGetProvince();
+  }, []);
+
+  useEffect(() => {
+    setDistrict(districts); // Update local state when Zustand state changes
+  }, [districts]);
+
+  const callActionGetProvince = async () => {
+    await actionGetProvince();
+    setProvince(provinces);
+  };
+
+  const handleProvinceChange = async (e) => {
+    const provinceId = e.target.value;
+    setSelectedProvince(provinceId);
+
+    if (!provinceId) return;
+
+    try {
+      await actionGetDistrict(provinceId)
+    } catch (error) {
+      console.error("Error fetching districts", error);
+    }
+  };
+
+  // console.log(district)
+
   return (
     <div className="flex justify-center  bg-blue-50 py-10">
       <div className="flex flex-col items-center w-250 rounded-4xl  mt-5 bg-white py-5 ">
@@ -107,21 +149,33 @@ function CreatePost() {
                   </div>
                 </div>
                 <div className="flex gap-20">
-                  <div className="flex flex-col">
-                    <p className="   text-lg text-[#086BAF] mt-2">District</p>
-                    <input
-                      type="text"
-                      className="bg-white rounded-xs h-10 w-60 border-1 border-[#9BA2A5] "
-                      placeholder="   district"
-                    />
+                  <div className="flex flex-col w-60">
+                    <p className="text-lg text-[#086BAF] mt-2">Province</p>
+                    <select defaultValue="Pick a color" onChange={handleProvinceChange} className="select">
+                      <option disabled={true} selected>
+                        Pick a Province
+                      </option>
+                      {provinces &&
+                        provinces?.map((el) => (
+                          <option key={el.id} value={el.id}>{el.name}</option>
+                        ))}
+                    </select>
                   </div>
-                  <div className="flex flex-col">
-                    <p className="   text-lg text-[#086BAF] mt-2">Province</p>
-                    <input
-                      type="text"
-                      className="bg-white rounded-xs h-10 w-60 border-1 border-[#9BA2A5] "
-                      placeholder="   province"
-                    />
+
+                  <div className="flex flex-col w-60">
+                    <p className="   text-lg text-[#086BAF] mt-2">District</p>
+                    <select defaultValue="Pick a color" className="select">
+                      <option disabled={true} selected>Pick a District</option>
+                      {district?.length > 0 &&
+
+                      district?.map((el) => (
+                        <option key={el.id} value={el.id}>
+                          {el.name}
+                        </option>
+                      ))
+
+                      }
+                    </select>
                   </div>
                 </div>
                 <p className="text-lg font-bold text-[#086BAF] mt-5">
