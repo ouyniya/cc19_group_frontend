@@ -107,21 +107,23 @@ function CreatePost() {
                   </div>
                 </div>
                 <div className="flex gap-20">
-                  <div className="flex flex-col">
+                  <div className="flex flex-col w-60">
                     <p className="   text-lg text-[#086BAF] mt-2">District</p>
-                    <input
-                      type="text"
-                      className="bg-white rounded-xs h-10 w-60 border-1 border-[#9BA2A5] "
-                      placeholder="   district"
-                    />
+                    <select defaultValue="Pick a color" className="select">
+                      <option disabled={true}>Pick a color</option>
+                      <option>Crimson</option>
+                      <option>Amber</option>
+                      <option>Velvet</option>
+                    </select>
                   </div>
-                  <div className="flex flex-col">
-                    <p className="   text-lg text-[#086BAF] mt-2">Province</p>
-                    <input
-                      type="text"
-                      className="bg-white rounded-xs h-10 w-60 border-1 border-[#9BA2A5] "
-                      placeholder="   province"
-                    />
+                  <div className="flex flex-col w-60">
+                    <p className="text-lg text-[#086BAF] mt-2">Province</p>
+                    <select defaultValue="Pick a color" className="select">
+                      <option disabled={true}>Pick a color</option>
+                      <option>Crimson</option>
+                      <option>Amber</option>
+                      <option>Velvet</option>
+                    </select>
                   </div>
                 </div>
                 <p className="text-lg font-bold text-[#086BAF] mt-5">
