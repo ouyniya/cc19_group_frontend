@@ -4,6 +4,7 @@ import map from "../icons/map.png";
 import picture from "../icons/picture.png";
 import trash from "../icons/trash.png";
 import uploading from "../icons/up-loading.png";
+import MapCanvas from "../components/MapCanvas";
 
 function CreatePost() {
   return (
@@ -127,7 +128,7 @@ function CreatePost() {
                   Select location in Map
                 </p>
                 <div className="mt-2 bg-blue-50 h-100 w-140">
-                  <p>map</p>
+                  <MapCanvas />
                 </div>
               </div>
 
