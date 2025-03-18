@@ -97,14 +97,7 @@ export default function AdminUserTable() {
         <tbody>
           {displayedUsers.map((user, index) => (
             <tr key={index} className="border-b hover:bg-gray-100 relative">
-              <td className="p-3 w-10">
-                <input
-                  type="checkbox"
-                  checked={selectedUsers.includes(user.email)}
-                  onChange={() => toggleSelection(user.email)}
-                  className="cursor-pointer"
-                />
-              </td>
+              <td className="p-3 w-10"></td>
               <td className="p-3">{user.name}</td>
               <td className="p-3">{user.email}</td>
               <td className="p-3">{user.joined}</td>
