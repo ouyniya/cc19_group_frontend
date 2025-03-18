@@ -12,19 +12,19 @@ const posts = [
 
 function MoreExplore() {
   return (
-    <div>
+    <div className="max-w-[80%] mx-auto mt-20">
       {/* More to explore */}
-      <div className="mt-20">
-        {/* text */}
-        <div className="flex gap-2">
-          <p className="text-xl font-bold ml-10">More to explore</p>
-          <img src={SearchLogo} alt="icon search" className="h-7  " />
+      <div>
+        {/* Header */}
+        <div className="flex gap-2 items-center">
+          <p className="text-xl font-bold">More to explore</p>
+          <img src={SearchLogo} alt="icon search" className="h-7" />
         </div>
 
-        {/* post */}
-        <div className="flex flex-col items-center sm:flew-row md:flex-row md:justify-between mt-2 gap-4 md:gap-1 px-2">
+        {/* Grid for posts */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
           {posts.map((el, index) => (
-            <div key={index} className="w-full sm:w-full md:w-1/3">
+            <div key={index} className="w-full">
               <div className="h-60 w-full">
                 <img
                   src={el.image}

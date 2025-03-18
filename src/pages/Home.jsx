@@ -32,7 +32,7 @@ function Home() {
           {/* Where is your destination */}
           <div className="flex justify-center gap-2 mt-5">
             <p className="text-3xl font-bold text-[#193B53]"> WHERE IS YOUR </p>
-            <p className="text-3xl font-bold text-[#A3B3BB]"> DESTINATION? </p>
+            <p className="text-3xl font-bold text-[#086BB0]"> DESTINATION? </p>
           </div>
           {/* search bar */}
 
@@ -72,7 +72,7 @@ function Home() {
         <div className="mt-15">
           {/* text */}
           <div className="flex">
-            <p className="text-xl font-bold ml-10">Top locations on Voyager </p>
+            <p className="text-xl font-bold ml-37">Top locations on Voyager </p>
             <img src={logo} alt="icon destination" className="h-10 -mt-2" />
           </div>
           {/* post */}
