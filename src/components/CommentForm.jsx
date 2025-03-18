@@ -9,9 +9,13 @@ const CommentForm = ({ postId, parentId = null, setShowReply }) => {
   const getComments = useCommentStores((state) => state.getComments);
   const comments = useCommentStores((state) => state.comments);
 
-  const actionGetMeOrGoogleLogin = useUserStore((state) => state.actionGetMeOrGoogleLogin);
+  const actionGetMeOrGoogleLogin = useUserStore(
+    (state) => state.actionGetMeOrGoogleLogin
+  );
   const user = useUserStore((state) => state.user);
-  const googleLoginSuccessful = useUserStore((state) => state.googleLoginSuccessful);
+  const googleLoginSuccessful = useUserStore(
+    (state) => state.googleLoginSuccessful
+  );
 
   useEffect(() => {
     if (!user && !googleLoginSuccessful) {
@@ -22,7 +26,8 @@ const CommentForm = ({ postId, parentId = null, setShowReply }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!content.trim()) return createAlert("info", "Please add some comments.");
+    if (!content.trim())
+      return createAlert("info", "Please add some comments.");
     // เช็คก่อนทำงานต่อ
 
     if (!user?.id)
@@ -42,7 +47,6 @@ const CommentForm = ({ postId, parentId = null, setShowReply }) => {
       await getComments(postId);
       setContent(""); // ค่าข้างในช่อง comment เป็นค่าว่าง
       if (setShowReply) setShowReply(false); //  ป้องกัน error ในกรณี setShowReply ไม่ถูกส่งมา
-      
     } catch (error) {
       const errorMsg = error?.response?.data?.message;
       createAlert("info", errorMsg);

@@ -20,47 +20,75 @@ function Region() {
             2025’s Traveler’s Select to travel
           </p>
         </div>
-        <div className="flex justify-center gap-5 mt-2">
+        <div className="flex flex-col items-center  md:flex-row md:justify-center gap-5 mt-2">
           {/* Region */}
-          <div className="flex flex-col ml-10 justify-between  h-115 w-240  ">
+          <div className=" w-full  md:w-auto">
             {/* อันบน */}
-            <div className="flex justify-between">
-              <div className="h-55 w-65 hover:cursor-pointer">
-                <img src={WatArun} alt="" className="h-full w-full" />
-                <p className="font-bold ml-5 -mt-10 text-2xl text-white">
+            <div className="grid grid-cols-3 gap-2">
+              {/* Central */}
+              <div className="relative h-55 w-full hover:cursor-pointer">
+                <img
+                  src={WatArun}
+                  alt="Central"
+                  className="w-full h-full object-cover   md:h-55"
+                />
+                <p className="absolute bottom-2 left-2 font-bold text-sm sm:text-base md:text-xl text-white">
                   Central
                 </p>
               </div>
-              <div className="h-55 w-65 hover:cursor-pointer">
-                <img src={NorthEast} alt="" className="h-full w-full" />
-                <p className="font-bold ml-5 -mt-10 text-2xl text-white">
+              {/* Northeast */}
+
+              <div className="relative h-55 w-full hover:cursor-pointer">
+                <img
+                  src={NorthEast}
+                  alt="Northeast"
+                  className="w-full h-full object-cover  md:h-55"
+                />
+                <p className="absolute bottom-2 left-2 font-bold text-sm sm:text-base md:text-xl text-white">
                   Northeast
                 </p>
               </div>
-              <div className="h-55 w-65 hover:cursor-pointer">
-                <img src={North} alt="" className="h-full w-full" />
-                <p className="font-bold ml-5 -mt-10 text-2xl text-white">
+              {/* Northern */}
+              <div className="relative h-55 w-full hover:cursor-pointer">
+                <img
+                  src={North}
+                  alt="Northern"
+                  className="w-full h-full object-cover  md:h-55"
+                />
+                <p className="absolute bottom-2 left-2 font-bold text-sm sm:text-base md:text-xl text-white">
                   Northern
                 </p>
               </div>
-            </div>
-            {/* อันล่าง */}
-            <div className="flex justify-between">
-              <div className="h-55 w-65 hover:cursor-pointer">
-                <img src={East} alt="" className="h-full w-full" />
-                <p className="font-bold ml-5 -mt-10 text-2xl text-white">
+              {/* East */}
+              <div className="relative h-55 w-full hover:cursor-pointer">
+                <img
+                  src={East}
+                  alt=""
+                  className="w-full h-full object-cover  md:h-55"
+                />
+                <p className="absolute bottom-2 left-2 font-bold text-sm sm:text-base md:text-xl text-white">
                   East
                 </p>
               </div>
-              <div className="h-55 w-65 hover:cursor-pointer">
-                <img src={West} alt="" className="h-full w-full" />
-                <p className="font-bold ml-5 -mt-10 text-2xl text-white">
+              {/* West */}
+              <div className="relative h-55 w-full hover:cursor-pointer">
+                <img
+                  src={West}
+                  alt="West"
+                  className="w-full h-full object-cover  md:h-55"
+                />
+                <p className="absolute bottom-2 left-2 font-bold text-sm sm:text-base md:text-xl text-white">
                   West
                 </p>
               </div>
-              <div className="h-55 w-65 hover:cursor-pointer">
-                <img src={South} alt="" className="h-full w-full" />
-                <p className="font-bold ml-5 -mt-10 text-2xl text-white">
+              {/* South */}
+              <div className="relative h-55 w-full hover:cursor-pointer">
+                <img
+                  src={South}
+                  alt="South"
+                  className="w-full h-full object-cover  md:h-55"
+                />
+                <p className="absolute bottom-2 left-2 font-bold text-sm sm:text-base md:text-xl text-white">
                   South
                 </p>
               </div>

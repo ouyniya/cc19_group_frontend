@@ -30,10 +30,14 @@ const posts = [
 
 function Post() {
   return (
-    <div className="flex justify-between px-5 mt-5 ">
+    <div className=" flex flex-col items-center gap-1 sm:flex-col sm:items-center md:flex-row md:justify-between px-5 mt-5  ">
       {posts.map((el) => (
         <div className=" h-120 w-118">
-          <img src={el.image} alt="" className="w-full h-full" />
+          <img
+            src={el.image}
+            alt=""
+            className="   w-full h-full object-cover "
+          />
           <div className="flex flex-col -mt-25 ml-5 text-white">
             <p className="text-xl">{el.location}</p>
             <p className="font-bold text-2xl">{el.title}</p>

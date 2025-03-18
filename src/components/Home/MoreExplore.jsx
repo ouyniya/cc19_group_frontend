@@ -22,14 +22,14 @@ function MoreExplore() {
         </div>
 
         {/* post */}
-        <div className="flex mt-2 gap-1 px-2">
+        <div className="flex flex-col items-center sm:flew-row md:flex-row md:justify-between mt-2 gap-4 md:gap-1 px-2">
           {posts.map((el, index) => (
-            <div key={index}>
-              <div className="h-80 w-120">
+            <div key={index} className="w-full sm:w-full md:w-1/3">
+              <div className="h-60 w-full">
                 <img
                   src={el.image}
                   alt="place image"
-                  className="rounded-2xl w-full h-full"
+                  className="rounded-2xl w-full h-full object-cover"
                 />
               </div>
             </div>

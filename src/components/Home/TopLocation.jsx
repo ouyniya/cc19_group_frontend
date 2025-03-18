@@ -17,25 +17,28 @@ const posts = [
 function TopLocation() {
   return (
     <>
-      <div className="flex justify-between px-2 mt-2">
+      <div className="sm:flex sm:flex-wrap md:flex md:justify-between md:px-2 md:mt-2">
         {posts.map((el, index) => (
-          <>
-            <div key={index} className="h-70 w-90 ">
+          <div
+            key={el.id}
+            className="w-full sm:w-1/2 md:w-1/4 p-2 flex-grow-0" // ปรับขนาดและเพิ่ม flex-grow-0
+          >
+            <div className="relative">
               <img
                 src={el.image}
                 alt=""
-                className="w-full h-full rounded-2xl"
+                className="w-full h-48 object-cover rounded-2xl"
               />
-              <div className="flex h-8 w-8 -mt-66 ml-78">
-                <img src={heart} alt="" className="w-full h-full" />
+              <div className="absolute top-2 right-2">
+                <img src={heart} alt="" className="w-8 h-8" />
               </div>
-              <p className="font-bold ml-2 mt-60 text-xl">{el.title}</p>
-              <div className="flex gap-2 ml-2">
-                <img src={view} alt="" className="w-6" />
+              <p className="font-bold mt-2 text-xl">{el.title}</p>
+              <div className="flex items-center gap-2 mt-1">
+                <img src={view} alt="" className="w-6 h-6" />
                 <p className="text-gray-500">{el.view}</p>
               </div>
             </div>
-          </>
+          </div>
         ))}
       </div>
     </>
