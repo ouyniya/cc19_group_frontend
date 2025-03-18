@@ -16,32 +16,27 @@ const posts = [
 
 function TopLocation() {
   return (
-    <>
-      <div className="sm:flex sm:flex-wrap md:flex md:justify-between md:px-2 md:mt-2">
-        {posts.map((el, index) => (
-          <div
-            key={el.id}
-            className="w-full sm:w-1/2 md:w-1/4 p-2 flex-grow-0" // ปรับขนาดและเพิ่ม flex-grow-0
-          >
-            <div className="relative">
-              <img
-                src={el.image}
-                alt=""
-                className="w-full h-48 object-cover rounded-2xl"
-              />
-              <div className="absolute top-2 right-2">
-                <img src={heart} alt="" className="w-8 h-8" />
-              </div>
-              <p className="font-bold mt-2 text-xl">{el.title}</p>
-              <div className="flex items-center gap-2 mt-1">
-                <img src={view} alt="" className="w-6 h-6" />
-                <p className="text-gray-500">{el.view}</p>
-              </div>
+    <div className="max-w-[80%] mx-auto mt-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        {posts.map((el) => (
+          <div key={el.id} className="relative">
+            <img
+              src={el.image}
+              alt={el.title}
+              className="w-full h-48 object-cover rounded-2xl"
+            />
+            <div className="absolute top-2 right-2">
+              <img src={heart} alt="heart icon" className="w-8 h-8" />
+            </div>
+            <p className="font-bold mt-2 text-xl">{el.title}</p>
+            <div className="flex items-center gap-2 mt-1">
+              <img src={view} alt="view icon" className="w-6 h-6" />
+              <p className="text-gray-500">{el.view}</p>
             </div>
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 }
 
