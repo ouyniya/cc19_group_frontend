@@ -1,14 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CommentList from "./CommentList";
-import {FaLink, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaLink, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import useLocationStores from "../stores/usePublicPostStores";
 
 const PostPage = ({ postId }) => {
-  const images = [
-    "https://picsum.photos/id/10/1000",
-    "https://picsum.photos/id/12/1000",
-    "https://picsum.photos/id/13/1000",
-    "https://picsum.photos/id/14/1000",
-  ];
+
+  const actionGetPostByPostId = useLocationStores(
+    (state) => state.actionGetPostByPostId
+  );
+  const publicPost = useLocationStores((state) => state.publicPost);
+  const postImage = useLocationStores((state) => state.postImage);
+
+  // get post
+  useEffect(() => {
+    callPost();
+  }, []);
+
+  const callPost = async () => {
+    await actionGetPostByPostId(postId);
+  };
+
+  // post image
+  let postImages = [];
+
+  if (postImage) {
+    postImages = postImage?.map((el) => el?.url);
+  }
+
+  console.log(publicPost);
+
+  const images = postImages;
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const prevImage = () => {
@@ -28,12 +50,11 @@ const PostPage = ({ postId }) => {
       {/* Header */}
       <div className="text-center">
         <h1 className="text-2xl font-bold text-blue-700 flex justify-center">
-          The Bluest Blue Sea in Maldives
+          {publicPost?.post?.title}
           <a href="#" className="text-gray-500 ml-2">
             <FaLink />
           </a>
         </h1>
-
       </div>
 
       {/* Image Slider */}
@@ -58,35 +79,33 @@ const PostPage = ({ postId }) => {
       </div>
 
       {/* Tabs */}
-      <div className="flex justify-center mt-5 border-b pb-2 space-x-6 text-gray-600">
-      </div>
+      <div className="flex justify-center mt-5 border-b pb-2 space-x-6 text-gray-600"></div>
 
       {/* Middle Post */}
       <div className="mt-6 text-black ml-20">
-        <h2 className="text-xl font-semibold text-blue-700 ">About</h2>
-        <p className="mt-2">
-          This location is a stunning tropical paradise in the Indian Ocean.
-          Explore breathtaking coral reefs, exotic marine life, and luxurious
-          resorts with crystal-clear waters.
-        </p>
+        <h2 className="text-xl font-semibold text-blue-700 ">Content</h2>
+        <p className="mt-2">{publicPost?.post?.content}</p>
+      </div>
 
-        <h3 className="text-lg font-semibold text-blue-700 mt-4">Highlights</h3>
-        <ul className="list-disc pl-5">
-          <li>Scuba diving & snorkeling</li>
-          <li>Luxury beach resorts</li>
-          <li>Local culture & seafood markets</li>
-          <li>Sunset dolphin cruises</li>
-          <li>Private island experiences</li>
-        </ul>
+      <div className="my-6 h-10 mb-[150px]">
+        <div className="flex gap-2">
+          {publicPost
+            ? publicPost?.postImage?.map((el, index) => (
+                <div className="w-[300px]">
+                  <img src={el.url} />
+                </div>
+              ))
+            : ""}
+        </div>
       </div>
 
       {/* Footer Post */}
-      <div className="mt-10">
+      {/* <div className="mt-10">
         <h2 className="text-xl font-bold text-blue-700">Fly me to Maldives</h2>
         <div className="grid grid-cols-3 gap-4 mt-4">
           <div className="col-span-2">
             <img
-              src="https://picsum.photos/id/124/1000/500"
+              src={""}
               alt="Post Image"
               className="rounded-lg w-full object-cover"
             />
@@ -95,36 +114,38 @@ const PostPage = ({ postId }) => {
               resorts, water villas, and world-class diving spots.
             </p>
           </div>
-          {/* Suggestion Section */}
+          
           <div>
-            <h3 className="text-lg font-semibold text-blue-700 ml-20">Suggestion</h3>
+            <h3 className="text-lg font-semibold text-blue-700 ml-20">
+              Suggestion
+            </h3>
             <div className="space-y-3 mt-2 ml-20">
               <img
-                src="https://picsum.photos/id/154/1000/500"
+                src={""}
                 alt="Related Post"
                 className="rounded-lg w-full object-cover"
               />
               <img
-                src="https://picsum.photos/id/177/1000/500"
+                src={""}
                 alt="Related Post"
                 className="rounded-lg w-full object-cover"
               />
               <img
-                src="https://picsum.photos/id/211/1000/500"
+                src={""}
                 alt="Related Post"
                 className="rounded-lg w-full object-cover"
               />
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Comments Section */}
       <section>
-          <h2 className="text-xl font-semibold text-blue-700">Comments</h2>
-          <CommentList postId={postId} />
-        </section>
-      </div>
+        <h2 className="text-xl font-semibold text-blue-700">Comments</h2>
+        <CommentList postId={postId} />
+      </section>
+    </div>
   );
 };
 
