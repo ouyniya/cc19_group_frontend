@@ -91,8 +91,8 @@ const PostPage = ({ postId }) => {
         <div className="flex gap-2">
           {publicPost
             ? publicPost?.postImage?.map((el, index) => (
-                <div className="w-[300px]">
-                  <img src={el.url} />
+                <div key={index} className="w-[300px]">
+                  <img src={el?.url} />
                 </div>
               ))
             : ""}
