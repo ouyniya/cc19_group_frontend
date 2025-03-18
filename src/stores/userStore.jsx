@@ -13,6 +13,8 @@ const useUserStore = create(
       isLoading: false,
       googleLoginSuccessful: false, // Flag to track Google login success
       currentUser: null,
+      posts: [],
+      userPublicInfo: [],
       // Get the current user
       getCurrentUser: () => get().user,
 
@@ -124,7 +126,28 @@ const useUserStore = create(
           set({ isLoading: false });
         }
       },
-
+      actionGetUserPosts: async (userId) => {
+        set({ isLoading: true });
+        try {
+          const { data } = await profileApi.actionGetUserPosts(userId);
+          set({ posts: data.post })
+        } catch (error) {
+          console.log(error);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+      actionGetUserInfoForDashboard: async (userId) => {
+        set({ isLoading: true });
+        try {
+          const { data } = await profileApi.actionGetUserInfoForDashboard(userId);
+          set({ userPublicInfo: data })
+        } catch (error) {
+          console.log(error);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
     }),
     {
       name: "state",

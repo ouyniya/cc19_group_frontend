@@ -14,4 +14,16 @@ profileApi.actionUpdateProfileImage = async (input) => {
   });
 };
 
+profileApi.actionGetUserPosts = async (userId) => {
+  return axios.get(`/api/posts/${userId}`, {
+    headers: { Authorization: `Bearer ${getAccessToken()}` },
+  });
+};
+
+profileApi.actionGetUserInfoForDashboard = async (userId) => {
+  return axios.get(`/api/profile/${userId}`, {
+    headers: { Authorization: `Bearer ${getAccessToken()}` },
+  });
+};
+
 export default profileApi;
