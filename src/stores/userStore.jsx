@@ -124,7 +124,28 @@ const useUserStore = create(
           set({ isLoading: false });
         }
       },
-
+      actionGetUserPosts: async (userId) => {
+        set({ isLoading: true });
+        try {
+          const { data } = await profileApi.actionGetUserPosts(userId);
+          // console.log(data)
+        } catch (error) {
+          console.log(error);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+      actionGetUserInfoForDashboard: async (userId) => {
+        set({ isLoading: true });
+        try {
+          const { data } = await profileApi.actionGetUserInfoForDashboard(userId);
+          // console.log(data)
+        } catch (error) {
+          console.log(error);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
     }),
     {
       name: "state",

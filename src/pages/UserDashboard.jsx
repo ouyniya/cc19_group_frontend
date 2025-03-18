@@ -1,35 +1,60 @@
-import React from "react";
+import React, { useEffect } from "react";
 import NavbarHeader from "../components/NavbarHeader";
 import Profile from "../pictures/profile.png";
 import Edit from "../icons/edit.png";
 import EditProfile from "../components/UserDashboard/EditProfile";
 import CreatePost from "../components/UserDashboard/CreatePost";
 import ChangeProfile from "../components/UserDashboard/ChangeProfile";
+import useUserStore from "../stores/userStore";
+import { User2 } from "lucide-react";
 
-function UserDashboard() {
+function UserDashboard({ userId }) {
+  const user = useUserStore((state) => state.user);
+  const getCurrentUser = useUserStore((state) => state.getCurrentUser);
+
+  useEffect(() => {
+    // get user data
+    callGetUser();
+  }, [user]);
+
+  const callGetUser = async () => {
+    await getCurrentUser();
+    await getCurrentUser();
+  };
+
   return (
     <>
       <div>
         {/* NavBar */}
         {/* <NavbarHeader /> */}
         {/* User dashboard */}
-        <div className="flex flex-col bg-blue-50 items-center   h-180  ">
+        <div className="flex flex-col bg-blue-50 items-center h-180">
           {/* profile header */}
-          <div className="flex  h-80 w-300 bg-white mt-5  ">
+          <div className="flex  h-80 w-300 bg-white mt-5 ">
             {/* profile photo */}
-            <div className="flex justify-center items-center  h-80 w-80 rounded-full">
-              <img
-                src={Profile}
-                alt="profile"
-                className="h-60 w-60 rounded-full"
-              />
+
+            <div className="avatar flex items-center justify-center p-10">
+              <div className="w-60 h-60 rounded-full bg-blue-200 flex items-center justify-center">
+                {user?.profileImage ? (
+                  <img
+                    src={user?.profileImage}
+                    alt="profile"
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center w-full h-full">
+                    <User2 size="150px" color="white" />
+                  </div>
+                )}
+              </div>
             </div>
+
             {/* profile information */}
             <div className="flex flex-col ml-5 mt-10  h-80 w-140">
               <p className="text-3xl mt-5 font-bold text-[#086BAF]">
-                Moana Stair
+                {user?.username}
               </p>
-              <p className="text-lg mt-1  text-[#5989A3]">@MoanaSTR</p>
+              <p className="text-lg mt-1  text-[#5989A3]">{user?.email}</p>
               <div className="flex flex-col mt-10">
                 <p className="text-2xl  ml-3 font-bold text-[#086BAF]">Posts</p>
                 <p className="text-2xl ml-3 font-bold text-[#B3B3B3]">315</p>
