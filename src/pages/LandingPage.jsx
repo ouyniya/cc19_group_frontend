@@ -1,40 +1,59 @@
 import React from "react";
-import NavbarHeader from "../components/NavbarHeader";
-import Fuji from "../pictures/Fuji.jpg";
 import { useNavigate } from "react-router";
+import Experience from "../pictures/Experience.png";
+import { motion } from "motion/react";
+import plane from "../icons/plane.png";
 
 function LandingPage() {
   const navigate = useNavigate();
   return (
-    <>
-      {/* header */}
-      {/* <NavbarHeader /> */}
-      {/* Body */}
-      <div className="flex flex-col mt-3 ">
-        {/* Image */}
-        <img src={Fuji} alt="" className="w-500  " />
-        <div className="flex flex-col gap-5 h-50 w-150 ml-25 -mt-90">
-          {/* Text */}
-          <p className="text-white  text-4xl font-bold ">
-            Experience
-            <br />
+    <div
+      className="relative min-h-screen bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${Experience})` }}
+    >
+      <div className="absolute inset-0 bg-black opacity-25"></div>
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        className="relative max-w-screen-xl mx-auto px-4 py-16 sm:px-6 lg:px-8"
+      >
+        <div className="mt-45 text-center">
+          <h1 className="text-6xl font-bold text-white mb-4 ">Experience</h1>
+          <h1 className="text-6xl font-bold text-white mb-4 ">
             The best trip ever
-          </p>
-          <p className="text-white ml-17 ">
+          </h1>
+          <p className="mt-5 ml-10 text-lg text-white ">
             "This is a space where the spirit of adventure meets the art of
-            storytelling, inviting you to discover the world through our eyes."
+            storytelling,
           </p>
+          <p className="mt-1 text-lg ml-11 text-white">
+            inviting you to discover the world through our eyes."
+          </p>
+          <motion.button
+            whileHover={{ scale: 1.1, y: -5 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            onClick={() => navigate("/home")}
+            className=" glass mt-50 rounded-full bg-[#5A7184] py-3 px-8 text-xl font-bold text-white transition-all duration-300 hover:bg-[#4A6174] shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+          >
+            Start Your Journey!
+          </motion.button>
         </div>
-      </div>
-      <div className="flex justify-center mt-45">
-        <button
-          onClick={() => navigate("/home")}
-          className="btn bg-[#A1BDCB] rounded-full h-15 w-30 text-white text-xl"
-        >
-          Home
-        </button>
-      </div>
-    </>
+        <div className="flex h-45 w-45">
+          <motion.img
+            src={plane}
+            className="-mt-110 ml-170 w-full h-full opacity-70"
+            initial={{ x: -500, y: -400, rotate: -10 }}
+            animate={{ x: 90, y: -100, rotate: 0 }} // ปรับปรุงตำแหน่งสุดท้ายและหมุน
+            transition={{
+              duration: 2, // ปรับปรุง duration
+              ease: "easeOut", // ปรับปรุง easing function
+            }}
+          />
+        </div>
+      </motion.div>
+    </div>
   );
 }
 
