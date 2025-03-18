@@ -21,6 +21,7 @@ import EditProfile from "../pages/EditProfile";
 import ErrorNotFound from "../pages/ErrorNotFound";
 import ProtectRoutesGuest from "./ProtectRoutesGuest";
 import ErrorUnauthorized from "../pages/ErrorUnauthorized";
+import UserDashboardShow from "../pages/UserDashboardShow";
 
 // Route ใช้ในการกำหนดเส้นทาง (route) เฉพาะหนึ่งเส้นทาง
 // Routes จะตรวจสอบว่า URL ตรงกับ path ไหน และแสดงคอมโพเนนต์ที่ตรงกับเส้นทางนั้น
@@ -41,8 +42,11 @@ function AppRoutes() {
             path="register"
             element={<ProtectRoutesGuest el={<Register />} />}
           />
-          <Route path="login" element={<ProtectRoutesGuest el={<Login />} />} />
-          <Route path="user-dashboard" element={<UserDashboard />} />
+          <Route
+            path="login"
+            element={<ProtectRoutesGuest el={<Login />} />}
+          />
+          <Route path="user-dashboard/:userId" element={<UserDashboardShow />} />
           <Route path="/post/:postId" element={<PostAndComment />} />
         </Route>
 

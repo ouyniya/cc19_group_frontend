@@ -13,6 +13,8 @@ const useUserStore = create(
       isLoading: false,
       googleLoginSuccessful: false, // Flag to track Google login success
       currentUser: null,
+      posts: [],
+      userPublicInfo: [],
       // Get the current user
       getCurrentUser: () => get().user,
 
@@ -128,7 +130,7 @@ const useUserStore = create(
         set({ isLoading: true });
         try {
           const { data } = await profileApi.actionGetUserPosts(userId);
-          // console.log(data)
+          set({ posts: data.post })
         } catch (error) {
           console.log(error);
         } finally {
@@ -139,7 +141,7 @@ const useUserStore = create(
         set({ isLoading: true });
         try {
           const { data } = await profileApi.actionGetUserInfoForDashboard(userId);
-          // console.log(data)
+          set({ userPublicInfo: data })
         } catch (error) {
           console.log(error);
         } finally {
