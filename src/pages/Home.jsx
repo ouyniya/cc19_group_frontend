@@ -44,17 +44,20 @@ function Home() {
           </div>
         </div>
         {/* Body popular */}
-        <div className=" w-full h-10 mt-5 flex ml-50 gap-2">
-          <button className="btn border-0 rounded-full text-[#082F49]">
-            Popular regions
-          </button>
-          <button className="btn border-0 rounded-full text-[#082F49]">
-            Popular destination
-          </button>
-          <button className="btn border-0 rounded-full text-[#082F49]">
-            Popular landmarks
-          </button>
+        <div className="mt-5 px-4">
+          <div className=" flex flex-wrap justify-center gap-2">
+            <button className="btn border-0 rounded-full text-[#082F49] text-sm sm:text-base">
+              Popular regions
+            </button>
+            <button className="btn border-0 rounded-full text-[#082F49] text-sm sm:text-base">
+              Popular destination
+            </button>
+            <button className="btn border-0 rounded-full text-[#082F49] text-sm sm:text-base">
+              Popular landmarks
+            </button>
+          </div>
         </div>
+
         {/* Body get post */}
         <Post />
         {/* pagination */}
@@ -81,10 +84,10 @@ function Home() {
         <Region />
         {/* footer */}
         <div className="mt-5">
-          <div className="h-60 w-full bg-[#97BEE2]">
-            <div className="flex justify-center gap-100  ">
+          <div className="bg-[#97BEE2] py-8">
+            <div className="flex flex-wrap justify-center md:justify-around gap-8 md:gap-20 px-4  ">
               {/* left text */}
-              <div className="w-100 mt-22 text-white text-xl">
+              <div className="w-full md:w-1/2 lg:w-1/3 text-white text-base md:text-lg lg:text-xl text-center md:text-left">
                 <p>
                   VOYAGER: A website that compiles information on tourist
                   attractions in Thailand
@@ -92,7 +95,7 @@ function Home() {
               </div>
               {/* right text */}
 
-              <div className="flex flex-col mt-22 text-white text-xl">
+              <div className=" w-full md:w-1/4 text-white text-base md:text-lg lg:text-xl text-center md:text-left">
                 <p>Advertising Inquiries:</p>
                 <p>Email: voyager@mail.com</p>
               </div>
