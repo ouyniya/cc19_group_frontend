@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import profile from "../pictures/profile.png";
+import { useNavigate } from "react-router";
 import ImageUploader from "react-images-upload";
 import { motion } from "framer-motion";
 import useLocationStores from "../stores/useLocationStores";
@@ -12,10 +12,13 @@ import useUserStore from "../stores/userStore";
 // for check img before uploading
 import * as nsfwjs from "nsfwjs";
 import { Buffer } from "buffer";
+import { createPostSchema } from "../utils/validators";
 window.Buffer = Buffer;
 
 function CreatePostPage() {
   // Zustand Stores
+  const navigate = useNavigate();
+
   const actionAddPost = usePostStores((state) => state.actionAddPost);
   const user = useUserStore((state) => state.user);
   const newPost = usePostStores((state) => state.newPost);
@@ -32,6 +35,7 @@ function CreatePostPage() {
 
   // safe image
   const [isSafe, setIsSafe] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
@@ -51,6 +55,30 @@ function CreatePostPage() {
     content: "",
     budget: "",
   });
+
+  const [inputError, setInputError] = useState({
+    title: "",
+    name: "",
+    description: "",
+    latitude: "",
+    longitude: "",
+    provinceId: "",
+    districtId: "",
+    content: "",
+    budget: "",
+  });
+
+  const initialInputError = {
+    title: "",
+    name: "",
+    description: "",
+    latitude: "",
+    longitude: "",
+    provinceId: "",
+    districtId: "",
+    content: "",
+    budget: "",
+  };
 
   useEffect(() => {
     callActionGetProvince();
@@ -128,6 +156,8 @@ function CreatePostPage() {
 
       setFile(safeImages);
       setIsSafe(safeImages.length === pictureFiles.length);
+    } else {
+      setIsSafe(true)
     }
   };
 
@@ -166,7 +196,7 @@ function CreatePostPage() {
     });
   };
 
-  // console.log(isSafe);
+  // console.log(file);
 
   // Handle Form Submission
   const hdlAddPost = async (e) => {
@@ -179,7 +209,20 @@ function CreatePostPage() {
       return;
     }
     try {
+      const validatedInput = {
+        ...input,
+        budget: Number(input.budget), // Convert budget to number
+        latitude: Number(input.latitude), // Convert latitude to number
+        longitude: Number(input.longitude), // Convert longitude to number
+        provinceId: Number(input.provinceId), // Convert provinceId to number
+        districtId: Number(input.districtId), // Convert districtId to number
+      };
+
+      // Validate the input using Zod schema
+      createPostSchema.parse(validatedInput);
+
       let formData = new FormData();
+      console.log(input);
       Object.entries(input).forEach(([key, value]) => {
         formData.append(key, value);
       });
@@ -191,10 +234,19 @@ function CreatePostPage() {
       await actionAddPost(formData);
       createAlert("success", "Post created successfully!");
     } catch (error) {
-      const errorMsg = error?.response?.data?.message;
-      createAlert("info", errorMsg);
+      // console.log(error);
+      const errMsg = error.errors.reduce((acc, cur) => {
+        acc[cur.path] = cur.message;
+        return acc;
+      });
+      createAlert("info", errMsg.message);
+      setInputError(errMsg);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  // console.log("1111", inputError);
 
   return (
     <>
@@ -334,13 +386,24 @@ function CreatePostPage() {
                   className="bg-white rounded-xs h-10 w-full border-1 border-[#9BA2A5] p-2"
                   placeholder="   Please fill your title"
                   value={input.title}
-                  onChange={(e) =>
-                    setInput({ ...input, title: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setInput({ ...input, title: e.target.value });
+                    setInputError(initialInputError);
+                  }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
                 />
+                {inputError.title && (
+                  <span className="text-xs text-red-500">
+                    {inputError.title}
+                  </span>
+                )}
+                {inputError?.message?.includes("Title") && (
+                  <span className="text-xs text-red-500">
+                    {inputError.message}
+                  </span>
+                )}
 
                 <p className="font-bold text-lg text-[#086BAF] mt-2 -mb-3">
                   Content
@@ -350,13 +413,25 @@ function CreatePostPage() {
                   className="bg-white rounded-xs h-30 w-full border-1 border-[#9BA2A5] p-2"
                   placeholder="Content"
                   value={input.content}
-                  onChange={(e) =>
-                    setInput({ ...input, content: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setInput({ ...input, content: e.target.value });
+                    setInputError(initialInputError);
+                  }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
                 />
+                {inputError.content && (
+                  <span className="text-xs text-red-500">
+                    {inputError.content}
+                  </span>
+                )}
+                {inputError?.message?.includes("Content") && (
+                  <span className="text-xs text-red-500">
+                    {inputError.message}
+                  </span>
+                )}
+
                 <p className="font-bold text-lg text-[#086BAF] mt-2 -mb-3">
                   Budget
                 </p>
@@ -365,13 +440,24 @@ function CreatePostPage() {
                   className="bg-white rounded-xs h-10 w-full border-1 border-[#9BA2A5] p-2"
                   placeholder="Budget"
                   value={input.budget}
-                  onChange={(e) =>
-                    setInput({ ...input, budget: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setInput({ ...input, budget: e.target.value });
+                    setInputError(initialInputError);
+                  }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
                 />
+                {inputError.budget && (
+                  <span className="text-xs text-red-500">
+                    {inputError.budget}
+                  </span>
+                )}
+                {inputError?.message?.includes("Budget") && (
+                  <span className="text-xs text-red-500">
+                    {inputError.message}
+                  </span>
+                )}
 
                 <p className="font-bold text-lg text-[#086BAF] mt-2 -mb-3">
                   Location name
@@ -386,6 +472,16 @@ function CreatePostPage() {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
                 />
+                {inputError.name && (
+                  <span className="text-xs text-red-500">
+                    {inputError.name}
+                  </span>
+                )}
+                {inputError?.message?.includes("Name") && (
+                  <span className="text-xs text-red-500">
+                    {inputError.message}
+                  </span>
+                )}
 
                 <p className="font-bold text-lg text-[#086BAF] mt-2 -mb-3">
                   Location description
@@ -394,23 +490,35 @@ function CreatePostPage() {
                   className="bg-white rounded-xs h-30 w-full border-1 border-[#9BA2A5] p-2"
                   placeholder="Description"
                   value={input.description}
-                  onChange={(e) =>
-                    setInput({ ...input, description: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setInput({ ...input, description: e.target.value });
+                    setInputError(initialInputError);
+                  }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
                 />
+                {inputError.description && (
+                  <span className="text-xs text-red-500">
+                    {inputError.description}
+                  </span>
+                )}
+                {inputError?.message?.includes("Description") && (
+                  <span className="text-xs text-red-500">
+                    {inputError.message}
+                  </span>
+                )}
 
                 <div className="flex gap-2">
                   <div className="basis-1/2">
                     <select
-                      defaultValue="Pick a color"
+                      defaultValue={"Pick a Province"}
+                      // value={selectedProvince}
                       onChange={handleProvinceChange}
                       className="bg-white rounded-xs h-10 w-full border-1 border-[#9BA2A5] p-2"
                     >
                       <option disabled={true} selected>
-                        Pick a Province
+                        Select Province
                       </option>
                       {provinces &&
                         provinces?.map((el) => (
@@ -423,9 +531,10 @@ function CreatePostPage() {
 
                   <div className="basis-1/2">
                     <motion.select
-                      onChange={(e) =>
-                        setInput({ ...input, districtId: e.target.value })
-                      }
+                      onChange={(e) => {
+                        setInput({ ...input, districtId: e.target.value });
+                        setInputError(initialInputError);
+                      }}
                       value={input.districtId}
                       className="bg-white rounded-xs h-10 w-full border-1 border-[#9BA2A5] p-2"
                       initial={{ opacity: 0 }}
@@ -441,6 +550,16 @@ function CreatePostPage() {
                     </motion.select>
                   </div>
                 </div>
+                {inputError["provinceId,districtId"] && (
+                  <span className="text-xs text-red-500">
+                    {inputError["provinceId,districtId"]}
+                  </span>
+                )}
+                {inputError?.message?.includes("provinceId,districtId") && (
+                  <span className="text-xs text-red-500">
+                    {inputError.message}
+                  </span>
+                )}
 
                 <div className="mt-2 bg-blue-50 h-100 w-140">
                   <MapCanvas
@@ -450,18 +569,30 @@ function CreatePostPage() {
                     setLongitude={setLongitude}
                   />
                 </div>
+                {inputError["latitude,longitude"] && (
+                  <span className="text-xs text-red-500">
+                    {inputError["latitude,longitude"]}
+                  </span>
+                )}
+                {inputError?.message?.includes("Latitude and Longitude") && (
+                  <span className="text-xs text-red-500">
+                    {inputError.message}
+                  </span>
+                )}
 
                 <motion.button
                   onClick={hdlAddPost}
                   disabled={!isSafe}
                   type="submit"
                   className={`mt-4 p-3 rounded-xl text-white font-bold ${
-                    isSafe ? "bg-[#086BAF]" : "bg-red-500 cursor-not-allowed"
+                    isSafe || !file
+                      ? "bg-[#086BAF]"
+                      : "bg-red-500 cursor-not-allowed"
                   }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {isSafe ? "Create Post" : "NSFW Content Detected!"}
+                  {isSafe || !file ? "Create Post" : "NSFW Content Detected!"}
                 </motion.button>
               </motion.form>
 
