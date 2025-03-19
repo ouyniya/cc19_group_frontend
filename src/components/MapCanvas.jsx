@@ -13,7 +13,6 @@ import BaseMap from "../components/layer/BaseMap";
 import Province from "../components/layer/Province";
 
 function MapCanvas({ latitude, longitude, setLatitude, setLongitude }) {
-  
   const LocationMarker = () => {
     useMapEvents({
       click(e) {
@@ -34,9 +33,8 @@ function MapCanvas({ latitude, longitude, setLatitude, setLongitude }) {
       zoom={6}
       style={{ height: "400px", width: "100%" }}
     >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+      <BaseMap />
+
       <LocationMarker />
     </MapContainer>
   );
