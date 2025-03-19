@@ -142,7 +142,6 @@ const PostPage = ({ postId }) => {
 
       {/* Comments Section */}
       <section>
-        <h2 className="text-xl font-semibold text-blue-700">Comments</h2>
         <CommentList postId={postId} />
       </section>
     </div>

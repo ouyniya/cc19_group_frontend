@@ -24,6 +24,7 @@ import ErrorUnauthorized from "../pages/ErrorUnauthorized";
 import UserDashboardShow from "../pages/UserDashboardShow";
 import CreatePostPage from "../pages/CreatePostPage";
 import AIPlanning from "../pages/private/AIPlanning";
+import ProfanityFilter from "../pages/ฺBadword";
 
 // Route ใช้ในการกำหนดเส้นทาง (route) เฉพาะหนึ่งเส้นทาง
 // Routes จะตรวจสอบว่า URL ตรงกับ path ไหน และแสดงคอมโพเนนต์ที่ตรงกับเส้นทางนั้น
@@ -62,6 +63,7 @@ function AppRoutes() {
           <Route path="plan" element={<AIPlanning />} />
           <Route path="create-post" element={<CreatePostPage />} />
           <Route path="edit-profile" element={<EditProfile />} />
+          <Route path="badword" element={<ProfanityFilter/>} />
         </Route>
 
         {/* Private: Admin */}
