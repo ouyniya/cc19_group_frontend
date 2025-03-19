@@ -7,5 +7,10 @@ wishlistExample.actionGetWishlist = async (userId) => {
     headers: { Authorization: `Bearer ${getAccessToken()}` },
   });
 };
+wishlistExample.actionDeleteWishlist = async (wishlistId) => {
+  return axios.delete(`/api/wishlists/${wishlistId}`, {
+    headers: { Authorization: `Bearer ${getAccessToken()}` },
+  });
+};
 
 export default wishlistExample;
