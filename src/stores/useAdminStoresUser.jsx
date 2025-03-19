@@ -7,9 +7,7 @@ const useAdminStoresUser = create((set, get) => ({
     actionAllUsers02: async () => {
         set({ isLoading: true })
         try {
-            console.log("actionAllUsers02")
             const result = await adminApi02.actionAllUsers02()
-            console.log(result)
             set({ allUsers: result.data.result})
         } catch (error) {
             console.log(error)
@@ -21,7 +19,6 @@ const useAdminStoresUser = create((set, get) => ({
         set({ isLoading: true })
         try {
             const result = await adminApi02.actionUpdateRole02(value)
-            console.log("result")
         } catch (error) {
             console.log(error)
         } finally {
@@ -31,11 +28,7 @@ const useAdminStoresUser = create((set, get) => ({
     actionDeleteUser02: async (id) => {
         set({ isLoading: true })
         try {
-            console.log("id actionDeleteUser02")
-            console.log(id)
             const result = await adminApi02.actionDeleteUser02(id)
-            console.log("result")
-            console.log(result)
         } catch (error) {
             console.log(error)
         } finally {

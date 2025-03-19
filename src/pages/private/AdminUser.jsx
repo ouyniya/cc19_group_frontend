@@ -3,72 +3,12 @@ import { FaEllipsisV } from "react-icons/fa";
 import useAdminStoresUser from "../../stores/useAdminStoresUser";
 import { Trash, Trash2 } from "lucide-react";
 
-// const users = [
-//   {
-//     name: "Leslie Maya",
-//     email: "leslie@gmail.com",
-//     joined: "October 2, 2010",
-//     role: "Admin",
-//   },
-//   {
-//     name: "Josie Deck",
-//     email: "josie@gmail.com",
-//     joined: "October 3, 2011",
-//     role: "Admin",
-//   },
-//   {
-//     name: "Alex Pfeiffer",
-//     email: "alex@gmail.com",
-//     joined: "May 20, 2015",
-//     role: "Admin",
-//   },
-//   {
-//     name: "Mike Dean",
-//     email: "mike@gmail.com",
-//     joined: "July 14, 2015",
-//     role: "User",
-//   },
-//   {
-//     name: "Mateus Cunha",
-//     email: "cunha@gmail.com",
-//     joined: "October, 2016",
-//     role: "User",
-//   },
-//   {
-//     name: "Nzola Uemo",
-//     email: "nzola@gmail.com",
-//     joined: "June 5, 2016",
-//     role: "User",
-//   },
-//   {
-//     name: "Antony Mack",
-//     email: "mack@gmail.com",
-//     joined: "June 15, 2015",
-//     role: "User",
-//   },
-//   {
-//     name: "André da Silva",
-//     email: "andre@gmail.com",
-//     joined: "March 13, 2018",
-//     role: "User",
-//   },
-//   {
-//     name: "Jorge Ferreira",
-//     email: "jorge@gmail.com",
-//     joined: "March 14, 2018",
-//     role: "User",
-//   },
-// ];
-
-
 export default function AdminUserTable() {
-
-  const [menuOpen, setMenuOpen] = useState(null);
 
   /* state เก็บ ข้อมูลจากหลังบ้าน */
   const [users02, setUsers02] = useState([])
 
-  /* state เก็บ token กับ id ที่ต้องการจะ cormfirm ลบ */
+  /* state เก็บ username กับ id ที่ต้องการจะ cormfirm ลบ */
   const [itemDel, setItemDel] = useState({
     id: "",
     username:""
@@ -97,9 +37,7 @@ export default function AdminUserTable() {
 
   const data = {
     allUsers
-  };
-  console.log("data allUsers")
-  console.log(data.allUsers)
+  }
 
   /* Update role */
   const hdlUpdateRole = async (id, role) => {
@@ -135,7 +73,7 @@ export default function AdminUserTable() {
       <table className="w-full border-collapse text-black bg-white shadow-md rounded-lg overflow-hidden">
         <thead className="bg-gray-200">
           <tr className="text-left">
-            <th className="p-3 w-10"></th>
+            <th className="p-3 w-10">no.</th>
             <th className="p-3">Full Name</th>
             <th className="p-3">Email Address</th>
             <th className="p-3">Role</th>
