@@ -1,20 +1,20 @@
 import React, { useEffect } from "react";
 import view from "../icons/view.png";
 import redheart from "../icons/redheart.png";
-import useWishlistStoresExample from "../stores/useWishlistStoresExample";
+import useWishlistStores from "../stores/useWishlistStores";
 import useUserStore from "../stores/userStore";
 import { Link } from "react-router";
 import Swal from "sweetalert2";
 
 function WishList() {
-  const actionGetWishlist = useWishlistStoresExample(
+  const actionGetWishlist = useWishlistStores(
     (state) => state.actionGetWishlist
   );
-  const actionDeleteWishlist = useWishlistStoresExample(
+  const actionDeleteWishlist = useWishlistStores(
     (state) => state.actionDeleteWishlist
   );
-  const wishlists = useWishlistStoresExample((state) => state.wishlists);
-  const getCurrentWishlists = useWishlistStoresExample(
+  const wishlists = useWishlistStores((state) => state.wishlists);
+  const getCurrentWishlists = useWishlistStores(
     (state) => state.getCurrentWishlists
   );
   const user = useUserStore((state) => state.user);

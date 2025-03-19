@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import wishlistExample from "../api/wishlistExample";
+import wishlistApi from "../api/wishlistApi";
 
-const useWishlistStoresExample = create((set, get) => ({
+const useWishlistStores = create((set, get) => ({
   wishlists: [],
   isLoading: false,
   getCurrentWishlists: () => get().wishlists,
@@ -9,7 +9,7 @@ const useWishlistStoresExample = create((set, get) => ({
   actionGetWishlist: async (userId) => {
     set({ isLoading: true });
     try {
-      const { data } = await wishlistExample.actionGetWishlist(userId);
+      const { data } = await wishlistApi.actionGetWishlist(userId);
       set({ wishlists: data });
       //   console.log(data)
     } catch (error) {
@@ -22,7 +22,7 @@ const useWishlistStoresExample = create((set, get) => ({
     set({ isLoading: true });
     try {
       // Call the API to delete the wishlist
-      const { data } = await wishlistExample.actionDeleteWishlist(wishlistId);
+      const { data } = await wishlistApi.actionDeleteWishlist(wishlistId);
   
       set((state) => ({
         // Check if `state.wishlists` is an array before filtering
@@ -39,4 +39,4 @@ const useWishlistStoresExample = create((set, get) => ({
   },
 }));
 
-export default useWishlistStoresExample;
+export default useWishlistStores;

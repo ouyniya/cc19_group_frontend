@@ -1,16 +1,16 @@
 import { axios, getAccessToken } from "../configs/axiosInstance";
 
-const wishlistExample = {};
+const wishlistApi = {};
 
-wishlistExample.actionGetWishlist = async (userId) => {
+wishlistApi.actionGetWishlist = async (userId) => {
   return axios.get(`/api/wishlists/user/${userId}`, {
     headers: { Authorization: `Bearer ${getAccessToken()}` },
   });
 };
-wishlistExample.actionDeleteWishlist = async (wishlistId) => {
+wishlistApi.actionDeleteWishlist = async (wishlistId) => {
   return axios.delete(`/api/wishlists/${wishlistId}`, {
     headers: { Authorization: `Bearer ${getAccessToken()}` },
   });
 };
 
-export default wishlistExample;
+export default wishlistApi;
