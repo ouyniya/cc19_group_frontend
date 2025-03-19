@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
+import * as toxicity from "@tensorflow-models/toxicity";
+import "@tensorflow/tfjs";
 import useCommentStores from "../stores/useCommentStores";
 import useUserStore from "../stores/userStore";
 import { createAlert } from "../utils/createAlert";
 
 const CommentForm = ({ postId, parentId = null, setShowReply }) => {
   const [content, setContent] = useState("");
+  const [loadingModel, setLoadingModel] = useState(true);
+  const [model, setModel] = useState(null);
+
   const addComment = useCommentStores((state) => state.addComment);
   const getComments = useCommentStores((state) => state.getComments);
-  const comments = useCommentStores((state) => state.comments);
-
-  const actionGetMeOrGoogleLogin = useUserStore(
-    (state) => state.actionGetMeOrGoogleLogin
-  );
+  const actionGetMeOrGoogleLogin = useUserStore((state) => state.actionGetMeOrGoogleLogin);
   const user = useUserStore((state) => state.user);
-  const googleLoginSuccessful = useUserStore(
-    (state) => state.googleLoginSuccessful
-  );
+  const googleLoginSuccessful = useUserStore((state) => state.googleLoginSuccessful);
 
   useEffect(() => {
     if (!user && !googleLoginSuccessful) {
@@ -23,16 +22,34 @@ const CommentForm = ({ postId, parentId = null, setShowReply }) => {
     }
   }, []);
 
+  useEffect(() => {
+    const loadModel = async () => {
+      const loadedModel = await toxicity.load(0.9);
+      setModel(loadedModel);
+      setLoadingModel(false);
+    };
+    loadModel();
+  }, []);
+
+  const checkToxicity = async (text) => {
+    if (!model) return false;
+    const predictions = await model.classify([text]);
+    return predictions.some((p) => p.results.some((r) => r.match));
+  };
+
+  const handleContentChange = (e) => {
+    setContent(e.target.value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!content.trim())
-      return createAlert("info", "Please add some comments.");
-    // เช็คก่อนทำงานต่อ
-
-    if (!user?.id)
-      return createAlert("info", "Please log in before leaving a comment.");
-    // เช็คก่อนทำงานต่อ
+    const foundToxic = await checkToxicity(content);
+    if (foundToxic) {
+      createAlert("error", "❌ พบคำไม่เหมาะสม! กรุณาใช้คำที่เหมาะสม");
+      return;
+    }
+    if (!content.trim()) return createAlert("info", "Please add some comments.");
+    if (!user?.id) return createAlert("info", "Please log in before leaving a comment.");
 
     try {
       const newComment = {
@@ -40,13 +57,12 @@ const CommentForm = ({ postId, parentId = null, setShowReply }) => {
         parentId,
         content,
         userId: Number(user?.id),
-      }; // เปลี่ยนเป็น userId ที่ login อยู่
-
-      const body = newComment;
-      await addComment(body);
+      };
+      await addComment(newComment);
       await getComments(postId);
-      setContent(""); // ค่าข้างในช่อง comment เป็นค่าว่าง
-      if (setShowReply) setShowReply(false); //  ป้องกัน error ในกรณี setShowReply ไม่ถูกส่งมา
+      setContent("");
+      if (setShowReply) setShowReply(false);
+      createAlert("success", "✅ Comment posted successfully!");
     } catch (error) {
       const errorMsg = error?.response?.data?.message;
       createAlert("info", errorMsg);
@@ -54,16 +70,16 @@ const CommentForm = ({ postId, parentId = null, setShowReply }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="flex items-center">
       <input
         type="text"
         value={content}
-        onChange={(e) => setContent(e.target.value)}
+        onChange={handleContentChange}
         placeholder="Write a comment..."
         className="border p-1 mr-[10px] rounded-md w-[80%]"
       />
-      <button type="submit" className="btn btn-primary">
-        Post
+      <button type="submit" className="btn btn-primary" disabled={loadingModel}>
+        {loadingModel ? "🔄" : "Post"}
       </button>
     </form>
   );
