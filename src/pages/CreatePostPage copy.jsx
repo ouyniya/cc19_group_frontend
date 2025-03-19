@@ -9,11 +9,6 @@ import { Undo2 } from "lucide-react";
 import { createAlert } from "../utils/createAlert";
 import useUserStore from "../stores/userStore";
 
-// for check img before uploading
-import NsfwScanner from "../components/NsfwScanner";
-import { Buffer } from "buffer";
-window.Buffer = Buffer;
-
 function CreatePostPage() {
   // Zustand Stores
   const actionAddPost = usePostStores((state) => state.actionAddPost);
@@ -29,20 +24,6 @@ function CreatePostPage() {
   );
 
   // State Variables
-
-  // safe image
-  const [isSafe, setIsSafe] = useState(true);
-
-  const handleScanComplete = (results) => {
-    console.log("scann")
-    const nsfwResult = results.some(
-      (p) => p.className === "Porn" && p.probability > 0.1
-    );
-    setIsSafe(!nsfwResult);
-  };
-
-  /////
-
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [province, setProvince] = useState([]);
@@ -119,25 +100,14 @@ function CreatePostPage() {
   };
 
   // Handle Image Upload
-const onDrop = (pictureFiles, pictureDataURLs) => {
-  if (pictureFiles.length > 0) {
-    console.log("File selected:", pictureFiles[0]);
+  const onDrop = (pictureFiles, pictureDataURLs) => {
     setFile(pictureFiles);
-    // console.log(pictureFiles) // file type
     setPreviewImageUrl(pictureDataURLs);
-  }
-};
+  };
 
   // Handle Form Submission
   const hdlAddPost = async (e) => {
     e.preventDefault();
-    if (!isSafe) {
-      createAlert(
-        "error",
-        "NSFW content detected! Please choose a different image."
-      );
-      return;
-    }
     try {
       let formData = new FormData();
       Object.entries(input).forEach(([key, value]) => {
@@ -205,41 +175,7 @@ const onDrop = (pictureFiles, pictureDataURLs) => {
             </div>
 
             <div className="flex flex-col basis-2/3">
-              {/* check img */}
-
-              <div className="flex flex-col items-center">
-                <h2 className="text-2xl font-bold">Create Post</h2>
-
-                <ImageUploader
-                  withIcon={true}
-                  withPreview={true}
-                  buttonText="Choose images"
-                  onChange={onDrop}
-                  imgExtension={[".jpg", ".gif", ".png", ".webp", "jpeg"]}
-                  maxFileSize={5242880}
-                />
-
-                {file.length > 0 && (
-                  <NsfwScanner
-                    imageFile={file[0]}
-                    onScanComplete={handleScanComplete}
-                  />
-                )}
-
-                <button
-                  onClick={hdlAddPost}
-                  disabled={!isSafe}
-                  className={`mt-4 p-2 rounded ${
-                    isSafe ? "bg-blue-500" : "bg-red-500 cursor-not-allowed"
-                  }`}
-                >
-                  {isSafe ? "Submit Post" : "NSFW Content Detected!"}
-                </button>
-              </div>
-
-              {/* <NsfwScanner /> */}
-
-              {/* <motion.div
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
@@ -257,9 +193,9 @@ const onDrop = (pictureFiles, pictureDataURLs) => {
                     buttonStyles={{ backgroundColor: "#086BAF" }}
                     fileContainerStyle={{ backgroundColor: "#EFF4F6" }}
                   />
-                </div> */}
+                </div>
 
-              {/* <motion.div
+                {/* <motion.div
                   className="mt-4 overflow-hidden"
                   drag="x"
                   dragConstraints={{ left: -200, right: 200 }}
@@ -280,8 +216,8 @@ const onDrop = (pictureFiles, pictureDataURLs) => {
                       />
                     ))}
                   </div>
-                </motion.div> 
-              </motion.div> */}
+                </motion.div> */}
+              </motion.div>
 
               <motion.form
                 onSubmit={hdlAddPost}
