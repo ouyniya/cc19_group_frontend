@@ -5,12 +5,12 @@ import { motion } from "framer-motion";
 import useLocationStores from "../stores/useLocationStores";
 import usePostStores from "../stores/usePostStores";
 import MapCanvas from "../components/MapCanvas";
-import { Undo2, User } from "lucide-react";
+import { Undo2 } from "lucide-react";
 import { createAlert } from "../utils/createAlert";
 import useUserStore from "../stores/userStore";
 
 // for check img before uploading
-import * as nsfwjs from "nsfwjs";
+import NsfwScanner from "../components/NsfwScanner";
 import { Buffer } from "buffer";
 window.Buffer = Buffer;
 
@@ -33,6 +33,16 @@ function CreatePostPage() {
   // safe image
   const [isSafe, setIsSafe] = useState(true);
 
+  const handleScanComplete = (results) => {
+    console.log("scann")
+    const nsfwResult = results.some(
+      (p) => p.className === "Porn" && p.probability > 0.1
+    );
+    setIsSafe(!nsfwResult);
+  };
+
+  /////
+
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [province, setProvince] = useState([]);
@@ -51,6 +61,8 @@ function CreatePostPage() {
     content: "",
     budget: "",
   });
+
+  // console.log(input);
 
   useEffect(() => {
     callActionGetProvince();
@@ -107,66 +119,14 @@ function CreatePostPage() {
   };
 
   // Handle Image Upload
-  const onDrop = async (pictureFiles, pictureDataURLs) => {
-    if (pictureFiles.length > 0) {
-      // console.log("Files selected:", pictureFiles);
-      setFile(pictureFiles);
-      setPreviewImageUrl(pictureDataURLs);
-
-      const nsfwModel = await nsfwjs.load();
-
-      const results = await Promise.all(
-        pictureFiles.map((file) => classifyImage(nsfwModel, file))
-      );
-
-      const safeImages = pictureFiles.filter((_, index) => results[index]);
-      const hasUnsafeImage = results.includes(false);
-
-      if (hasUnsafeImage) {
-        createAlert("error", "NSFW content detected! Some images are removed.");
-      }
-
-      setFile(safeImages);
-      setIsSafe(safeImages.length === pictureFiles.length);
-    }
-  };
-
-  // Function to classify image using NSFW model
-  const classifyImage = async (model, file) => {
-    return new Promise((resolve) => {
-      const imageUrl = URL.createObjectURL(file);
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.src = imageUrl;
-
-      img.onload = async () => {
-        try {
-          const results = await model.classify(img);
-          // console.log("Scanning completed", results);
-
-          const nsfwResult = results.some(
-            (p) =>
-              (p.className === "Porn" && p.probability > 0.1) ||
-              (p.className === "Hentai" && p.probability > 0.05)
-          );
-
-          resolve(!nsfwResult); // true = safe, false = NSFW
-        } catch (error) {
-          console.error("Error classifying image:", error);
-          resolve(false); // Assume unsafe if an error occurs
-        } finally {
-          URL.revokeObjectURL(imageUrl);
-        }
-      };
-
-      img.onerror = () => {
-        console.error("Failed to load image for scanning");
-        resolve(false); // Assume unsafe if image fails to load
-      };
-    });
-  };
-
-  // console.log(isSafe);
+const onDrop = (pictureFiles, pictureDataURLs) => {
+  if (pictureFiles.length > 0) {
+    console.log("File selected:", pictureFiles[0]);
+    setFile(pictureFiles);
+    // console.log(pictureFiles) // file type
+    setPreviewImageUrl(pictureDataURLs);
+  }
+};
 
   // Handle Form Submission
   const hdlAddPost = async (e) => {
@@ -215,22 +175,16 @@ function CreatePostPage() {
           </motion.p>
           <div className="flex justify-evenly w-[85%] gap-10 pt-15 pb-25">
             <div className="flex items-center flex-col basis-1/4">
-              {user?.profileImage ? (
-                <div className="flex overflow-hidden rounded-full w-50 h-50 justify-center items-center">
-                  <motion.img
-                    src={user?.profileImage}
-                    alt="Profile"
-                    className="object-cover w-full h-full"
-                    initial={{ scale: 0.5, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                  />
-                </div>
-              ) : (
-                <div className="flex overflow-hidden rounded-full w-50 h-50 justify-center items-center bg-slate-300">
-                  <User size={100} color="white" />
-                </div>
-              )}
+              <div className="flex overflow-hidden rounded-full w-50 h-50 justify-center items-center">
+                <motion.img
+                  src={user?.profileImage}
+                  alt="Profile"
+                  className="object-cover w-full h-full"
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                />
+              </div>
 
               <motion.p
                 className="text-[#086BAF] text-2xl font-bold mt-2"
@@ -264,13 +218,23 @@ function CreatePostPage() {
                   imgExtension={[".jpg", ".gif", ".png", ".webp", "jpeg"]}
                   maxFileSize={5242880}
                 />
-                {/* 
+
                 {file.length > 0 && (
                   <NsfwScanner
                     imageFile={file[0]}
                     onScanComplete={handleScanComplete}
                   />
-                )} */}
+                )}
+
+                <button
+                  onClick={hdlAddPost}
+                  disabled={!isSafe}
+                  className={`mt-4 p-2 rounded ${
+                    isSafe ? "bg-blue-500" : "bg-red-500 cursor-not-allowed"
+                  }`}
+                >
+                  {isSafe ? "Submit Post" : "NSFW Content Detected!"}
+                </button>
               </div>
 
               {/* <NsfwScanner /> */}
@@ -452,19 +416,14 @@ function CreatePostPage() {
                 </div>
 
                 <motion.button
-                  onClick={hdlAddPost}
-                  disabled={!isSafe}
                   type="submit"
-                  className={`mt-4 p-3 rounded-xl text-white font-bold ${
-                    isSafe ? "bg-[#086BAF]" : "bg-red-500 cursor-not-allowed"
-                  }`}
+                  className="bg-[#086BAF] text-white font-bold p-3 rounded-xl"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {isSafe ? "Create Post" : "NSFW Content Detected!"}
+                  Create Post
                 </motion.button>
               </motion.form>
-
               <button
                 onClick={handleReset}
                 className="hover:link-error hover:cursor-grab mt-3"
