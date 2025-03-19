@@ -65,7 +65,7 @@ function CreatePost() {
             <p className="text-[#086BAF] text-2xl font-bold ml-10 mt-2">
               Moana Stair
             </p>
-            <p className="text-[#086BAF] text-2xl  ml-10">@MoanaSTR</p>
+            <p className="text-[#000000] text-2xl  ml-10">@MoanaSTR</p>
           </div>
           {/* Right */}
           <div>
@@ -138,7 +138,7 @@ function CreatePost() {
                   </div>
 
                   <div className="flex flex-col">
-                    <p className="   text-lg text-[#086BAF] mt-2">
+                    <p className="   text-lg text-[#000000] mt-2">
                       Description
                     </p>
                     <input

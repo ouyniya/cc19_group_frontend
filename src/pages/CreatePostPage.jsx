@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
 import profile from "../pictures/profile.png";
-import map from "../icons/map.png";
-import picture from "../icons/picture.png";
-import trash from "../icons/trash.png";
-import uploading from "../icons/up-loading.png";
-import MapCanvas from "../components/MapCanvas";
+import ImageUploader from "react-images-upload";
+import { motion } from "framer-motion";
 import useLocationStores from "../stores/useLocationStores";
 import usePostStores from "../stores/usePostStores";
+import MapCanvas from "../components/MapCanvas";
+import { Undo2 } from "lucide-react";
+import { createAlert } from "../utils/createAlert";
+import useUserStore from "../stores/userStore";
 
 function CreatePostPage() {
-  // post store
+  // Zustand Stores
   const actionAddPost = usePostStores((state) => state.actionAddPost);
+  const user = useUserStore((state) => state.user);
   const newPost = usePostStores((state) => state.newPost);
-
   const provinces = useLocationStores((state) => state.provinces);
   const districts = useLocationStores((state) => state.districts);
-
   const actionGetProvince = useLocationStores(
     (state) => state.actionGetProvince
   );
@@ -23,26 +23,27 @@ function CreatePostPage() {
     (state) => state.actionGetDistrict
   );
 
+  // State Variables
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
   const [province, setProvince] = useState([]);
   const [district, setDistrict] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
-
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState([]);
   const [previewImageUrl, setPreviewImageUrl] = useState([]);
+  const [input, setInput] = useState({
+    title: "",
+    name: "",
+    description: "",
+    latitude: latitude || null,
+    longitude: longitude || null,
+    provinceId: "",
+    districtId: "",
+    content: "",
+    budget: "",
+  });
 
-  const hdlFileChange = (event) => {
-    const file = event.target.files;
-    // console.log(file[0]) //obj
-
-    if (file) {
-      setFile(file); // multiple files
-
-      for (let el of file) {
-        const urlPic = URL.createObjectURL(el);
-        setPreviewImageUrl((prev) => [...prev, urlPic]);
-      }
-    }
-  };
+  // console.log(input);
 
   useEffect(() => {
     callActionGetProvince();
@@ -52,14 +53,42 @@ function CreatePostPage() {
     setDistrict(districts); // Update local state when Zustand state changes
   }, [districts]);
 
+  useEffect(() => {
+    setInput((prev) => ({
+      ...prev,
+      latitude: latitude,
+      longitude: longitude,
+    }));
+  }, [latitude, longitude]);
+
   const callActionGetProvince = async () => {
     await actionGetProvince();
     setProvince(provinces);
   };
 
+  const handleReset = () => {
+    setInput({
+      title: "",
+      name: "",
+      description: "",
+      latitude: null,
+      longitude: null,
+      provinceId: "",
+      districtId: "",
+      content: "",
+      budget: "",
+    });
+    setSelectedProvince("");
+    setFile([]);
+    setLatitude(null);
+    setLongitude(null);
+  };
+
+  // Handle Province Selection
   const handleProvinceChange = async (e) => {
     const provinceId = e.target.value;
     setSelectedProvince(provinceId);
+    setInput((prev) => ({ ...prev, provinceId }));
 
     if (!provinceId) return;
 
@@ -70,274 +99,280 @@ function CreatePostPage() {
     }
   };
 
-  const hdlAddPost = async () => {
-    console.log("12345");
+  // Handle Image Upload
+  const onDrop = (pictureFiles, pictureDataURLs) => {
+    setFile(pictureFiles);
+    setPreviewImageUrl(pictureDataURLs);
+  };
+
+  // Handle Form Submission
+  const hdlAddPost = async (e) => {
+    e.preventDefault();
     try {
-      let title = "ddddd";
-      let name = "ddddd";
-      let description = "ddddd";
-      let latitude = 1234;
-      let longitude = 1234;
-      let provinceId = "1";
-      let districtId = "1";
-      let content = "sssss";
-      let budget = 55500;
+      let formData = new FormData();
+      Object.entries(input).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
 
-      // console.log("**", JSON.parse(place))
+      file.forEach((el) => {
+        formData.append("images", el);
+      });
 
-      let input = new FormData();
-      input.append("title", title);
-      input.append("name", name);
-      input.append("description", description);
-      input.append("latitude", latitude);
-      input.append("longitude", longitude);
-      input.append("provinceId", provinceId);
-      input.append("districtId", districtId);
-      // input.append("place", place)
-      input.append("content", content);
-      input.append("budget", +budget);
-
-      // loop
-
-      if (file) {
-        for (let el of file) {
-          input.append("images", el);
-        }
-      }
-
-      // console.log("**", JSON.parse(input))
-
-      await actionAddPost(input);
+      await actionAddPost(formData);
+      createAlert("success", "Post created successfully!");
     } catch (error) {
-      console.log(error);
+      const errorMsg = error?.response?.data?.message;
+      createAlert("info", errorMsg);
     }
   };
 
   return (
     <>
-      <div
-        className="bg-slate-100 hover:bg-slate-200 min-h-40 
-   rounded-lg relative cursor-pointer"
-        onClick={() => document.getElementById("input-file").click()}
-      >
-        <input
-          type="file"
-          className="hidden"
-          id="input-file"
-          multiple
-          onChange={hdlFileChange}
-        />
-        {file &&
-          previewImageUrl.map((el) => (
-            <img src={el} className="h-full block mx-auto" />
-          ))}
-        {!file && (
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-            <p>img</p>
-          </div>
-        )}
-      </div>
-      <div className="h-25 w-25 mt-5 rounded-full overflow-hidden">
-        {previewImageUrl && (
-          <img
-            src={previewImageUrl}
-            alt="Preview"
-            className="w-full h-full object-cover "
-          />
-        )}
-      </div>
-      <MapCanvas />
-
-      <div className="flex flex-col w-60">
-        <p className="text-lg text-[#086BAF] mt-2">Province</p>
-        <select
-          defaultValue="Pick a color"
-          onChange={handleProvinceChange}
-          className="select"
+      <div className="flex justify-evenly items-center text-slate-800 pt-15 pb-25">
+        <motion.div
+          className="flex flex-col items-center w-[80%] min-w-[900px] max-w-[1200px] rounded-xl bg-white"
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5 }}
         >
-          <option disabled={true} selected>
-            Pick a Province
-          </option>
-          {provinces &&
-            provinces?.map((el) => (
-              <option key={el.id} value={el.id}>
-                {el.name}
-              </option>
-            ))}
-        </select>
-      </div>
+          <motion.p
+            className="text-[#086BAF] font-bold text-3xl pt-20"
+            initial={{ x: -100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            Create Post
+          </motion.p>
+          <div className="flex justify-evenly w-[85%] gap-10 pt-15 pb-25">
+            <div className="flex items-center flex-col basis-1/4">
+              <div className="flex overflow-hidden rounded-full w-50 h-50 justify-center items-center">
+                <motion.img
+                  src={user?.profileImage}
+                  alt="Profile"
+                  className="object-cover w-full h-full"
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                />
+              </div>
 
-      <div className="flex flex-col w-60">
-        <p className="   text-lg text-[#086BAF] mt-2">District</p>
-        <select defaultValue="Pick a color" className="select">
-          <option disabled={true} selected>
-            Pick a District
-          </option>
-          {district?.length > 0 &&
-            district?.map((el) => (
-              <option key={el.id} value={el.id}>
-                {el.name}
-              </option>
-            ))}
-        </select>
-      </div>
-      <button onClick={hdlAddPost} className="btn btn-info">submit</button>
+              <motion.p
+                className="text-[#086BAF] text-2xl font-bold mt-2"
+                initial={{ x: -100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                {user?.username}
+              </motion.p>
+              <motion.p
+                className="text-[#086BAF] text-lg"
+                initial={{ x: -100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                {user?.email}
+              </motion.p>
+            </div>
 
+            <div className="flex flex-col basis-2/3">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="w-full mb-5">
+                  <ImageUploader
+                    withIcon={true}
+                    withPreview={true}
+                    buttonText="Choose images"
+                    onChange={onDrop}
+                    imgExtension={[".jpg", ".gif", ".png", ".gif"]}
+                    maxFileSize={5242880}
+                    singleImage={false}
+                    buttonClassName={"btn btn-info bg-blue-300"}
+                    buttonStyles={{ backgroundColor: "#086BAF" }}
+                    fileContainerStyle={{ backgroundColor: "#EFF4F6" }}
+                  />
+                </div>
 
+                {/* <motion.div
+                  className="mt-4 overflow-hidden"
+                  drag="x"
+                  dragConstraints={{ left: -200, right: 200 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="flex gap-2">
+                    {previewImageUrl.map((url, index) => (
+                      <motion.img
+                        key={index}
+                        src={url}
+                        alt="Preview"
+                        className="h-20 w-20 rounded-md"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    ))}
+                  </div>
+                </motion.div> */}
+              </motion.div>
 
-........
-
-
-      <div className="flex justify-center  bg-blue-50 py-10">
-      <div className="flex flex-col items-center w-250 rounded-4xl  mt-5 bg-white py-5 ">
-        <div>
-          <p className="text-[#086BAF]  font-bold text-3xl mt-10 ">
-            CREATED POST
-          </p>
-        </div>
-        {/* post detail */}
-        <div className="flex mt-10 gap-15">
-          {/* left */}
-          <div className="flex flex-col">
-            <img src={profile} alt="" className="h-50 w-50 rounded-full" />
-            <p className="text-[#086BAF] text-2xl font-bold ml-10 mt-2">
-              Moana Stair
-            </p>
-            <p className="text-[#086BAF] text-2xl  ml-10">@MoanaSTR</p>
-          </div>
-          {/* Right */}
-          <div>
-            <form action="">
-              <div className="flex flex-col gap-2 ml-5 ">
-                <p className="font-bold text-lg text-[#086BAF]">Title</p>
-                <input
+              <motion.form
+                onSubmit={hdlAddPost}
+                className="flex flex-col gap-5"
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <p className="font-bold text-lg text-[#086BAF] mt-2 -mb-3">
+                  Title
+                </p>
+                <motion.input
                   type="text"
-                  className="bg-white rounded-xs h-10 w-120 border-1 border-[#9BA2A5] "
+                  className="bg-white rounded-xs h-10 w-full border-1 border-[#9BA2A5] p-2"
                   placeholder="   Please fill your title"
+                  value={input.title}
+                  onChange={(e) =>
+                    setInput({ ...input, title: e.target.value })
+                  }
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
                 />
 
-                <p className="font-bold  text-lg text-[#086BAF] mt-2">
-                  {" "}
+                <p className="font-bold text-lg text-[#086BAF] mt-2 -mb-3">
                   Content
                 </p>
-                <input
-                  type="text"
-                  className="bg-white rounded-xs  h-20 w-120 border-1 border-[#9BA2A5] "
-                  placeholder="    "
-                />
-              </div>
-              <div className="flex mt-10  gap-8">
-                <div className="flex flex-col items-center gap-2  ml-5 border-2 border-dashed border-[#78AAD7] h-45 w-80">
-                  <img
-                    src={uploading}
-                    alt="uploading-icon"
-                    className="h-7 mt-4"
-                  />
-                  <button className="btn bg-[#5CAFF0] mt-2 border-0 rounded-3xl text-white ">
-                    Browse
-                  </button>
-                  <p className="text-[#5CAFF0]">drop a file here</p>
-                  <p className="text-[#457BA6]">*File supported .png & .jpg</p>
-                </div>
-                <div className="flex flex-col">
-                  <p className="-mt-5 font-bold text-[#086BAF]">Upload files</p>
-                  <div className="flex gap-2 mt-2">
-                    <img src={picture} alt="" className="h-5" />
-                    <p className="text-[#457BA6]">ADDDd.jpg</p>
-                    <img src={trash} alt="" className="h-6" />
-                  </div>
-                  <div className="flex gap-2 mt-2">
-                    <img src={picture} alt="" className="h-5" />
-                    <p className="text-[#457BA6]">ADDDd.jpg</p>
-                    <img src={trash} alt="" className="h-6" />
-                  </div>
-                  <div className="flex gap-2 mt-2">
-                    <img src={picture} alt="" className="h-5" />
-                    <p className="text-[#457BA6]">ADDDd.jpg</p>
-                    <img src={trash} alt="" className="h-6" />
-                  </div>
-                </div>
-              </div>
-              {/* map */}
-              <div className="flex flex-col  ml-5 gap-2">
-                <p className=" font-bold  text-lg text-[#086BAF] mt-5">
-                  Location
-                </p>
-                <div className="flex gap-20 ">
-                  <div className="flex flex-col">
-                    <p className="   text-lg text-[#086BAF] mt-2">
-                      Location name
-                    </p>
-                    <input
-                      type="text"
-                      className="bg-white rounded-xs h-10 w-60 border-1 border-[#9BA2A5] "
-                      placeholder="   location name"
-                    />
-                  </div>
 
-                  <div className="flex flex-col">
-                    <p className="   text-lg text-[#086BAF] mt-2">
-                      Description
-                    </p>
-                    <input
-                      type="text"
-                      className="bg-white rounded-xs h-10 w-60 border-1 border-[#9BA2A5] "
-                      placeholder="   description"
-                    />
-                  </div>
-                </div>
-                <div className="flex gap-20">
-                  <div className="flex flex-col w-60">
-                    <p className="text-lg text-[#086BAF] mt-2">Province</p>
-                    <select defaultValue="Pick a color" onChange={handleProvinceChange} className="select">
+                <motion.textarea
+                  className="bg-white rounded-xs h-30 w-full border-1 border-[#9BA2A5] p-2"
+                  placeholder="Content"
+                  value={input.content}
+                  onChange={(e) =>
+                    setInput({ ...input, content: e.target.value })
+                  }
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                />
+                <p className="font-bold text-lg text-[#086BAF] mt-2 -mb-3">
+                  Budget
+                </p>
+                <motion.input
+                  type="number"
+                  className="bg-white rounded-xs h-10 w-full border-1 border-[#9BA2A5] p-2"
+                  placeholder="Budget"
+                  value={input.budget}
+                  onChange={(e) =>
+                    setInput({ ...input, budget: e.target.value })
+                  }
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                />
+
+                <p className="font-bold text-lg text-[#086BAF] mt-2 -mb-3">
+                  Location name
+                </p>
+                <motion.input
+                  type="text"
+                  className="bg-white rounded-xs h-10 w-full border-1 border-[#9BA2A5] p-2"
+                  placeholder="Name"
+                  value={input.name}
+                  onChange={(e) => setInput({ ...input, name: e.target.value })}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                />
+
+                <p className="font-bold text-lg text-[#086BAF] mt-2 -mb-3">
+                  Location description
+                </p>
+                <motion.textarea
+                  className="bg-white rounded-xs h-30 w-full border-1 border-[#9BA2A5] p-2"
+                  placeholder="Description"
+                  value={input.description}
+                  onChange={(e) =>
+                    setInput({ ...input, description: e.target.value })
+                  }
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                />
+
+                <div className="flex gap-2">
+                  <div className="basis-1/2">
+                    <select
+                      defaultValue="Pick a color"
+                      onChange={handleProvinceChange}
+                      className="bg-white rounded-xs h-10 w-full border-1 border-[#9BA2A5] p-2"
+                    >
                       <option disabled={true} selected>
                         Pick a Province
                       </option>
                       {provinces &&
                         provinces?.map((el) => (
-                          <option key={el.id} value={el.id}>{el.name}</option>
+                          <option key={el.id} value={el.id}>
+                            {el.name}
+                          </option>
                         ))}
                     </select>
                   </div>
 
-                  <div className="flex flex-col w-60">
-                    <p className="   text-lg text-[#086BAF] mt-2">District</p>
-                    <select defaultValue="Pick a color" className="select">
-                      <option disabled={true} selected>Pick a District</option>
-                      {district?.length > 0 &&
-
-                      district?.map((el) => (
-                        <option key={el.id} value={el.id}>
-                          {el.name}
-                        </option>
-                      ))
-
+                  <div className="basis-1/2">
+                    <motion.select
+                      onChange={(e) =>
+                        setInput({ ...input, districtId: e.target.value })
                       }
-                    </select>
+                      value={input.districtId}
+                      className="bg-white rounded-xs h-10 w-full border-1 border-[#9BA2A5] p-2"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <option value="">Select District</option>
+                      {district.map((dist) => (
+                        <option key={dist.id} value={dist.id}>
+                          {dist.name}
+                        </option>
+                      ))}
+                    </motion.select>
                   </div>
                 </div>
-                <p className="text-lg font-bold text-[#086BAF] mt-5">
-                  Select location in Map
-                </p>
-                <div className="mt-2 bg-blue-50 h-100 w-140">
-                  <MapCanvas />
-                </div>
-              </div>
 
-              {/* button */}
-              <div className="flex justify-center mt-10 gap-3 ">
-                <button className="btn border-0 bg-[#086BAF] rounded-full text-white">
-                  Post
-                </button>
-                <button className="btn text-[#9BA2A5] bg-white border-2 border-[#086BAF] rounded-full">
-                  Cancel
-                </button>
-              </div>
-            </form>
+                <div className="mt-2 bg-blue-50 h-100 w-140">
+                  <MapCanvas
+                    latitude={latitude}
+                    longitude={longitude}
+                    setLatitude={setLatitude}
+                    setLongitude={setLongitude}
+                  />
+                </div>
+
+                <motion.button
+                  type="submit"
+                  className="bg-[#086BAF] text-white font-bold p-3 rounded-xl"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Create Post
+                </motion.button>
+              </motion.form>
+              <button
+                onClick={handleReset}
+                className="hover:link-error hover:cursor-grab mt-3"
+              >
+                <p className="flex gap-2 justify-center items-center">
+                  <Undo2 />
+                  Reset
+                </p>
+              </button>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
     </>
   );
 }
