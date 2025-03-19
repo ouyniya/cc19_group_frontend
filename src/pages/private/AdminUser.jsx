@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaEllipsisV } from "react-icons/fa";
+import useAdminStoresUser from "../../stores/useAdminStoresUser";
 
 const users = [
   {
@@ -58,6 +59,7 @@ const users = [
   },
 ];
 
+
 export default function AdminUserTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5;
@@ -65,10 +67,39 @@ export default function AdminUserTable() {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [menuOpen, setMenuOpen] = useState(null);
 
+  /* state เก็บ ข้อมูลจากหลังบ้าน */
+  const [users02, setUsers02] = useState([])
+
   const displayedUsers = users.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
+
+  const store = useAdminStoresUser();
+  const {
+    allUsers,
+    actionAllUsers02,
+    actionUpdateRole02,
+  } = store;
+
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        await actionAllUsers02()
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    }
+
+    fetchAllUsers()
+  }, [actionAllUsers02,actionUpdateRole02])
+
+  const data = {
+    allUsers
+  };
+  console.log("data allUsers")
+  console.log(data.allUsers)
+
 
   const toggleSelection = (email) => {
     setSelectedUsers((prev) =>
@@ -81,35 +112,54 @@ export default function AdminUserTable() {
     setMenuOpen(null);
   };
 
+  /* Update role */
+  const hdlUpdateRole = async (id, role) => {
+    try {
+      console.log("id, role")
+      console.log({id, role})
+      const res = await actionUpdateRole02({ id, role })
+      console.log("res hdlUpdateRole")
+      console.log(res)
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div className="p-4 bg-white w-full">
+
       <table className="w-full border-collapse text-black bg-white shadow-md rounded-lg overflow-hidden">
         <thead className="bg-gray-200">
           <tr className="text-left">
             <th className="p-3 w-10"></th>
             <th className="p-3">Full Name</th>
             <th className="p-3">Email Address</th>
-            <th className="p-3">Joined</th>
             <th className="p-3">Role</th>
             <th className="p-3 w-10">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {displayedUsers.map((user, index) => (
+          {data?.allUsers?.map((user, index) => (
             <tr key={index} className="border-b hover:bg-gray-100 relative">
               <td className="p-3 w-10"></td>
-              <td className="p-3">{user.name}</td>
+              <td className="p-3">{user.username}</td>
               <td className="p-3">{user.email}</td>
-              <td className="p-3">{user.joined}</td>
               <td className="p-3">
-                <span
-                  className={`px-3 py-1 rounded-full text-white text-sm ${
-                    user.role === "Admin" ? "bg-red-500" : "bg-blue-400"
+                {
+                  <select
+                  className={`px-3 py-1 rounded-full text-white text-sm ${user.role === "Admin" ? "bg-red-500" : "bg-blue-400"
                   }`}
-                >
-                  {user.role}
-                </span>
+                    onChange={(e) => hdlUpdateRole(user.id, e.target.value)}
+                    defaultValue={user.role}
+                  >
+                    <option >USER</option>
+                    <option >ADMIN</option>
+                  </select>
+                }
               </td>
+              
+
               <td className="p-3 w-10 relative">
                 <button
                   onClick={() => setMenuOpen(menuOpen === index ? null : index)}
@@ -139,7 +189,7 @@ export default function AdminUserTable() {
       </table>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center mt-4 text-black">
+      {/* <div className="flex justify-between items-center mt-4 text-black">
         <div>
           <button
             className="px-3 py-1 bg-gray-300 rounded-lg"
@@ -151,9 +201,8 @@ export default function AdminUserTable() {
           {[...Array(totalPages)].map((_, i) => (
             <button
               key={i}
-              className={`px-3 py-1 mx-1 rounded-lg ${
-                currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-gray-300"
-              }`}
+              className={`px-3 py-1 mx-1 rounded-lg ${currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-gray-300"
+                }`}
               onClick={() => setCurrentPage(i + 1)}
             >
               {i + 1}
@@ -178,7 +227,7 @@ export default function AdminUserTable() {
             <option>50 rows</option>
           </select>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
