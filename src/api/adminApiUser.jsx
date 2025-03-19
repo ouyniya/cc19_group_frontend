@@ -8,14 +8,14 @@ adminApi02.actionAllUsers02 = async () => {
     });
 };
 
-adminApi02.actionDeleteUser02 = async () => {
-    return axios.delete("/api/admin/users", {
+adminApi02.actionUpdateRole02 = async (value) => {
+    return axios.patch("/api/admin/users", value, {
         headers: { Authorization: `Bearer ${getAccessToken()}` },
     })
 }
 
-adminApi02.actionUpdateRole02 = async (value) => {
-    return axios.patch("/api/admin/users", value, {
+adminApi02.actionDeleteUser02 = async (id) => {
+    return axios.delete(`/api/admin/users/${id}`, {
         headers: { Authorization: `Bearer ${getAccessToken()}` },
     })
 }
