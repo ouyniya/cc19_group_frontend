@@ -23,6 +23,7 @@ import ProtectRoutesGuest from "./ProtectRoutesGuest";
 import ErrorUnauthorized from "../pages/ErrorUnauthorized";
 import UserDashboardShow from "../pages/UserDashboardShow";
 import CreatePostPage from "../pages/CreatePostPage";
+import AIPlanning from "../pages/private/AIPlanning";
 
 // Route ใช้ในการกำหนดเส้นทาง (route) เฉพาะหนึ่งเส้นทาง
 // Routes จะตรวจสอบว่า URL ตรงกับ path ไหน และแสดงคอมโพเนนต์ที่ตรงกับเส้นทางนั้น
@@ -58,7 +59,7 @@ function AppRoutes() {
         >
           <Route index element={<WishList />} />
           <Route path="wishlist" element={<WishList />} />
-          <Route path="plan" element={<WishList />} />
+          <Route path="plan" element={<AIPlanning />} />
           <Route path="create-post" element={<CreatePostPage />} />
           <Route path="edit-profile" element={<EditProfile />} />
         </Route>
