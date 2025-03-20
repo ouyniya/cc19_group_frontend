@@ -37,6 +37,25 @@ const useWishlistStores = create((set, get) => ({
       set({ isLoading: false });
     }
   },
+  actionAddWishlist: async (wishlistId) => {
+    set({ isLoading: true });
+    try {
+      // Call the API to delete the wishlist
+      const { data } = await wishlistApi.actionAddWishlist(wishlistId);
+  
+      set((state) => ({
+        // Check if `state.wishlists` is an array before filtering
+        wishlists: Array.isArray(state.wishlists)
+          ? state.wishlists.filter((wishlist) => wishlist.id !== wishlistId)
+          : [], // If `wishlists` is not an array, reset it to an empty array
+      }));
+  
+    } catch (error) {
+      console.log(error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 }));
 
 export default useWishlistStores;

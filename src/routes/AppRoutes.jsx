@@ -25,6 +25,7 @@ import UserDashboardShow from "../pages/UserDashboardShow";
 import CreatePostPage from "../pages/CreatePostPage";
 import AIPlanning from "../pages/private/AIPlanning";
 import ProfanityFilter from "../pages/ฺBadword";
+import FilterPageDraft from "../pages/FilterPageDraft";
 
 // Route ใช้ในการกำหนดเส้นทาง (route) เฉพาะหนึ่งเส้นทาง
 // Routes จะตรวจสอบว่า URL ตรงกับ path ไหน และแสดงคอมโพเนนต์ที่ตรงกับเส้นทางนั้น
@@ -38,6 +39,7 @@ function AppRoutes() {
         <Route path="/" element={<Layout />}>
           <Route index element={<LandingPage />} />
           <Route path="home" element={<Home />} />
+          <Route path="filter-page" element={<FilterPageDraft/>} />
 
           {/* soft protect */}
 
