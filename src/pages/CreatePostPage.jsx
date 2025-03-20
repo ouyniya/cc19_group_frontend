@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import useLocationStores from "../stores/useLocationStores";
 import usePostStores from "../stores/usePostStores";
 import MapCanvas from "../components/MapCanvas";
-import { Undo2, User } from "lucide-react";
+import { Trash, Undo2, User } from "lucide-react";
 import { createAlert } from "../utils/createAlert";
 import useUserStore from "../stores/userStore";
 import * as toxicity from "@tensorflow-models/toxicity";
@@ -39,11 +39,10 @@ function CreatePostPage() {
   // safe image
   const [isSafe, setIsSafe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(false); // for success page
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [province, setProvince] = useState([]);
-  const [provinceSelected, setProvinceSelected] = useState("");
+  const [provinceSelected, setProvinceSelected] = useState(true);
   const [district, setDistrict] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [file, setFile] = useState([]);
@@ -140,7 +139,7 @@ function CreatePostPage() {
     setFile([]);
     setLatitude(null);
     setLongitude(null);
-    console.log(province);
+    setProvinceSelected(true);
   };
 
   // Handle Province Selection
@@ -234,7 +233,7 @@ function CreatePostPage() {
 
     const foundToxic = await checkToxicity(input.content);
     if (foundToxic) {
-      createAlert("error", "❌ พบคำไม่เหมาะสมในเนื้อหา! กรุณาแก้ไข");
+      createAlert("error", "❌ Inappropriate content detected! Please revise.");
       setIsToxic(true);
       return;
     }
@@ -336,7 +335,8 @@ function CreatePostPage() {
               {/* check img */}
 
               <div className="flex flex-col items-center">
-                <h2 className="text-2xl font-bold">Create Post</h2>
+                <h2 className="text-2xl font-bold text-[#086BAF]">Image Upload</h2>
+                <p className="text-xs">Add an Image to Your Post</p>
 
                 <ImageUploader
                   withIcon={true}
@@ -345,6 +345,8 @@ function CreatePostPage() {
                   onChange={onDrop}
                   imgExtension={[".jpg", ".gif", ".png", ".webp", "jpeg"]}
                   maxFileSize={5242880}
+                  deleteIcon={<Trash />}
+                  buttonStyles={{ backgroundColor: "#086BAF" }}
                 />
                 {/* 
                 {file.length > 0 && (
@@ -543,12 +545,16 @@ function CreatePostPage() {
                   <div className="basis-1/2">
                     <select
                       id="province"
-                      defaultValue={"Pick a Province"}
+                      defaultValue={"Select Province"}
                       // value={selectedProvince}
                       onChange={handleProvinceChange}
                       className="bg-white rounded-xs h-10 w-full border-1 border-[#9BA2A5] p-2"
                     >
-                      <option disabled={true} selected={provinceSelected}>
+                      <option
+                        disabled={true}
+                        selected={provinceSelected}
+                        value="Select Province"
+                      >
                         Select Province
                       </option>
                       {provinces &&
