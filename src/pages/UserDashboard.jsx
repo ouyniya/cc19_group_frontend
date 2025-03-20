@@ -102,7 +102,7 @@ function UserDashboard({ userId }) {
             <button className="btn rounded-full text-[#086BAF] text-xl font-bold bg-white border-0">
               Activity feed
             </button>
-            <button className="ml-2 btn rounded-full text-[#086BAF] text-xl border-0 bg-white border-0">
+            <button className="ml-2 btn rounded-full text-[#086BAF] text-xl bg-white border-0">
               Photo
             </button>
           </div>
@@ -116,21 +116,16 @@ function UserDashboard({ userId }) {
 
                 {user ? (
                   <>
-                    <div className="flex">
-                      <div
-                        onClick={() =>
-                          document.getElementById("my_modal_4").showModal()
-                        }
-                      >
+                    <Link to='/user/create-post'>
+                      <div className="flex">
                         <img
                           src={Edit}
                           alt="edit create post"
                           className="h-6 hover:cursor-pointer"
                         />
+                        <p className="text-blue-900 text-xl">Create post</p>
                       </div>
-
-                      <p className="text-blue-900 text-xl">Create post</p>
-                    </div>
+                    </Link>
                   </>
                 ) : (
                   <button className="btn btn-info text-white bg-blue-300 rounded-full border-blue-300">
@@ -159,7 +154,12 @@ function UserDashboard({ userId }) {
                       <tr key={index}>
                         <th>{index + 1}</th>
                         <td>
-                          <Link to={`/post/${el.id}`} className="link hover:link-info">{el.title}</Link>
+                          <Link
+                            to={`/post/${el.id}`}
+                            className="link hover:link-info"
+                          >
+                            {el.title}
+                          </Link>
                         </td>
                         <td>{el.place.province.name}</td>
                         <td>
@@ -179,39 +179,9 @@ function UserDashboard({ userId }) {
 
           {/* CreatePost */}
           {/* <CreatePost /> */}
-          <ChangeProfile />
+          {/* <ChangeProfile /> */}
         </div>
       </div>
-
-      {/* Modal Edit profile */}
-      <dialog id="my_modal_3" className="modal">
-        <div className="modal-box h-95 w-full">
-          <form method="dialog">
-            {/* if there is a button in form, it will close the modal */}
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-              ✕
-            </button>
-          </form>
-          <div>
-            <EditProfile />
-          </div>
-        </div>
-      </dialog>
-
-      {/* Modal create post */}
-      <dialog id="my_modal_4" className="modal">
-        <div className="modal-box h-100 w-full">
-          <form method="dialog">
-            {/* if there is a button in form, it will close the modal */}
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-              ✕
-            </button>
-          </form>
-          <div>
-            <CreatePost />
-          </div>
-        </div>
-      </dialog>
     </>
   );
 }

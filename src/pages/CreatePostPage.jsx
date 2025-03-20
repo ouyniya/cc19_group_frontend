@@ -39,10 +39,11 @@ function CreatePostPage() {
   // safe image
   const [isSafe, setIsSafe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isOpen, setIsOpen] = useState(false); // for success page
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [province, setProvince] = useState([]);
+  const [provinceSelected, setProvinceSelected] = useState("");
   const [district, setDistrict] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [file, setFile] = useState([]);
@@ -134,10 +135,12 @@ function CreatePostPage() {
       content: "",
       budget: "",
     });
+    setInputError(initialInputError);
     setSelectedProvince("");
     setFile([]);
     setLatitude(null);
     setLongitude(null);
+    console.log(province);
   };
 
   // Handle Province Selection
@@ -260,7 +263,8 @@ function CreatePostPage() {
       });
 
       await actionAddPost(formData);
-      createAlert("success", "Post created successfully!");
+      // createAlert("success", "Post created successfully!");
+      navigate("/user/success-post");
     } catch (error) {
       // console.log(error);
       const errMsg = error.errors.reduce((acc, cur) => {
@@ -538,12 +542,13 @@ function CreatePostPage() {
                 <div className="flex gap-2">
                   <div className="basis-1/2">
                     <select
+                      id="province"
                       defaultValue={"Pick a Province"}
                       // value={selectedProvince}
                       onChange={handleProvinceChange}
                       className="bg-white rounded-xs h-10 w-full border-1 border-[#9BA2A5] p-2"
                     >
-                      <option disabled={true} selected>
+                      <option disabled={true} selected={provinceSelected}>
                         Select Province
                       </option>
                       {provinces &&
