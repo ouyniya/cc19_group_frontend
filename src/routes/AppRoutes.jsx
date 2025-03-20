@@ -47,11 +47,11 @@ function AppRoutes() {
             path="register"
             element={<ProtectRoutesGuest el={<Register />} />}
           />
+          <Route path="login" element={<ProtectRoutesGuest el={<Login />} />} />
           <Route
-            path="login"
-            element={<ProtectRoutesGuest el={<Login />} />}
+            path="user-dashboard/:userId"
+            element={<UserDashboardShow />}
           />
-          <Route path="user-dashboard/:userId" element={<UserDashboardShow />} />
           <Route path="/post/:postId" element={<PostAndComment />} />
         </Route>
 
