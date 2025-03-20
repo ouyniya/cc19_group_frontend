@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import view from "../icons/view.png";
 import redheart from "../icons/redheart.png";
 import useWishlistStores from "../stores/useWishlistStores";
@@ -18,13 +18,21 @@ function WishList() {
     (state) => state.getCurrentWishlists
   );
   const user = useUserStore((state) => state.user);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     callActionGetWishlist();
   }, [getCurrentWishlists]);
 
   const callActionGetWishlist = async () => {
-    await actionGetWishlist(user?.id);
+    try {
+      setIsLoading(true);
+      await actionGetWishlist(user?.id);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const hdlDelete = async (wishlistId) => {
@@ -56,15 +64,16 @@ function WishList() {
     }
   };
 
-  // console.log('***', wishlists)
+  // console.log("***", wishlists);
+  // console.log("***", wishlists?.result?.length);
 
   return (
     <>
       {/* header */}
       {/* <NavbarHeader /> */}
 
-      <div className="flex flex-wrap justify-start gap-2 px-3 mt-10">
-        {wishlists?.length > 0 ? (
+      <div className="flex flex-wrap justify-start gap-2 px-3 my-10">
+        {wishlists?.result?.length > 0 && !isLoading ? (
           wishlists?.result?.map((el, index) => (
             <div key={index} className="flex  flex-col">
               {/* Image or Fallback Icon */}

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import wishlistApi from "../api/wishlistApi";
+import { createAlert } from "../utils/createAlert";
 
 const useWishlistStores = create((set, get) => ({
   wishlists: [],
@@ -23,35 +24,35 @@ const useWishlistStores = create((set, get) => ({
     try {
       // Call the API to delete the wishlist
       const { data } = await wishlistApi.actionDeleteWishlist(wishlistId);
-  
+
       set((state) => ({
         // Check if `state.wishlists` is an array before filtering
         wishlists: Array.isArray(state.wishlists)
           ? state.wishlists.filter((wishlist) => wishlist.id !== wishlistId)
           : [], // If `wishlists` is not an array, reset it to an empty array
       }));
-  
     } catch (error) {
       console.log(error);
     } finally {
       set({ isLoading: false });
     }
   },
-  actionAddWishlist: async (wishlistId) => {
+  actionAddWishlist: async (input) => {
     set({ isLoading: true });
     try {
       // Call the API to delete the wishlist
-      const { data } = await wishlistApi.actionAddWishlist(wishlistId);
-  
+      const { data } = await wishlistApi.actionAddWishlist(input);
+
       set((state) => ({
-        // Check if `state.wishlists` is an array before filtering
         wishlists: Array.isArray(state.wishlists)
-          ? state.wishlists.filter((wishlist) => wishlist.id !== wishlistId)
-          : [], // If `wishlists` is not an array, reset it to an empty array
+          ? [...state.wishlists, data] // Append the new item
+          : [data], // Initialize if empty
       }));
-  
+
+      createAlert("success", "Added the post to your wishlist");
     } catch (error) {
-      console.log(error);
+      console.log(error?.response?.data?.message);
+      createAlert("info", error?.response?.data?.message);
     } finally {
       set({ isLoading: false });
     }
