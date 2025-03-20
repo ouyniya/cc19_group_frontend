@@ -18,6 +18,7 @@ const usePostStores = create((set, get) => ({
       set({ isLoading: false });
     }
   },
+  actionDeleteNewPost: () => set({ newPost: [] })
 }));
 
 export default usePostStores;
