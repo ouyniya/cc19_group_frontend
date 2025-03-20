@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-// import NavbarHeader from "../components/NavbarHeader";
-import Search from "../components/Search";
+import { useNavigate } from "react-router";
 import logo from "../icons/logo.png";
 
 import pagination from "../icons/pagination.png";
@@ -11,6 +10,8 @@ import Region from "../components/Home/Region";
 import useUserStore from "../stores/userStore";
 
 function Home() {
+  const navigate = useNavigate();
+  const [searchText, setSearchText] = useState("");
   // const { user, token } = useUserStore();
 
   // useEffect(() => {
@@ -20,6 +21,12 @@ function Home() {
   // }, []);
 
   // console.log(user)
+
+  const hdlSearch = (e) => {
+    setSearchText(e.target.value);
+    // console.log(searchText)
+    navigate(`/filter-page?placeName=${searchText}&province=&district=&page=1`);
+  };
 
   return (
     <>
@@ -37,8 +44,17 @@ function Home() {
           {/* search bar */}
 
           <div className="flex justify-center gap-1 mt-5">
-            <Search />
-            <button className="btn rounded-full bg-[#086BB0] text-white text-xl h-12 w-25 border-0">
+            <input
+              type="search"
+              className="grow"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              placeholder="Find your destination"
+            />
+            <button
+              onClick={(e) => hdlSearch(e)}
+              className="btn rounded-full bg-[#086BB0] text-white text-xl h-12 w-25 border-0"
+            >
               Search
             </button>
           </div>

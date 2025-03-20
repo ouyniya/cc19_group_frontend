@@ -22,7 +22,7 @@ function Search() {
         </svg>
         <input
           type="search"
-          className="grow "
+          className="grow"
           placeholder="Find your destination"
         />
       </label>

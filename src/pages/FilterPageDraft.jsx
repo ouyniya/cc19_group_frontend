@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import logo from "../icons/logo.png";
 import heart from "../icons/heart.png";
 import useFilterStores from "../stores/useFilterStores";
 import { useSearchParams } from "react-router"; // Import from react-router-dom
+import { createAlert } from "../utils/createAlert";
+import useWishlistStores from "../stores/useWishlistStores";
 
 function FilterPageDraft() {
+  const actionAddWishlist = useWishlistStores((state) => state.actionAddWishlist); // Fetch posts from store
   const filterPosts = useFilterStores((state) => state.filterPosts); // Fetch posts from store
   const actionGetFilterPosts = useFilterStores(
     (state) => state.actionGetFilterPosts
@@ -69,6 +71,20 @@ function FilterPageDraft() {
     }
   };
 
+  const hdlAddWishlist = async (input) => {
+    console.log(input)
+    if (!input) {
+      return createAlert("info", "Please choose post correctly")
+    }
+
+    const body = {
+      postId: +input
+    }
+
+    await actionAddWishlist(body)
+    // return createAlert("success", "Added the post to your wishlist")
+  }
+
   // console.log(filterPosts);
 
   return (
@@ -118,7 +134,7 @@ function FilterPageDraft() {
                 filterPosts?.posts?.map((el) => (
                   <div
                     key={el.id}
-                    className="relative h-[350px] flex flex-col justify-between mb-5"
+                    className="relative min-h-[350px] flex flex-col justify-between mb-5"
                   >
                     <div>
                       <img
@@ -127,7 +143,8 @@ function FilterPageDraft() {
                         className="w-full h-48 object-cover rounded-2xl"
                       />
                       <div className="absolute top-2 right-2">
-                        <img src={heart} alt="heart icon" className="w-8 h-8" />
+                        <img src={heart} alt="heart icon" className="w-8 h-8"
+                        onClick={() => hdlAddWishlist(el.id)} />
                       </div>
                       <p className="font-bold mt-2 text-xl">{el.title}</p>
                       <div className="flex items-center gap-2 mt-1">
