@@ -13,6 +13,7 @@ import {
 } from "chart.js";
 import { createAlert } from "../../utils/createAlert";
 import useAdminStores from "../../stores/useAdminStores";
+import { slice } from "@tensorflow/tfjs-core";
 
 ChartJS.register(
   CategoryScale,
@@ -92,21 +93,36 @@ export default function AnalysisDashboard() {
               <Bar
                 data={{
                   labels:
-                    data?.topDestination?.topProvinces?.map((el, index) => {
-                      // if (index <= 9) {
-                      return el?.name;
-                      // }
-                    }) || [],
+                    data?.topDestination?.topProvinces
+                      ?.slice(0, 10)
+                      ?.map((el, index) => {
+                        // if (index <= 9) {
+                        return el?.name;
+                        // }
+                      }) || [],
                   datasets: [
                     {
                       label: "Number of Views",
                       data:
-                        data?.topDestination?.topProvinces?.map((el, index) => {
-                          // if (index <= 9) {
-                          return el?.totalViews;
-                          // }
-                        }) || [],
-                      backgroundColor: "#5CAFF0",
+                        data?.topDestination?.topProvinces
+                          ?.slice(0, 10)
+                          ?.map((el, index) => {
+                            // if (index <= 9) {
+                            return el?.totalViews;
+                            // }
+                          }) || [],
+                      backgroundColor: [
+                        "rgba(12, 74, 110, 0.8)", // sky-900
+                        "rgba(12, 74, 110, 0.8)", // sky-900
+                        "rgba(7, 89, 133, 0.8)", // sky-800
+                        "rgba(3, 105, 161, 0.8)", // sky-700
+                        "rgba(2, 132, 199, 0.8)", // sky-600
+                        "rgba(14, 165, 233, 0.8)", // sky-500
+                        "rgba(56, 189, 248, 0.8)", // sky-400
+                        "rgba(125, 211, 252, 0.8)", // sky-300
+                        "rgba(186, 230, 253, 0.8)", // sky-200 (lighter)
+                        "rgba(224, 242, 254, 0.8)", // sky-100 (lightest)
+                      ],
                     },
                   ],
                 }}

@@ -23,7 +23,7 @@ import ErrorUnauthorized from "../pages/ErrorUnauthorized";
 import UserDashboardShow from "../pages/UserDashboardShow";
 import CreatePostPage from "../pages/CreatePostPage";
 import AIPlanning from "../pages/private/AIPlanning";
-import ProfanityFilter from "../pages/ฺBadword";
+import ProfanityFilter from "../pages/Badword";
 import FilterPageDraft from "../pages/FilterPageDraft";
 import SuccessPost from "../pages/SuccessPost";
 
