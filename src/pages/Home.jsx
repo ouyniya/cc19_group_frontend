@@ -43,10 +43,10 @@ function Home() {
           </div>
           {/* search bar */}
 
-          <div className="flex justify-center gap-1 mt-5">
+          <div className="flex justify-center gap-4 mt-5">
             <input
               type="search"
-              className="grow"
+              className="input input-lg rounded-full w-[35%] p-5"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               placeholder="Find your destination"

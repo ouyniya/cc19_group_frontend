@@ -3,7 +3,6 @@ import NavbarHeader from "../components/NavbarHeader";
 import Profile from "../pictures/profile.png";
 import Edit from "../icons/edit.png";
 import EditProfile from "../components/UserDashboard/EditProfile";
-import CreatePost from "../components/UserDashboard/CreatePost";
 import ChangeProfile from "../components/UserDashboard/ChangeProfile";
 import useUserStore from "../stores/userStore";
 import { User2 } from "lucide-react";
