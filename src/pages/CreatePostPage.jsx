@@ -8,11 +8,14 @@ import MapCanvas from "../components/MapCanvas";
 import { Undo2, User } from "lucide-react";
 import { createAlert } from "../utils/createAlert";
 import useUserStore from "../stores/userStore";
+import * as toxicity from "@tensorflow-models/toxicity";
+import "@tensorflow/tfjs";
 
 // for check img before uploading
 import * as nsfwjs from "nsfwjs";
 import { Buffer } from "buffer";
 import { createPostSchema } from "../utils/validators";
+
 window.Buffer = Buffer;
 
 function CreatePostPage() {
@@ -44,6 +47,9 @@ function CreatePostPage() {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [file, setFile] = useState([]);
   const [previewImageUrl, setPreviewImageUrl] = useState([]);
+  const [model, setModel] = useState(null);
+  const [isToxic, setIsToxic] = useState(false);
+  const [loadingModel, setLoadingModel] = useState(true);
   const [input, setInput] = useState({
     title: "",
     name: "",
@@ -81,6 +87,15 @@ function CreatePostPage() {
   };
 
   useEffect(() => {
+    const loadToxicityModel = async () => {
+      const loadedModel = await toxicity.load(0.9);
+      setModel(loadedModel);
+      setLoadingModel(false);
+    };
+    loadToxicityModel();
+  }, []);
+
+  useEffect(() => {
     callActionGetProvince();
   }, []);
 
@@ -95,6 +110,12 @@ function CreatePostPage() {
       longitude: longitude,
     }));
   }, [latitude, longitude]);
+
+  const checkToxicity = async (text) => {
+    if (!model) return false;
+    const predictions = await model.classify([text]);
+    return predictions.some((p) => p.results.some((r) => r.match));
+  };
 
   const callActionGetProvince = async () => {
     await actionGetProvince();
@@ -136,6 +157,7 @@ function CreatePostPage() {
 
   // Handle Image Upload
   const onDrop = async (pictureFiles, pictureDataURLs) => {
+    console.log(123);
     if (pictureFiles.length > 0) {
       // console.log("Files selected:", pictureFiles);
       setFile(pictureFiles);
@@ -157,7 +179,7 @@ function CreatePostPage() {
       setFile(safeImages);
       setIsSafe(safeImages.length === pictureFiles.length);
     } else {
-      setIsSafe(true)
+      setIsSafe(true);
     }
   };
 
@@ -197,8 +219,6 @@ function CreatePostPage() {
   };
 
   // console.log(file);
-
-  // Handle Form Submission
   const hdlAddPost = async (e) => {
     e.preventDefault();
     if (!isSafe) {
@@ -208,6 +228,14 @@ function CreatePostPage() {
       );
       return;
     }
+
+    const foundToxic = await checkToxicity(input.content);
+    if (foundToxic) {
+      createAlert("error", "❌ พบคำไม่เหมาะสมในเนื้อหา! กรุณาแก้ไข");
+      setIsToxic(true);
+      return;
+    }
+
     try {
       const validatedInput = {
         ...input,
@@ -245,8 +273,6 @@ function CreatePostPage() {
       setIsLoading(false);
     }
   };
-
-  // console.log("1111", inputError);
 
   return (
     <>
@@ -384,7 +410,7 @@ function CreatePostPage() {
                 <motion.input
                   type="text"
                   className="bg-white rounded-xs h-10 w-full border-1 border-[#9BA2A5] p-2"
-                  placeholder="   Please fill your title"
+                  placeholder="Please fill your title"
                   value={input.title}
                   onChange={(e) => {
                     setInput({ ...input, title: e.target.value });
