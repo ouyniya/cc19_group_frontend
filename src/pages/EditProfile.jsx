@@ -107,8 +107,8 @@ function EditProfile() {
               />
             </div>
 
-            <p className="text-white -ml-2">Change</p>
-            <p className="text-white -ml-8 ">profile photo</p>
+            <p className="text-black -ml-2">Change</p>
+            <p className="text-black -ml-8 ">profile photo</p>
           </div>
         </div>
         {/* Right */}
@@ -118,7 +118,7 @@ function EditProfile() {
             <p className="font-bold text-xl text-[#086BAF]">Username</p>
             <input
               type="text"
-              className="text-base-100 bg-white rounded-lg h-10 w-70 border-1 border-[#9BA2A5] pl-3"
+              className="text-black  bg-white rounded-lg h-10 w-70 border-1 border-[#9BA2A5] pl-3"
               placeholder="Username"
               name="username"
               onChange={handleChange}
@@ -136,7 +136,7 @@ function EditProfile() {
             </p>
             <input
               type="text"
-              className="text-base-100 bg-white rounded-lg h-10 w-70 border-1 border-[#9BA2A5] pl-3"
+              className="text-black bg-white rounded-lg h-10 w-70 border-1 border-[#9BA2A5] pl-3"
               placeholder="Add your email address"
               name="email"
               onChange={handleChange}
