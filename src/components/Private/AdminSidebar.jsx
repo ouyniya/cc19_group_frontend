@@ -229,4 +229,4 @@ const ToggleClose = ({ open, setOpen }) => {
   );
 };
 
-const ExampleContent = () => <div className="h-[200vh] w-full"></div>;
+const ExampleContent = () => <div className="h-[100vh] w-full"></div>;
