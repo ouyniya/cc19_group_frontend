@@ -64,9 +64,20 @@ function EditProfile() {
       if (error instanceof AxiosError) {
         console.log("error axios", error.response.data);
       }
+      // if (error instanceof ZodError) {
+      //   const errMsg = error.errors.reduce((acc, cur) => {
+      //     acc[cur.path] = cur.message;
+      //     console.log(acc.email)
+      //     createAlert(`info`, ` ${acc.email} `)
+      //     return acc;
+      //   }, {});
+      //   setInputError(errMsg);
+      //   return;
+      // }
       if (error instanceof ZodError) {
         const errMsg = error.errors.reduce((acc, cur) => {
           acc[cur.path] = cur.message;
+          createAlert(`info`, ` ${cur.message} `)
           return acc;
         }, {});
         setInputError(errMsg);
