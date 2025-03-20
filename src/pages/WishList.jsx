@@ -1,24 +1,20 @@
 import React, { useEffect } from "react";
-import NavbarHeader from "../components/NavbarHeader";
-import Lake from "../pictures/Lake.png";
-import paris from "../pictures/paris2.jpg";
-import shirakawago from "../pictures/Shirakawago.png";
 import view from "../icons/view.png";
 import redheart from "../icons/redheart.png";
-import useWishlistStoresExample from "../stores/useWishlistStoresExample";
+import useWishlistStores from "../stores/useWishlistStores";
 import useUserStore from "../stores/userStore";
 import { Link } from "react-router";
 import Swal from "sweetalert2";
 
 function WishList() {
-  const actionGetWishlist = useWishlistStoresExample(
+  const actionGetWishlist = useWishlistStores(
     (state) => state.actionGetWishlist
   );
-  const actionDeleteWishlist = useWishlistStoresExample(
+  const actionDeleteWishlist = useWishlistStores(
     (state) => state.actionDeleteWishlist
   );
-  const wishlists = useWishlistStoresExample((state) => state.wishlists);
-  const getCurrentWishlists = useWishlistStoresExample(
+  const wishlists = useWishlistStores((state) => state.wishlists);
+  const getCurrentWishlists = useWishlistStores(
     (state) => state.getCurrentWishlists
   );
   const user = useUserStore((state) => state.user);
@@ -68,7 +64,7 @@ function WishList() {
       {/* <NavbarHeader /> */}
 
       <div className="flex flex-wrap justify-start gap-2 px-3 mt-10">
-        {wishlists &&
+        {wishlists?.length > 0 ? (
           wishlists?.result?.map((el, index) => (
             <div key={index} className="flex  flex-col">
               {/* Image or Fallback Icon */}
@@ -101,7 +97,33 @@ function WishList() {
                 <p className="text-[#A3B3BB]">{el?.post?.view}</p>
               </div>
             </div>
-          ))}
+          ))
+        ) : (
+          <div className="flex justify-center items-center w-full">
+            <div role="alert" className="alert alert-info alert-soft">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                className="h-6 w-6 shrink-0 stroke-current"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+              <span>
+                <strong>Your wishlist is empty!</strong> Find something amazing
+                and add it to your wishlist!
+              </span>
+              <Link to="/home">
+                <div className="btn btn-info btn-xs">here</div>
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
