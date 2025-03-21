@@ -26,6 +26,7 @@ import AIPlanning from "../pages/private/AIPlanning";
 import ProfanityFilter from "../pages/Badword";
 import FilterPageDraft from "../pages/FilterPageDraft";
 import SuccessPost from "../pages/SuccessPost";
+import EditPost from "../pages/EditPost";
 
 // Route ใช้ในการกำหนดเส้นทาง (route) เฉพาะหนึ่งเส้นทาง
 // Routes จะตรวจสอบว่า URL ตรงกับ path ไหน และแสดงคอมโพเนนต์ที่ตรงกับเส้นทางนั้น
@@ -73,6 +74,7 @@ function AppRoutes() {
           <Route path="edit-profile" element={<EditProfile />} />
           <Route path="badword" element={<ProfanityFilter/>} />
           <Route path="success-post" element={<SuccessPost/>} />
+          <Route path="edit-post/:id" element={<EditPost />} />
         </Route>
 
         {/* Private: Admin */}
