@@ -104,12 +104,12 @@ const CommentItem = ({ comment }) => {
               onChange={(e) => setEditContent(e.target.value)}
               className="border p-1 flex-1 rounded-md"
             />
-            <button className="btn btn-success" onClick={handleEdit}>
+            <button className="btn btn-outline btn-info" onClick={handleEdit}>
               Save
             </button>
             <button
-              className="btn btn-secondary"
-              onClick={() => setIsEditing(false)}
+              className="btn btn-outline"
+              onClick={() => setIsEditing(false)} 
             >
               Cancel
             </button>
@@ -122,21 +122,21 @@ const CommentItem = ({ comment }) => {
 
         <div className="flex gap-2 mt-2">
           <button
-            className="btn btn-xs btn-info"
+            className="btn btn-xs btn-outline"
             hidden={comment.parentId === null ? false : true}
             onClick={() => setShowReply(!showReply)}
           >
             Reply
           </button>
           <button
-            className="btn btn-xs btn-warning"
+            className="btn btn-xs btn-outline"
             hidden={Number(comment.userId) === Number(user?.id) ? false : true} // แก้ไขเป็น user ของเราเอง
             onClick={() => setIsEditing(true)}
           >
             Edit
           </button>
           <button
-            className="btn btn-xs btn-error"
+            className="btn btn-xs btn-error btn-outline"
             onClick={handleDelete}
             hidden={comment.userId === user?.id ? false : true} // แก้ไขเป็น user ของเราเอง
           >
