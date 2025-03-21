@@ -8,5 +8,11 @@ postApi.actionAddPost = async (input) => {
   });
 };
 
+postApi.actionDeletePost = async (id) => {
+  return axios.delete(`/api/posts/${id}`, {
+    headers: { Authorization: `Bearer ${getAccessToken()}` },
+  });
+};
+
 
 export default postApi;
