@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from "react";
 import CommentList from "./CommentList";
-import { FaLink, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import {
+  FaLink,
+  FaChevronLeft,
+  FaChevronRight,
+  FaMapMarkerAlt,
+  FaTimes,
+  FaUser,
+} from "react-icons/fa";
 import useLocationStores from "../stores/usePublicPostStores";
+import { useNavigate } from "react-router";
+
 
 const PostPage = ({ postId }) => {
-
   const actionGetPostByPostId = useLocationStores(
     (state) => state.actionGetPostByPostId
   );
+  const navigate = useNavigate();
   const publicPost = useLocationStores((state) => state.publicPost);
   const postImage = useLocationStores((state) => state.postImage);
 
-  // get post
   useEffect(() => {
     callPost();
   }, []);
@@ -20,128 +28,149 @@ const PostPage = ({ postId }) => {
     await actionGetPostByPostId(postId);
   };
 
-  // post image
-  let postImages = [];
-
-  if (postImage) {
-    postImages = postImage?.map((el) => el?.url);
-  }
-
-  console.log(publicPost);
-
-  const images = postImages;
+  let postImages = postImage ? postImage.map((el) => el?.url) : [];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const prevImage = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+      prevIndex === 0 ? postImages.length - 1 : prevIndex - 1
     );
   };
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      prevIndex === postImages.length - 1 ? 0 : prevIndex + 1
     );
   };
 
+  const openPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
+
+  console.log(publicPost);
+
+  
   return (
-    <div className=" mx-auto w-full p-6 bg-white">
+    <div className="mx-auto w-full max-w-5xl p-6 bg-white shadow-md rounded-lg">
       {/* Header */}
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-blue-700 flex justify-center">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-gray-800">
           {publicPost?.post?.title}
-          <a href="#" className="text-gray-500 ml-2">
-            <FaLink />
-          </a>
         </h1>
+        <a href="#" className="text-gray-500 flex items-center">
+          <FaLink className="mr-1" /> Share
+        </a>
+      </div>
+
+      <div className="flex items-center mt-4">
+        <FaUser className="text-gray-600 mr-2" />
+        <span
+          className="text-blue-600 cursor-pointer"
+          onClick={() =>
+            navigate(`/user-dashboard/${publicPost?.post?.userId}`)
+          }
+        >
+          User
+        </span>
       </div>
 
       {/* Image Slider */}
       <div className="relative flex justify-center items-center mt-6">
         <button
           onClick={prevImage}
-          className="absolute left-20 bg-blue-500 text-white p-2 rounded-full shadow-lg"
+          className="absolute left-4 bg-gray-800 text-white p-2 rounded-full shadow-lg opacity-80"
         >
           <FaChevronLeft size={24} />
         </button>
         <img
-          src={images[currentImageIndex]}
-          alt="Main Image"
-          className="rounded-lg w-full max-w-3xl h-72 object-cover"
+          src={
+            postImages[currentImageIndex] ||
+            "https://via.placeholder.com/800x400"
+          }
+          alt="Post Image"
+          className="rounded-lg w-full max-w-3xl h-96 object-cover cursor-pointer"
+          onClick={openPopup} // เปิด Popup เมื่อคลิกที่รูป
         />
         <button
           onClick={nextImage}
-          className="absolute right-20 bg-blue-500 text-white p-2 rounded-full shadow-lg"
+          className="absolute right-4 bg-gray-800 text-white p-2 rounded-full shadow-lg opacity-80"
         >
           <FaChevronRight size={24} />
         </button>
       </div>
 
-      {/* Tabs */}
-      <div className="flex justify-center mt-5 border-b pb-2 space-x-6 text-gray-600"></div>
-
-      {/* Middle Post */}
-      <div className="mt-6 text-black ml-20">
-        <h2 className="text-xl font-semibold text-blue-700 ">Content</h2>
-        <p className="mt-2">{publicPost?.post?.content}</p>
-      </div>
-
-      <div className="my-6 h-10 mb-[150px]">
-        <div className="flex gap-2">
-          {publicPost
-            ? publicPost?.postImage?.map((el, index) => (
-                <div key={index} className="w-[300px]">
-                  <img src={el?.url} />
-                </div>
-              ))
-            : ""}
-        </div>
-      </div>
-
-      {/* Footer Post */}
-      {/* <div className="mt-10">
-        <h2 className="text-xl font-bold text-blue-700">Fly me to Maldives</h2>
-        <div className="grid grid-cols-3 gap-4 mt-4">
-          <div className="col-span-2">
+      {/* Popup Modal */}
+      {isPopupOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50">
+          <div className="relative">
+            <button
+              onClick={closePopup}
+              className="absolute top-4 right-4 bg-gray-700 text-white p-2 rounded-full shadow-lg"
+            >
+              <FaTimes size={24} />
+            </button>
             <img
-              src={""}
-              alt="Post Image"
-              className="rounded-lg w-full object-cover"
+              src={postImages[currentImageIndex]}
+              alt="Expanded Post Image"
+              className="max-w-[90vw] max-h-[90vh] rounded-lg"
             />
-            <p className=" text-black mt-2">
-              Experience the best of the Maldives through stunning beach
-              resorts, water villas, and world-class diving spots.
-            </p>
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-semibold text-blue-700 ml-20">
-              Suggestion
-            </h3>
-            <div className="space-y-3 mt-2 ml-20">
-              <img
-                src={""}
-                alt="Related Post"
-                className="rounded-lg w-full object-cover"
-              />
-              <img
-                src={""}
-                alt="Related Post"
-                className="rounded-lg w-full object-cover"
-              />
-              <img
-                src={""}
-                alt="Related Post"
-                className="rounded-lg w-full object-cover"
-              />
-            </div>
           </div>
         </div>
-      </div> */}
+      )}
+
+      {/* Location and Budget Section */}
+      <div className="mt-4 flex items-center justify-between text-gray-600">
+        <div className="flex items-center">
+          <FaMapMarkerAlt className="text-red-500 mr-2" />
+          <span>
+            {publicPost?.post?.place?.latitude} ,{" "}
+            {publicPost?.post?.place?.longitude}
+          </span>
+        </div>
+        <div className="font-semibold text-gray-600">
+          Budget: ${publicPost?.post?.budget}
+        </div>
+      </div>
+
+      <div className="mt-6 flex">
+        <div className="w-2/3 pr-4">
+          <h2 className="text-xl font-semibold text-gray-700">Details</h2>
+          <p className="mt-2 text-gray-600">{publicPost?.post?.content}</p>
+        </div>
+      </div>
+
+      {/* Additional Images */}
+      {publicPost?.postImage?.length > 0 && (
+        <div className="my-6">
+          <h3 className="text-lg font-semibold text-gray-700 mb-3">
+            More Photos
+          </h3>
+          <div className="grid grid-cols-3 gap-2">
+            {publicPost.postImage.map((el, index) => (
+              <img
+                key={index}
+                src={el?.url}
+                alt="Additional Image"
+                className="rounded-lg object-cover w-full h-40 cursor-pointer"
+                onClick={() => {
+                  setCurrentImageIndex(index);
+                  openPopup();
+                }} // คลิกแล้วเปิด Popup
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Comments Section */}
-      <section>
+      <section className="mt-10">
+        <h2 className="text-xl font-bold text-gray-700">Comments</h2>
         <CommentList postId={postId} />
       </section>
     </div>

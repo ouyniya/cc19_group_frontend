@@ -20,7 +20,6 @@ const CommentList = ({ postId }) => {
 
   return (
     <div>
-      <h3>Comments</h3>
       <CommentForm postId={postId} />
       <div>
         {getUpdatedComment()?.map((comment, index) =>
