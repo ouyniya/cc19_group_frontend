@@ -159,7 +159,6 @@ function CreatePostPage() {
 
   // Handle Image Upload
   const onDrop = async (pictureFiles, pictureDataURLs) => {
-    console.log(123);
     if (pictureFiles.length > 0) {
       // console.log("Files selected:", pictureFiles);
       setFile(pictureFiles);
@@ -182,6 +181,7 @@ function CreatePostPage() {
       setIsSafe(safeImages.length === pictureFiles.length);
     } else {
       setIsSafe(true);
+      setFile([]);
     }
   };
 
@@ -276,6 +276,7 @@ function CreatePostPage() {
       setIsLoading(false);
     }
   };
+
 
   return (
     <>
