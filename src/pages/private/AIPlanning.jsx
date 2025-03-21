@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import useLocationStores from "../../stores/useLocationStores";
 import useAiplanningStores from "../../stores/useAIPlanningStores";
 
@@ -12,6 +12,9 @@ export default function AIPlanning() {
   const [tripType, setTripType] = useState([]);
   const [moodAndTone, setMoodAndTone] = useState("");
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0); // ✅ Progress bar state
+
+  const resultRef = useRef(null);
 
   const input = {
     budget,
@@ -78,6 +81,15 @@ export default function AIPlanning() {
     }
 
     setLoading(true);
+    setProgress(0);
+
+    // ⏳ Simulate loading progress
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 90) return prev;
+        return prev + 1;
+      });
+    }, 50);
 
     try {
       await generatePlan(input);
@@ -85,12 +97,27 @@ export default function AIPlanning() {
       console.log(error);
     }
 
-    setLoading(false);
+    clearInterval(interval);
+    setProgress(100);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
   };
+
+  // 🔄 Scroll to result when ready
+  useEffect(() => {
+    if (resultPlanning && resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [resultPlanning]);
 
   return (
     <div className="p-6 bg-gray-50 w-full min-h-screen flex flex-col items-center text-black">
-      <h1 className="text-2xl font-bold text-blue-700 mb-4">Plan Your Trip</h1>
+      <h1 className="text-2xl font-bold mb-4" style={{ color: '#086BB0' }}>
+        Plan Your Trip
+      </h1>
+
 
       <div className="grid grid-cols-2 gap-4 w-full max-w-2xl">
         <input
@@ -148,8 +175,13 @@ export default function AIPlanning() {
           <div className="grid grid-cols-3 gap-2">
             {tripOptions.map(({ label, className }) => (
               <label key={label} className="flex items-center">
-                <input type="checkbox" value={label} checked={tripType.includes(label)}
-                  onChange={() => handleTripTypeChange(label)} className={`${className} mr-2`} />
+                <input
+                  type="checkbox"
+                  value={label}
+                  checked={tripType.includes(label)}
+                  onChange={() => handleTripTypeChange(label)}
+                  className={`${className} mr-2`}
+                />
                 {label}
               </label>
             ))}
@@ -164,34 +196,53 @@ export default function AIPlanning() {
               <div
                 key={label}
                 className={`cursor-pointer flex flex-col items-center p-2 rounded-lg transition-all duration-300
-          ${moodAndTone === label ? "border-4 border-blue-500" : "border border-gray-300 hover:scale-105"}`}
+                ${moodAndTone === label ? "border-4 border-blue-500" : "border border-gray-300 hover:scale-105"}`}
                 onClick={() => setMoodAndTone(label)}
                 style={{
-                  width: "105px",  // Slightly wider for text fit
-                  height: "105px", // Increased height for text spacing
+                  width: "105px",
+                  height: "105px",
                   transform: moodAndTone === label ? "scale(1.2)" : "scale(1)",
                 }}
               >
-                <span className="text-5xl">{emoji}</span> {/* Adjusted emoji size */}
-                <p className="mt-1 text-center text-sm font-medium leading-tight w-full">
-                  {label}
-                </p> {/* Wrapped text inside the box */}
+                <span className="text-5xl">{emoji}</span>
+                <p className="mt-1 text-center text-sm font-medium leading-tight w-full">{label}</p>
               </div>
             ))}
           </div>
         </div>
-
       </div>
 
-      <button onClick={handleSubmit} className="btn btn-info mt-4" disabled={loading}>
-        {loading ? "Generating..." : "Generate Trip Plan"}
+      {/* Generate Button */}
+      <button onClick={handleSubmit} className="btn btn-info mt-4 text-white"   disabled={loading}>
+        {loading ? "Generating..." : "Generate Your Travelling"}
       </button>
+
+      {/* Progress Bar */}
+      {loading && (
+        <div className="w-full max-w-2xl mt-4">
+          <div className="w-full bg-gray-200 rounded-full h-4">
+            <div
+              className="bg-blue-500 h-4 rounded-full transition-all duration-200 ease-out"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+          <p className="text-sm text-gray-600 mt-1 text-center">Generating trip... {progress}%</p>
+        </div>
+      )}
+
+      {/* Trip Result */}
       {resultPlanning && (
-        <div className="mt-6 p-4 bg-white shadow rounded-lg w-full max-w-3xl">
-          <h2 className="text-lg font-semibold text-blue-700 mb-3">Your Travel Plan</h2>
+        <div
+          ref={resultRef}
+          className="mt-6 p-4 bg-white shadow rounded-lg w-full max-w-3xl"
+        >
+          <h2 className="text-lg font-semibold mb-3" style={{ color: '#086BB0' }}>
+            Your Travel Plan
+          </h2>
+
           <div
-            className="text-black leading-relaxed space-y-3" // Ensure proper spacing
-            style={{ wordBreak: "break-word" }} // Prevent overflow issues
+            className="text-black leading-relaxed space-y-3"
+            style={{ wordBreak: "break-word" }}
             dangerouslySetInnerHTML={{ __html: resultPlanning }}
           />
         </div>
