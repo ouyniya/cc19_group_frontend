@@ -7,6 +7,7 @@ import East from "../../pictures/East.png";
 import West from "../../pictures/West.png";
 import South from "../../pictures/South.png";
 import MapCanvasExample from "../MapCanvasExample";
+import InteractiveMap from "../InteractiveMap";
 
 function Region() {
   return (
@@ -55,6 +56,7 @@ function Region() {
           <MapCanvasExample />
         </div>
       </div>
+      <InteractiveMap />
     </div>
   );
 }
