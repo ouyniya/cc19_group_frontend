@@ -10,7 +10,8 @@ import {
 } from "react-icons/fa";
 import useLocationStores from "../stores/usePublicPostStores";
 import { useNavigate } from "react-router";
-
+import MapCanvasShow from "./MapCanvasShow";
+import view from "../icons/view.png";
 
 const PostPage = ({ postId }) => {
   const actionGetPostByPostId = useLocationStores(
@@ -54,8 +55,11 @@ const PostPage = ({ postId }) => {
   };
 
   console.log(publicPost);
+  let latitude = publicPost?.post?.place?.latitude;
+  let longitude = publicPost?.post?.place?.longitude;
 
-  
+  // console.log(latitude)
+
   return (
     <div className="mx-auto w-full max-w-5xl p-6 bg-white shadow-md rounded-lg">
       {/* Header */}
@@ -63,20 +67,23 @@ const PostPage = ({ postId }) => {
         <h1 className="text-3xl font-bold text-gray-800">
           {publicPost?.post?.title}
         </h1>
-        <a href="#" className="text-gray-500 flex items-center">
-          <FaLink className="mr-1" /> Share
-        </a>
+        <div className="flex gap-1">
+          <img src={view} alt="view icon" className="w-6 h-6" />
+          <p className="text-gray-500 flex items-center">
+            {new Intl.NumberFormat("ja-JP", {}).format(publicPost?.post?.view)}
+          </p>
+        </div>
       </div>
 
       <div className="flex items-center mt-4">
         <FaUser className="text-gray-600 mr-2" />
         <span
-          className="text-blue-600 cursor-pointer"
+          className="text-sky-600 cursor-pointer"
           onClick={() =>
             navigate(`/user-dashboard/${publicPost?.post?.userId}`)
           }
         >
-          User
+          {publicPost?.post?.user?.username}
         </span>
       </div>
 
@@ -134,14 +141,21 @@ const PostPage = ({ postId }) => {
           </span>
         </div>
         <div className="font-semibold text-gray-600">
-          Budget: ${publicPost?.post?.budget}
+          Budget:
+          {new Intl.NumberFormat("ja-JP", {
+            style: "currency",
+            currency: "THB",
+          }).format(publicPost?.post?.budget)}
         </div>
       </div>
 
-      <div className="mt-6 flex">
+      <div className="mt-6 flex justify-between">
         <div className="w-2/3 pr-4">
           <h2 className="text-xl font-semibold text-gray-700">Details</h2>
           <p className="mt-2 text-gray-600">{publicPost?.post?.content}</p>
+        </div>
+        <div className="w-[250px]">
+          <MapCanvasShow latitude={latitude} longitude={longitude} />
         </div>
       </div>
 
