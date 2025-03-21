@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import useAIPlanning from "../../stores/useAIplanningStores";
 import useLocationStores from "../../stores/useLocationStores";
-import useAiplanningStores from "../../stores/useAIplanningStores";
+import useAiplanningStores from "../../stores/useAIPlanningStores";
 
 export default function AIPlanning() {
   const [budget, setBudget] = useState("");
