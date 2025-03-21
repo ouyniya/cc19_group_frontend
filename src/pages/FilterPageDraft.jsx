@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import heart from "../icons/heart.png";
 import useFilterStores from "../stores/useFilterStores";
 import { useSearchParams } from "react-router"; // Import from react-router-dom
@@ -26,8 +26,14 @@ function FilterPageDraft() {
   const totalPages = Math.ceil((filterPosts?.totalPosts || 0) / pageSize); // Calculate total pages
 
   // Fetch posts based on query params whenever they change
+  const timeoutRef = useRef(null); // Reference for debounce timer
+
   useEffect(() => {
-    const fetchPosts = async () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(async () => {
       setLoading(true);
       const queryParams = new URLSearchParams({
         placeName,
@@ -37,17 +43,18 @@ function FilterPageDraft() {
       });
 
       try {
-        // Fetch posts based on current filters
         await actionGetFilterPosts(queryParams);
       } catch (error) {
         console.error("Error fetching posts:", error);
       } finally {
         setLoading(false);
       }
-    };
+    }, 500); // Delay of 500ms
 
-    fetchPosts();
-  }, [placeName, province, district, page, actionGetFilterPosts]); // Dependencies: re-fetch when these change
+    return () => clearTimeout(timeoutRef.current); // Cleanup on unmount or dependency change
+  }, [placeName, province, district, page, actionGetFilterPosts]);
+
+
 
   // Handle search form submission
   const handleSearch = () => {
@@ -72,7 +79,7 @@ function FilterPageDraft() {
   };
 
   const hdlAddWishlist = async (input) => {
-    console.log(input)
+    // console.log(input)
     if (!input) {
       return createAlert("info", "Please choose post correctly")
     }
@@ -90,19 +97,19 @@ function FilterPageDraft() {
   return (
     <>
       <div>
-        <div className="mt-15">
+        <div className="mt-15 flex flex-col justify-between">
           <div className="flex justify-between items-center">
-            <p className="text-2xl font-bold ml-37">Find Your Next Adventure</p>
+            <p className="text-2xl font-bold ml-37 ">Find Your Next Adventure</p>
           </div>
 
           {/* Search Box */}
-          <div className="mt-5 mb-[100px] max-w-[80%] mx-auto flex gap-3">
+          <div className="mt-5 mb-[100px] max-w-[80%] mx-auto flex justify-between gap-3 w-full">
             <input
               type="text"
               placeholder="Search by Place"
               value={placeName}
               onChange={(e) => setPlaceName(e.target.value)}
-              className="p-2 border rounded-lg input"
+              className="p-2 border rounded-lg input flex-1/3"
             />
             <input
               type="text"

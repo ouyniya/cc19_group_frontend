@@ -5,7 +5,6 @@ import { createAlert } from "../utils/createAlert";
 const usePostStores = create((set, get) => ({
   newPost: [],
   isLoading: false,
-
   actionAddPost: async (input) => {
     set({ isLoading: true });
     try {
@@ -18,7 +17,7 @@ const usePostStores = create((set, get) => ({
       set({ isLoading: false });
     }
   },
-  actionDeleteNewPost: () => set({ newPost: [] })
+  actionDeleteNewPost: () => set({ newPost: [] }),
 }));
 
 export default usePostStores;

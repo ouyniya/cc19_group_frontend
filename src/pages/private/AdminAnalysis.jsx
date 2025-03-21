@@ -60,76 +60,107 @@ export default function AnalysisDashboard() {
     topDestination,
   };
 
+  // console.log(topDestination)
+
   return (
-    <div className="p-6 bg-gray-50 w-full min-h-screen">
-      <div className="flex justify-between gap-6 mb-6 text-center">
-        <div className="flex-1 p-4 bg-white shadow rounded-lg">
-          <h2 className="text-lg font-semibold text-gray-700">Total Users</h2>
-          <p className="text-2xl font-bold text-blue-500">{data?.allUsers}</p>
-          <p className="text-xs text-gray-500">Updated from latest data</p>
-        </div>
-        <div className="flex-1 p-4 bg-white shadow rounded-lg">
-          <h2 className="text-lg font-semibold text-gray-700">Total Views</h2>
-          <p className="text-2xl font-bold text-blue-500">{data?.totalViews}</p>
-          <p className="text-xs text-gray-500">Updated from latest data</p>
-        </div>
-
-        <div className="flex-1 p-4 bg-white shadow rounded-lg">
-          <h2 className="text-lg font-semibold text-gray-700">
-            Top Destination
-          </h2>
-          <p className="text-2xl font-bold text-orange-500">
-            {data?.topDestination?.topProvinces?.[0]?.name}
-          </p>
-          <p className="text-xs text-gray-500">Updated from latest data</p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="p-4 bg-white shadow rounded-lg h-[350px]">
-          <h2 className="text-lg font-semibold text-gray-700 mb-3">
-            Views Per Place
-          </h2>
-          <div className="h-[300px]">
-            <Bar
-              data={{
-                labels:
-                  data?.topDestination?.topProvinces?.map((el) => el?.name) ||
-                  [],
-                datasets: [
-                  {
-                    label: "Number of Views",
-                    data:
-                      data?.topDestination?.topProvinces?.map(
-                        (el) => el?.totalViews
-                      ) || [],
-                    backgroundColor: "rgba(75, 192, 192, 0.5)",
-                  },
-                ],
-              }}
-              options={{ responsive: true, maintainAspectRatio: false }}
-            />
+    <>
+      <div className="p-6 bg-gray-100 w-full overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200 ">
+            <h2 className="stat-title font-bold text-lg">Total Users</h2>
+            <p className="stat-value text-sky-400">{data?.allUsers}</p>
+            <p className="stat-title">Updated from latest data</p>
+          </div>
+          <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200">
+            <h2 className="stat-title  font-bold text-lg">Total Views</h2>
+            <p className="stat-value text-sky-400">{data?.totalViews}</p>
+            <p className="stat-title">Updated from latest data</p>
+          </div>
+          <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200">
+            <h2 className="stat-title  font-bold text-lg">Top Destination</h2>
+            <p className="stat-value text-sky-400">
+              {data?.topDestination?.topProvinces?.[0]?.name}
+            </p>
+            <p className="stat-title">Updated from latest data</p>
           </div>
         </div>
 
-        <div className="flex-1 p-9 bg-white shadow rounded-lg text-left h-[350px]">
-          <h2 className="text-lg font-semibold text-gray-700 mb-3">
-            Top 5 Most Viewed Posts
-          </h2>
-          <ul className="text-gray-600 text-lg mt-6">
-            {data?.topDestination?.topProvinces?.map((el, index) => {
-              if (index <= 5) {
-                return (
-                  <li key={index} className="mb-2">
-                    {index + 1}. {el?.name} -
-                    <strong>{el?.totalViews} views</strong>
-                  </li>
-                );
-              }
-            })}
-          </ul>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
+          <div className="p-6 bg-white shadow-xs rounded-xl border border-gray-200 h-[370px]">
+            <h2 className="text-lg font-semibold stat-title">
+              Views Per Place
+            </h2>
+            <div className="h-[300px]">
+              <Bar
+                data={{
+                  labels:
+                    data?.topDestination?.topProvinces
+                      ?.slice(0, 10)
+                      ?.map((el, index) => {
+                        // if (index <= 9) {
+                        return el?.name;
+                        // }
+                      }) || [],
+                  datasets: [
+                    {
+                      label: "Number of Views",
+                      data:
+                        data?.topDestination?.topProvinces
+                          ?.slice(0, 10)
+                          ?.map((el, index) => {
+                            // if (index <= 9) {
+                            return el?.totalViews;
+                            // }
+                          }) || [],
+                      backgroundColor: [
+                        "rgba(12, 74, 110, 0.8)", // sky-900
+                        "rgba(12, 74, 110, 0.8)", // sky-900
+                        "rgba(7, 89, 133, 0.8)", // sky-800
+                        "rgba(3, 105, 161, 0.8)", // sky-700
+                        "rgba(2, 132, 199, 0.8)", // sky-600
+                        "rgba(14, 165, 233, 0.8)", // sky-500
+                        "rgba(56, 189, 248, 0.8)", // sky-400
+                        "rgba(125, 211, 252, 0.8)", // sky-300
+                        "rgba(186, 230, 253, 0.8)", // sky-200 (lighter)
+                        "rgba(224, 242, 254, 0.8)", // sky-100 (lightest)
+                      ],
+                    },
+                  ],
+                }}
+                options={{ responsive: true, maintainAspectRatio: false }}
+              />
+            </div>
+          </div>
+
+          <div className="p-6 bg-white shadow-xs rounded-xl border border-gray-200 h-[370px] flex justify-center items-center ">
+            <div className="w-full">
+              <h2 className="text-lg font-semibold stat-title mb-5">
+                Top 5 Most Viewed Posts
+              </h2>
+              <ul className="space-y-3 stat-title text-[14px]">
+                {data?.topDestination?.topProvinces
+                  ?.slice(0, 5)
+                  .map((el, index) => (
+                    <li
+                      key={index}
+                      className="flex justify-between items-center border-b border-slate-300 pb-2"
+                    >
+                      <span className="flex">
+                        <div className="flex justify-center items-center w-7 h-7 bg-sky-500 text-white rounded-full p-1 mr-3">
+                          <strong>{index + 1}</strong>
+                        </div>
+                        {el?.name}
+                      </span>
+                      <strong className="text-sky-400">
+                        {el?.totalViews} views
+                      </strong>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

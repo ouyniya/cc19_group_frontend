@@ -51,6 +51,12 @@ function Rightbar() {
           {user?.role === "USER" && (
             <>
               <button
+                onClick={() => navigate(`/user-dashboard/${user?.id}`)}
+                className="text-gray-700 hover:text-[#5CAFF0] hover:underline font-semibold"
+              >
+                Profile
+              </button>
+              <button
                 onClick={() => navigate("/user/plan")}
                 className="text-gray-700 hover:text-[#5CAFF0] hover:underline font-semibold"
               >
@@ -60,7 +66,7 @@ function Rightbar() {
                 onClick={() => navigate("/user/wishlist")}
                 className="text-gray-700 hover:text-[#5CAFF0] hover:underline font-semibold"
               >
-                Wish List
+                Wishlist
               </button>
             </>
           )}

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import userApi from "../api/authApi";
+import postApi from "../api/postApi";
 import profileApi from "../api/profileApi";
 import axios from "axios";
 import { createAlert } from "../utils/createAlert";
@@ -133,6 +134,22 @@ const useUserStore = create(
           set({ posts: data.post })
         } catch (error) {
           console.log(error);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+      actionDeletePost: async (id) => {
+        set({ isLoading: true });
+        try {
+          const res = await postApi.actionDeletePost(id);
+          set((state) => ({
+            posts: Array.isArray(state.posts)
+              ? state.posts.filter((el) => el.id !== id)
+              : [],
+          }));
+        } catch (error) {
+          const errorMsg = error?.response?.data?.message;
+          createAlert("info", errorMsg);
         } finally {
           set({ isLoading: false });
         }

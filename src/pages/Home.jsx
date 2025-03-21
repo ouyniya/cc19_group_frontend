@@ -8,6 +8,7 @@ import TopLocation from "../components/Home/TopLocation";
 import MoreExplore from "../components/Home/MoreExplore";
 import Region from "../components/Home/Region";
 import useUserStore from "../stores/userStore";
+import MapCanvasExample from "../components/MapCanvasExample";
 
 function Home() {
   const navigate = useNavigate();
@@ -43,10 +44,10 @@ function Home() {
           </div>
           {/* search bar */}
 
-          <div className="flex justify-center gap-1 mt-5">
+          <div className="flex justify-center gap-4 mt-5">
             <input
               type="search"
-              className="grow"
+              className="input input-lg rounded-full w-[35%] p-5"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               placeholder="Find your destination"
@@ -98,6 +99,9 @@ function Home() {
         <MoreExplore />
         {/* The most beautiful places */}
         <Region />
+
+        <div>
+        </div>
         {/* footer */}
         <div className="mt-5">
           <div className="bg-[#97BEE2] py-8">

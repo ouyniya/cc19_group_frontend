@@ -1,5 +1,5 @@
 import React from "react"; // ใช้ในการสร้าง components
-import { Route, Routes } from "react-router";
+import { Outlet, Route, Routes } from "react-router";
 import Layout from "../layouts/Layout";
 
 import LayoutUser from "../layouts/LayoutUser";
@@ -16,7 +16,6 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import UserDashboard from "../pages/UserDashboard";
 import WishList from "../pages/WishList";
-import CreatePost from "../pages/CreatePost";
 import EditProfile from "../pages/EditProfile";
 import ErrorNotFound from "../pages/ErrorNotFound";
 import ProtectRoutesGuest from "./ProtectRoutesGuest";
@@ -24,7 +23,7 @@ import ErrorUnauthorized from "../pages/ErrorUnauthorized";
 import UserDashboardShow from "../pages/UserDashboardShow";
 import CreatePostPage from "../pages/CreatePostPage";
 import AIPlanning from "../pages/private/AIPlanning";
-import ProfanityFilter from "../pages/ฺBadword";
+import ProfanityFilter from "../pages/Badword";
 import FilterPageDraft from "../pages/FilterPageDraft";
 import SuccessPost from "../pages/SuccessPost";
 
@@ -37,8 +36,14 @@ function AppRoutes() {
     <>
       <Routes>
         {/* public */}
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<Outlet />}>
           <Route index element={<LandingPage />} />
+
+          </Route>
+
+
+
+        <Route path="/" element={<Layout />}>
           <Route path="home" element={<Home />} />
           <Route path="filter-page" element={<FilterPageDraft/>} />
 

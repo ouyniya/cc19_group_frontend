@@ -27,7 +27,7 @@ const PostPage = ({ postId }) => {
     postImages = postImage?.map((el) => el?.url);
   }
 
-  // console.log(publicPost);
+  console.log(publicPost);
 
   const images = postImages;
 
