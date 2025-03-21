@@ -13,7 +13,6 @@ import {
 } from "chart.js";
 import { createAlert } from "../../utils/createAlert";
 import useAdminStores from "../../stores/useAdminStores";
-import { slice } from "@tensorflow/tfjs-core";
 
 ChartJS.register(
   CategoryScale,
@@ -60,6 +59,8 @@ export default function AnalysisDashboard() {
     totalViews,
     topDestination,
   };
+
+  // console.log(topDestination)
 
   return (
     <>

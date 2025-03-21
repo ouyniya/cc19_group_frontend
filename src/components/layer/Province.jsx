@@ -1,46 +1,75 @@
-import React from "react";
+import React, { useEffect } from "react";
 import * as d3 from "d3";
 import { GeoJSON } from "react-leaflet";
 import data from "../data/province.json";
+import useAdminStores from "../../stores/useAdminStores";
 
 function Province() {
-  const popularProvince = [
-    { id: 1, province: "Bangkok", view: 100 },
-    { id: 2, province: "Saraburi", view: 48 },
-    { id: 3, province: "Sa Kaeo", view: 20 },
-    { id: 4, province: "Tak", view: 10 },
-  ];
+  const store = useAdminStores();
+  const {
+    actionTopDestination,
+    topDestination,
+  } = store;
+  
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        await actionTopDestination();
+      } catch (error) {
+        console.error("Failed to fetch top destinations:", error);
+      }
+    };
+    
+    fetchAllUsers();
+  }, [actionTopDestination]);
+  
+  // Extract popular provinces safely
+  const popularProvince = topDestination?.topProvinces || [];
 
-  // หา min-max ของ view
-  const minView = Math.min(...popularProvince.map((p) => p.view));
-  const maxView = Math.max(...popularProvince.map((p) => p.view));
+  // Fix: Only calculate min and max if popularProvince array exists and has items
+  const calculateColors = () => {
+    // Check if popularProvince exists and has items
+    if (!popularProvince || popularProvince.length === 0) {
+      // Return default style function if no data
+      return () => ({
+        weight: 1,
+        color: "red",
+        fillColor: "white",
+        fillOpacity: 0.5,
+      });
+    }
 
-  // สร้าง gradient scale จากสีฟ้า → แดง
-  const colorScale = d3
-    .scaleSequential(d3.interpolate("white", "red")) // ไล่จาก Yellow → Orange → Red
-    .domain([minView, maxView]);
+    // console.log(popularProvince)
 
-  // ฟังก์ชันกำหนดสีตาม view
-  const getColor = (view) => {
-    return colorScale(view); // คืนค่าเป็นสี gradient
-  };
+    // Calculate min-max views safely
+    const minView = Math.min(...popularProvince.map(p => p.totalViews));
+    const maxView = Math.max(...popularProvince.map(p => p.totalViews));
 
-  // สไตล์ GeoJSON
-  const geoStyle = (feature) => {
-    const provinceName = feature.properties.ADM1_EN;
-    const province = popularProvince.find((p) => p.province === provinceName);
-    const view = province ? province.view : 0;
+    // Create color scale
+    const colorScale = d3
+      .scaleSequential(d3.interpolate("white", "red"))
+      .domain([minView, maxView]);
 
-    return {
-      weight: 1,
-      color: "gray",
-      fillColor: getColor(view),
-      fillOpacity: 0.5,
+    // Return the style function
+    return (feature) => {
+      const provinceName = feature.properties.ADM1_EN;
+      const province = popularProvince.find(p => p.name === provinceName);
+      const view = province ? province.totalViews : 0;
+
+      return {
+        weight: 1,
+        color: "gray",
+        fillColor: colorScale(view),
+        fillOpacity: 0.5,
+      };
     };
   };
 
+  // Get the style function based on current data state
+  const geoStyle = calculateColors();
 
-  return data && <GeoJSON data={data} style={geoStyle} />;
+  // Only render GeoJSON if data is available
+  return data ? <GeoJSON data={data} style={geoStyle} /> : null;
 }
 
 export default Province;

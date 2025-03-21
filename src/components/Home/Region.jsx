@@ -6,6 +6,7 @@ import North from "../../pictures/North.png";
 import East from "../../pictures/East.png";
 import West from "../../pictures/West.png";
 import South from "../../pictures/South.png";
+import MapCanvasExample from "../MapCanvasExample";
 
 function Region() {
   return (
@@ -93,12 +94,13 @@ function Region() {
         </div>
 
         {/* Heat Map */}
-        <div className="w-full md:w-1/3 flex justify-center">
-          <img
+        <div className="w-full h-[400px] md:w-1/3 flex justify-center rounded-xl overflow-hidden">
+          {/* <img
             src={Map}
             alt="heat map"
             className="w-full h-auto object-contain rounded-lg"
-          />
+          /> */}
+          <MapCanvasExample />
         </div>
       </div>
     </div>

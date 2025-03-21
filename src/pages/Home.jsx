@@ -8,6 +8,7 @@ import TopLocation from "../components/Home/TopLocation";
 import MoreExplore from "../components/Home/MoreExplore";
 import Region from "../components/Home/Region";
 import useUserStore from "../stores/userStore";
+import MapCanvasExample from "../components/MapCanvasExample";
 
 function Home() {
   const navigate = useNavigate();
@@ -98,6 +99,9 @@ function Home() {
         <MoreExplore />
         {/* The most beautiful places */}
         <Region />
+
+        <div>
+        </div>
         {/* footer */}
         <div className="mt-5">
           <div className="bg-[#97BEE2] py-8">
