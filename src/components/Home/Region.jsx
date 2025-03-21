@@ -24,82 +24,34 @@ function Region() {
         {/* Region Images */}
         <div className="w-full md:w-2/3">
           <div className="grid grid-cols-3 gap-4">
-            {/* Central */}
-            <div className="relative hover:cursor-pointer">
-              <img
-                src={WatArun}
-                alt="Central"
-                className="w-full h-full object-cover rounded-lg"
-              />
-              <p className="absolute bottom-2 left-2 font-bold text-sm sm:text-base md:text-lg text-white">
-                Central
-              </p>
-            </div>
-            {/* Northeast */}
-            <div className="relative hover:cursor-pointer">
-              <img
-                src={NorthEast}
-                alt="Northeast"
-                className="w-full h-full object-cover rounded-lg"
-              />
-              <p className="absolute bottom-2 left-2 font-bold text-sm sm:text-base md:text-lg text-white">
-                Northeast
-              </p>
-            </div>
-            {/* Northern */}
-            <div className="relative hover:cursor-pointer">
-              <img
-                src={North}
-                alt="Northern"
-                className="w-full h-full object-cover rounded-lg"
-              />
-              <p className="absolute bottom-2 left-2 font-bold text-sm sm:text-base md:text-lg text-white">
-                Northern
-              </p>
-            </div>
-            {/* East */}
-            <div className="relative hover:cursor-pointer">
-              <img
-                src={East}
-                alt="East"
-                className="w-full h-full object-cover rounded-lg"
-              />
-              <p className="absolute bottom-2 left-2 font-bold text-sm sm:text-base md:text-lg text-white">
-                East
-              </p>
-            </div>
-            {/* West */}
-            <div className="relative hover:cursor-pointer">
-              <img
-                src={West}
-                alt="West"
-                className="w-full h-full object-cover rounded-lg"
-              />
-              <p className="absolute bottom-2 left-2 font-bold text-sm sm:text-base md:text-lg text-white">
-                West
-              </p>
-            </div>
-            {/* South */}
-            <div className="relative hover:cursor-pointer">
-              <img
-                src={South}
-                alt="South"
-                className="w-full h-full object-cover rounded-lg"
-              />
-              <p className="absolute bottom-2 left-2 font-bold text-sm sm:text-base md:text-lg text-white">
-                South
-              </p>
-            </div>
+            {[
+              { src: WatArun, label: "Central" },
+              { src: NorthEast, label: "Northeast" },
+              { src: North, label: "Northern" },
+              { src: East, label: "East" },
+              { src: West, label: "West" },
+              { src: South, label: "South" },
+            ].map((region, index) => (
+              <div key={index} className="relative hover:cursor-pointer">
+                <img
+                  src={region.src}
+                  alt={region.label}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+
+                {/* Overlay Black Gradient */}
+                <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 rounded-b-lg">
+                  <p className="font-bold text-sm sm:text-base md:text-lg text-white">
+                    {region.label}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Heat Map */}
         <div className="w-full h-[400px] md:w-1/3 flex justify-center rounded-xl overflow-hidden">
-          {/* <img
-            src={Map}
-            alt="heat map"
-            className="w-full h-auto object-contain rounded-lg"
-          /> */}
           <MapCanvasExample />
         </div>
       </div>
