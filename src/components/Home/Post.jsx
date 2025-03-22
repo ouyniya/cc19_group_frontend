@@ -42,7 +42,7 @@ const titleVariants = {
 
 function Post() {
   return (
-    <div className="flex flex-row justify-center gap-6 px-5 mt-5">
+    <div className="flex flex-row justify-center gap-6 px-5 mt-10">
       {posts.map((el) => (
         <motion.div
           key={el.id}

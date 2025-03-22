@@ -154,9 +154,11 @@ const PostPage = ({ postId }) => {
           <h2 className="text-xl font-semibold text-gray-700">Details</h2>
           <p className="mt-2 text-gray-600">{publicPost?.post?.content}</p>
         </div>
-        <div className="w-[250px]">
-          <MapCanvasShow latitude={latitude} longitude={longitude} />
-        </div>
+        {!isPopupOpen && (
+          <div className="w-[250px]">
+            <MapCanvasShow latitude={latitude} longitude={longitude} />
+          </div>
+        )}
       </div>
 
       {/* Additional Images */}

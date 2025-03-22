@@ -25,9 +25,6 @@ function TopLocation() {
               alt={el.title}
               className="w-full h-48 object-cover rounded-2xl"
             />
-            <div className="absolute top-2 right-2">
-              <img src={heart} alt="heart icon" className="w-8 h-8" />
-            </div>
             <p className="font-bold mt-2 text-xl">{el.title}</p>
             <div className="flex items-center gap-2 mt-1">
               <img src={view} alt="view icon" className="w-6 h-6" />
