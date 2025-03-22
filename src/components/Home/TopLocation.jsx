@@ -17,21 +17,11 @@ const posts = [
 
 function TopLocation() {
   const store = useAdminStores();
-  const {
-    allUsers,
-    actionAllUsers,
-    totalViews,
-    actionAllViews,
-    actionTopDestination,
-    topDestination,
-    isLoading,
-  } = store;
+  const { actionTopDestination, topDestination } = store;
 
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        await actionAllUsers();
-        await actionAllViews();
         await actionTopDestination();
       } catch (error) {
         console.error("Failed to fetch user:", error);
@@ -39,30 +29,24 @@ function TopLocation() {
     };
 
     fetchAllUsers();
-  }, [actionAllUsers, actionAllViews, actionTopDestination]);
+  }, [actionTopDestination]);
 
-  const data = {
-    allUsers,
-    totalViews,
-    topDestination,
-  };
-
-  console.log(topDestination);
+  console.log(topDestination?.topProvinces);
 
   return (
     <div className="max-w-[80%] mx-auto mt-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        {posts.map((el) => (
-          <div key={el.id} className="relative">
+        {topDestination?.topProvinces?.slice(0, 4)?.map((el) => (
+          <div key={el?.id} className="relative">
             <img
-              src={el.image}
-              alt={el.title}
+              src={el?.image}
+              alt={el?.name}
               className="w-full h-48 object-cover rounded-2xl"
             />
-            <p className="font-bold mt-2 text-xl">{el.title}</p>
+            <p className="font-bold mt-2 text-xl">{el?.name}</p>
             <div className="flex items-center gap-2 mt-1">
               <img src={view} alt="view icon" className="w-6 h-6" />
-              <p className="text-gray-500">{el.view}</p>
+              <p className="text-gray-500">{el?.totalViews?.toLocaleString()}</p>
             </div>
           </div>
         ))}
