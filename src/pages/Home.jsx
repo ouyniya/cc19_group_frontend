@@ -60,20 +60,6 @@ function Home() {
             </button>
           </div>
         </div>
-        {/* Body popular */}
-        <div className="mt-5 px-4">
-          <div className=" flex flex-wrap justify-center gap-2">
-            <button className="btn border-0 rounded-full text-[#082F49] text-sm sm:text-base">
-              Popular regions
-            </button>
-            <button className="btn border-0 rounded-full text-[#082F49] text-sm sm:text-base">
-              Popular destination
-            </button>
-            <button className="btn border-0 rounded-full text-[#082F49] text-sm sm:text-base">
-              Popular landmarks
-            </button>
-          </div>
-        </div>
 
         {/* Body get post */}
         <Post />
