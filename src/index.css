@@ -8,3 +8,9 @@
 @plugin "daisyui" {
     themes: light --default
   }
+
+  :root {
+    --bgGround: #f4f9fb;
+    --btnMain: #086BB0;
+    --white: #ffffff;
+  }

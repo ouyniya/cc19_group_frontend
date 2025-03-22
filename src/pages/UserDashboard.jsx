@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from "react";
-import NavbarHeader from "../components/NavbarHeader";
 import Profile from "../pictures/profile.png";
 import Edit from "../icons/edit.png";
-import EditProfile from "../components/UserDashboard/EditProfile";
-import ChangeProfile from "../components/UserDashboard/ChangeProfile";
 import useUserStore from "../stores/userStore";
-import { Coins, Edit2, Edit3Icon, User2 } from "lucide-react";
+import { Coins, Crown, Edit2, Edit3Icon, User2 } from "lucide-react";
 import { Link } from "react-router";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
+import Menu from "../components/UserDashboard/ActionMenu";
 import ActionMenu from "../components/UserDashboard/ActionMenu";
-import BtnCreatePost from "../components/UserDashboard/BtnCreatePost";
-import usePostStores from "../stores/usePostStores";
 
 function UserDashboard({ userId }) {
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current location
 
   const user = useUserStore((state) => state.user);
   // const getCurrentUser = useUserStore((state) => state.getCurrentUser);
@@ -36,6 +33,12 @@ function UserDashboard({ userId }) {
   const handleShowLess = () => {
     setVisibleRows(10); // Reset to show only 10 rows
   };
+
+  useEffect(() => {
+    // navigate(0);
+    console.log("***Location changed to:", location.pathname);
+    console.log("***now", `/user-dashboard/${userId}`);
+  }, [location]);
 
   useEffect(() => {
     // get user data
@@ -65,7 +68,8 @@ function UserDashboard({ userId }) {
               <div className="flex justify-center md:justify-start">
                 <div className="relative group">
                   <div className="w-40 h-40 md:w-48 md:h-48 lg:w-60 lg:h-60 rounded-full bg-gradient-to-r from-blue-300 to-blue-200 flex items-center justify-center shadow-md overflow-hidden">
-                    {userPublicInfo?.profileImage && !userPublicInfo?.isGoogleUser ? (
+                    {userPublicInfo?.profileImage &&
+                    !userPublicInfo?.isGoogleUser ? (
                       <img
                         src={userPublicInfo?.profileImage}
                         alt="profile"
@@ -83,7 +87,17 @@ function UserDashboard({ userId }) {
               {/* Profile information with improved typography */}
               <div className="flex flex-col md:ml-8 mt-6 md:mt-0 text-center md:text-left flex-grow">
                 <h1 className="text-3xl font-bold text-sky-800 mb-1">
-                  {userPublicInfo?.username}
+                  {userPublicInfo?.role === "ADMIN" ? (
+                    <div>
+                      {userPublicInfo?.username}
+                      <div className="badge badge-soft badge-warning ml-2">
+                        <Crown size={18} />
+                        <p className="font-medium">admin</p>
+                      </div>
+                    </div>
+                  ) : (
+                    userPublicInfo?.username
+                  )}
                 </h1>
                 <p className="text-lg text-sky-600 opacity-80 mb-6">
                   {userPublicInfo?.email}
@@ -148,9 +162,11 @@ function UserDashboard({ userId }) {
                     </button>
                   </Link>
                 ) : (
-                  <button className="w-full px-6 py-3 bg-gradient-to-r from-sky-500 to-sky-400 text-white rounded-xl shadow-md hover:shadowmd transition-all duration-300">
-                    Sign Up
-                  </button>
+                  <Link to="/register" className="w-full">
+                    <button className="w-full px-6 py-3 bg-gradient-to-r from-[var(--btnMain)] to-sky-600 text-white rounded-xl shadow-md hover:shadow-md transition-all duration-300 hover:bg-sky-600 hover:cursor-pointer hover:font-bold">
+                      Sign Up
+                    </button>
+                  </Link>
                 )}
               </div>
             </div>
@@ -231,7 +247,7 @@ function UserDashboard({ userId }) {
                         <th>Title</th>
                         <th>Province</th>
                         <th className="rounded-r-lg">Budget</th>
-                        <th>Action</th>
+                        {user?.id === userPublicInfo.id ? <th>Action</th> : ""}
                       </tr>
                     </thead>
                     <tbody>
@@ -261,9 +277,13 @@ function UserDashboard({ userId }) {
                               {new Intl.NumberFormat("en-US").format(el.budget)}
                             </p>
                           </td>
-                          <td className="text-gray-700">
-                            <ActionMenu id={el?.id} />
-                          </td>
+                          {user?.id === userPublicInfo.id ? (
+                            <td className="text-gray-700">
+                              <ActionMenu id={el?.id} />
+                            </td>
+                          ) : (
+                            ""
+                          )}
                         </tr>
                       ))}
                       {posts.length === 0 && (
@@ -272,7 +292,7 @@ function UserDashboard({ userId }) {
                             colSpan="5"
                             className="text-center py-8 text-gray-500"
                           >
-                            No posts yet. 
+                            No posts yet.
                           </td>
                         </tr>
                       )}

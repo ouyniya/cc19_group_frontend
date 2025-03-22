@@ -32,7 +32,7 @@ const ActionMenu = ({ id }) => {
           initial={wrapperVariants.closed}
           variants={wrapperVariants}
           style={{ originY: "top", translateX: "-50%" }}
-          className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[10%] w-30 overflow-hidden z-50"
+          className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[100%] left-[0%] w-30 overflow-hidden z-50"
         >
           <Option
             setOpen={setOpen}

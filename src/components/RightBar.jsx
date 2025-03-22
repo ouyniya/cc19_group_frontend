@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import logo from "../icons/logo.png";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation, Link } from "react-router";
 import useUserStore from "../stores/userStore";
 import { User as UserIcon, Menu, X } from "lucide-react"; // Import Lucide Icons
 
 function Rightbar() {
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current location
+
   const user = useUserStore((state) => state.user);
   const token = useUserStore((state) => state.token);
   const googleLoginSuccessful = useUserStore(
@@ -23,35 +25,55 @@ function Rightbar() {
     }
   }, []);
 
+  useEffect(() => {
+    console.log("Location changed to:", location.pathname);
+  }, [location]);
+
   // Function to handle logout
   const handleLogout = () => {
     useUserStore.getState().actionLogout();
     navigate("/home");
   };
 
+  const hdlProfileLink = () => {
+    const targetPath = `/user-dashboard/${user?.id}`; // Replace with dynamic user ID
+    console.log("Target Path:", targetPath);
+
+    // Only navigate if the current location does not match the target path
+    if (location.pathname !== targetPath) {
+      navigate(targetPath, { replace: true }); 
+      navigate(0); // This will reload the current page and trigger a re-render
+    } else {
+      // If already on the target route, force re-navigation
+      navigate(targetPath, { replace: true }); 
+    }
+  };
+
   return (
     <header className="w-full flex justify-center py-4 bg-transparent relative">
       <div className="max-w-[80%] w-full flex items-center mx-auto px-6 py-3">
         {/* ✅ LOGO ด้านซ้าย */}
-        <div className="flex items-center">
-          <p className="text-3xl font-bold text-[#086FB6] ml-2">V</p>
-          <img src={logo} alt="logo voyager" className="w-10 -mt-1 -ml-1" />
-          <p className="text-3xl font-bold text-[#086FB6] -ml-2">YAGER</p>
-        </div>
+        <Link to="/home">
+          <div className="flex items-center">
+            <p className="text-3xl font-bold text-[#086FB6] ml-2">V</p>
+            <img src={logo} alt="logo voyager" className="w-10 -mt-1 -ml-1" />
+            <p className="text-3xl font-bold text-[#086FB6] -ml-2">YAGER</p>
+          </div>
+        </Link>
 
         {/* ✅ Navigation - ซ่อนบนมือถือ แสดงบน Desktop */}
         <div className="hidden md:flex flex-1 justify-center gap-6">
-          <button
+          {/* <button
             onClick={() => navigate("/home")}
             className="text-gray-700 hover:text-[#5CAFF0] hover:underline font-semibold"
           >
             Home
-          </button>
+          </button> */}
 
           {user?.role === "USER" && (
             <>
               <button
-                onClick={() => navigate(`/user-dashboard/${user?.id}`)}
+                onClick={hdlProfileLink}
                 className="text-gray-700 hover:text-[#5CAFF0] hover:underline font-semibold"
               >
                 Profile
