@@ -41,11 +41,11 @@ function Rightbar() {
 
     // Only navigate if the current location does not match the target path
     if (location.pathname !== targetPath) {
-      navigate(targetPath);
+      navigate(targetPath, { replace: true }); 
       navigate(0); // This will reload the current page and trigger a re-render
     } else {
       // If already on the target route, force re-navigation
-      navigate(0); // This will reload the current page and trigger a re-render
+      navigate(targetPath, { replace: true }); 
     }
   };
 
