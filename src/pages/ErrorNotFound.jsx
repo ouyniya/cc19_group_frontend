@@ -38,7 +38,7 @@ function ErrorNotFound() {
           </p>
           <button
             className="btn glass bg-[#5caff0] w-50 h-15 text-2xl rounded-3xl mt-20 ml-38 text-white"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
           >
             Go to Home
           </button>

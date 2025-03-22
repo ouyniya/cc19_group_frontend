@@ -85,15 +85,15 @@ function Rightbar() {
         <div className="hidden md:flex items-center gap-3">
           {user ? (
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-gray-300 flex justify-center items-center">
-                {user.profileImage ? (
+              <div className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-300 to-blue-200 flex justify-center items-center">
+                {user?.profileImage && !user?.isGoogleUser ? (
                   <img
                     src={user.profileImage}
                     alt="Profile"
                     className="w-full h-full rounded-full object-cover"
                   />
                 ) : (
-                  <UserIcon size={30} color="#000" />
+                  <UserIcon size={20} color="white" />
                 )}
               </div>
               <span>{user.username}</span>
