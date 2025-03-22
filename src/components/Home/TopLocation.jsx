@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import WatRongKhun from "../../pictures/WatRongKhun.png";
 import BangtaoBeach from "../../pictures/BangtaoBeach.png";
@@ -6,6 +6,7 @@ import Manasikarn from "../../pictures/Manasikarn.png";
 import SamPanBok from "../../pictures/SamPanBok.png";
 import view from "../../icons/view.png";
 import heart from "../../icons/heart.png";
+import useAdminStores from "../../stores/useAdminStores";
 
 const posts = [
   { id: 1, image: WatRongKhun, title: "Wat Rong Khun", view: "12.3K" },
@@ -15,6 +16,39 @@ const posts = [
 ];
 
 function TopLocation() {
+  const store = useAdminStores();
+  const {
+    allUsers,
+    actionAllUsers,
+    totalViews,
+    actionAllViews,
+    actionTopDestination,
+    topDestination,
+    isLoading,
+  } = store;
+
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        await actionAllUsers();
+        await actionAllViews();
+        await actionTopDestination();
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
+
+    fetchAllUsers();
+  }, [actionAllUsers, actionAllViews, actionTopDestination]);
+
+  const data = {
+    allUsers,
+    totalViews,
+    topDestination,
+  };
+
+  console.log(topDestination);
+
   return (
     <div className="max-w-[80%] mx-auto mt-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">

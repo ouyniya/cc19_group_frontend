@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Map from "../../pictures/ThaiMap.png";
 import WatArun from "../../pictures/WatArun.png";
 import NorthEast from "../../pictures/Northeast.png";
@@ -8,6 +8,7 @@ import West from "../../pictures/West.png";
 import South from "../../pictures/South.png";
 import MapCanvasExample from "../MapCanvasExample";
 import InteractiveMap from "../InteractiveMap";
+import useAdminStores from "../../stores/useAdminStores";
 
 function Region() {
   return (
