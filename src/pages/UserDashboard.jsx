@@ -11,7 +11,7 @@ import ActionMenu from "../components/UserDashboard/ActionMenu";
 function UserDashboard({ userId }) {
   const navigate = useNavigate();
   const location = useLocation(); // Get the current location
-  
+
   const user = useUserStore((state) => state.user);
   // const getCurrentUser = useUserStore((state) => state.getCurrentUser);
   const actionGetUserInfoForDashboard = useUserStore(
@@ -20,28 +20,26 @@ function UserDashboard({ userId }) {
   const userPublicInfo = useUserStore((state) => state.userPublicInfo);
   const posts = useUserStore((state) => state.posts);
   const actionGetUserPosts = useUserStore((state) => state.actionGetUserPosts);
-  
+
   // Add this new state for controlling visible rows
   const [visibleRows, setVisibleRows] = useState(10);
-  
+
   // Function to handle showing more rows
   const handleShowMore = () => {
     setVisibleRows(posts.length); // Show all posts
   };
-  
+
   // Function to handle showing less rows
   const handleShowLess = () => {
     setVisibleRows(10); // Reset to show only 10 rows
   };
 
   useEffect(() => {
-
     // navigate(0);
     console.log("***Location changed to:", location.pathname);
     console.log("***now", `/user-dashboard/${userId}`);
-
   }, [location]);
-  
+
   useEffect(() => {
     // get user data
     callGetUser();
@@ -89,18 +87,17 @@ function UserDashboard({ userId }) {
               {/* Profile information with improved typography */}
               <div className="flex flex-col md:ml-8 mt-6 md:mt-0 text-center md:text-left flex-grow">
                 <h1 className="text-3xl font-bold text-sky-800 mb-1">
-                  {
-                  userPublicInfo?.role === "ADMIN"
-                  ? 
-                  <div>
-                    {userPublicInfo?.username}
-                    <div className="badge badge-soft badge-warning ml-2">
-                      <Crown size={18} />
-                      <p className="font-medium">admin</p>
+                  {userPublicInfo?.role === "ADMIN" ? (
+                    <div>
+                      {userPublicInfo?.username}
+                      <div className="badge badge-soft badge-warning ml-2">
+                        <Crown size={18} />
+                        <p className="font-medium">admin</p>
                       </div>
-                  </div>
-                  
-                  : userPublicInfo?.username}
+                    </div>
+                  ) : (
+                    userPublicInfo?.username
+                  )}
                 </h1>
                 <p className="text-lg text-sky-600 opacity-80 mb-6">
                   {userPublicInfo?.email}
@@ -165,9 +162,11 @@ function UserDashboard({ userId }) {
                     </button>
                   </Link>
                 ) : (
-                  <button className="w-full px-6 py-3 bg-gradient-to-r from-sky-500 to-sky-400 text-white rounded-xl shadow-md hover:shadowmd transition-all duration-300">
-                    Sign Up
-                  </button>
+                  <Link to="/register" className="w-full">
+                    <button className="w-full px-6 py-3 bg-gradient-to-r from-[var(--btnMain)] to-sky-600 text-white rounded-xl shadow-md hover:shadow-md transition-all duration-300 hover:bg-sky-600 hover:cursor-pointer hover:font-bold">
+                      Sign Up
+                    </button>
+                  </Link>
                 )}
               </div>
             </div>
