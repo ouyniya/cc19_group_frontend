@@ -559,18 +559,18 @@ const Dropdown = ({ options, onSelect }) => {
     }
   };
   return (
-    <div className={`flex flex-col ${isMobile ? '' : 'flex-row'} h-screen`}>
+    <div className={`flex flex-col ${isMobile ? '' : 'flex-row'} `}>
       <div 
         className="map-container" 
         style={{ 
           width: isMobile ? "100%" : (selectedPlace ? `${100 - sidebarWidth}%` : "100%"), 
-          height: isMobile ? (selectedPlace ? "50vh" : "100vh") : "100vh" 
+          height: isMobile ? (selectedPlace ? "50vh" : "50vh") : "50vh" 
         }}
       >
         <MapContainer
           // style={{ height: "100%", width: "100%" }}
           className="h-[400px]"
-          center={[19, 101]}
+          center={[19.15, 101]}
           zoom={9}
           ref={mapRef}
         >

@@ -11,7 +11,7 @@ import InteractiveMap from "../InteractiveMap";
 
 function Region() {
   return (
-    <div className="max-w-[80%] mx-auto mt-20">
+    <div className="max-w-[80%] mx-auto mt-20 flex flex-col gap-5">
       {/* Title */}
       <div>
         <p className="text-xl font-bold">Explore the most beautiful places</p>
@@ -56,7 +56,9 @@ function Region() {
           <MapCanvasExample />
         </div>
       </div>
-      <InteractiveMap />
+      <div className="overflow-hidden rounded-xl h-[400px]">
+        <InteractiveMap />
+      </div>
     </div>
   );
 }
