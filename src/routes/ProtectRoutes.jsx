@@ -7,26 +7,45 @@ import LoadingAnimation from "../components/LoadingAnimation";
 function ProtectRoute({ el, allows }) {
   const navigate = useNavigate();
   const [isAuthorized, setIsAuthorized] = useState(null);
-  const [loading, setLoading] = useState(true); // Independent loading state
+  const [loading, setLoading] = useState(null); // Independent loading state
   const { user } = useUserStore();
 
+  const hdlLoading = async () => {
+    console.log("Loading animation")
+    setLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 750))
+    try {
+      setLoading(true);
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
+    
+    console.log("bello")
     const authorized = allows.includes(user?.role);
     setIsAuthorized(authorized);
-    setLoading(false);
+    hdlLoading()
   }, []);
 
   // console.log(isAuthorized);
 
   // Show loading animation while user data is being fetched
-  if (loading) return <LoadingAnimation />;
+  // if (loading) {
+  //   return <LoadingAnimation />
+  // }
 
   // If no user is available or user is unauthorized, show the error page
   if (!user || !isAuthorized) {
     return <ErrorUnauthorized />;
   }
 
-  return <>{el}</>;
+  return <>
+    {loading ? <LoadingAnimation /> :  el }
+  </>;
 }
 
 export default ProtectRoute;

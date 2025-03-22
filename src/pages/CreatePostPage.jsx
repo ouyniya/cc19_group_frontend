@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import useLocationStores from "../stores/useLocationStores";
 import usePostStores from "../stores/usePostStores";
 import MapCanvas from "../components/MapCanvas";
-import { Trash, Undo2, User } from "lucide-react";
+import { Loader, Trash, Undo2, User } from "lucide-react";
 import { createAlert } from "../utils/createAlert";
 import useUserStore from "../stores/userStore";
 import * as toxicity from "@tensorflow-models/toxicity";
@@ -35,6 +35,9 @@ function CreatePostPage() {
   );
 
   // State Variables
+
+  /* state Loding */
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // safe image
   const [isSafe, setIsSafe] = useState(true);
@@ -237,15 +240,20 @@ function CreatePostPage() {
       setIsToxic(true);
       return;
     }
+    if (!isSubmitting) {
+      setIsSubmitting(true)
+    }
 
     try {
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+      setIsSubmitting(false)
       const validatedInput = {
         ...input,
         budget: Number(input.budget), // Convert budget to number
         latitude: Number(input.latitude), // Convert latitude to number
         longitude: Number(input.longitude), // Convert longitude to number
-        provinceId: Number(input.provinceId), // Convert provinceId to number
-        districtId: Number(input.districtId), // Convert districtId to number
+        provinceId: Number(1), // Convert provinceId to number (input.provinceId)
+        districtId: Number(1), // Convert districtId to number (input.districtId)
       };
 
       // Validate the input using Zod schema
@@ -625,15 +633,18 @@ function CreatePostPage() {
                   onClick={hdlAddPost}
                   disabled={!isSafe}
                   type="submit"
-                  className={`mt-4 p-3 rounded-xl text-white font-bold ${
-                    isSafe || !file
-                      ? "bg-[#086BAF]"
-                      : "bg-red-500 cursor-not-allowed"
-                  }`}
+                  className={`mt-4 p-3 rounded-xl text-white font-bold ${isSafe || !file
+                    ? "bg-[#086BAF]"
+                    : "bg-red-500 cursor-not-allowed"
+                    }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {isSafe || !file ? "Create Post" : "NSFW Content Detected!"}
+                  {isSafe || !file ?
+                    (isSubmitting ?
+                      <div className='flex gap-2 justify-center'><Loader className='animate-spin' />Loading...</div>
+                      : "Create Post")
+                    : "NSFW Content Detected!"}
                 </motion.button>
               </motion.form>
 
