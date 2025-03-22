@@ -10,7 +10,7 @@ import {
   FiTag,
   FiUsers,
 } from "react-icons/fi";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import logo from "../../icons/logo.png";
 
@@ -85,7 +85,6 @@ const Sidebar = () => {
           setSelected={setSelected}
           open={open}
           onClick={() => navigate("/admin/usermanagement")}
-
         />
         <Option
           Icon={FiTag}
@@ -94,7 +93,6 @@ const Sidebar = () => {
           setSelected={setSelected}
           open={open}
           onClick={() => navigate("/admin/postmanagement")}
-
         />
       </div>
 
@@ -174,8 +172,10 @@ const TitleSection = ({ open }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.125 }}
             >
-              <span className="block text-xs font-semibold">VOYAGER</span>
-              <span className="block text-xs text-slate-500">Admin</span>
+              <Link to="/home">
+                <span className="block text-xs font-semibold">VOYAGER</span>
+                <span className="block text-xs text-slate-500">Admin</span>
+              </Link>
             </motion.div>
           )}
         </div>
@@ -190,7 +190,7 @@ const Logo = () => {
   return (
     <motion.div
       layout
-      className="grid size-10 shrink-0 place-content-center rounded-md bg-sky-50"
+      className="grid size-10 shrink-0 place-content-center rounded-md bg-white"
     >
       <img src={logo} />
     </motion.div>

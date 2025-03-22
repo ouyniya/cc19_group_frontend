@@ -60,7 +60,7 @@ export default function AnalysisDashboard() {
     topDestination,
   };
 
-  // console.log(topDestination)
+  console.log(topDestination)
 
   return (
     <>
@@ -68,12 +68,12 @@ export default function AnalysisDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200 ">
             <h2 className="stat-title font-bold text-lg">Total Users</h2>
-            <p className="stat-value text-sky-400">{data?.allUsers}</p>
+            <p className="stat-value text-sky-400">{data?.allUsers?.toLocaleString()}</p>
             <p className="stat-title">Updated from latest data</p>
           </div>
           <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200">
             <h2 className="stat-title  font-bold text-lg">Total Views</h2>
-            <p className="stat-value text-sky-400">{data?.totalViews}</p>
+            <p className="stat-value text-sky-400">{data?.totalViews?.toLocaleString()}</p>
             <p className="stat-title">Updated from latest data</p>
           </div>
           <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200">
@@ -114,7 +114,7 @@ export default function AnalysisDashboard() {
                           }) || [],
                       backgroundColor: [
                         "rgba(12, 74, 110, 0.8)", // sky-900
-                        "rgba(12, 74, 110, 0.8)", // sky-900
+                        "rgba(12, 80, 120, 0.8)", // sky-900
                         "rgba(7, 89, 133, 0.8)", // sky-800
                         "rgba(3, 105, 161, 0.8)", // sky-700
                         "rgba(2, 132, 199, 0.8)", // sky-600
@@ -152,7 +152,7 @@ export default function AnalysisDashboard() {
                         {el?.name}
                       </span>
                       <strong className="text-sky-400">
-                        {el?.totalViews} views
+                        {el?.totalViews?.toLocaleString()} views
                       </strong>
                     </li>
                   ))}
