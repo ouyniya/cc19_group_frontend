@@ -65,7 +65,7 @@ function UserDashboard({ userId }) {
               <div className="flex justify-center md:justify-start">
                 <div className="relative group">
                   <div className="w-40 h-40 md:w-48 md:h-48 lg:w-60 lg:h-60 rounded-full bg-gradient-to-r from-blue-300 to-blue-200 flex items-center justify-center shadow-md overflow-hidden">
-                    {userPublicInfo?.profileImage ? (
+                    {userPublicInfo?.profileImage && !userPublicInfo?.isGoogleUser ? (
                       <img
                         src={userPublicInfo?.profileImage}
                         alt="profile"
@@ -272,7 +272,7 @@ function UserDashboard({ userId }) {
                             colSpan="5"
                             className="text-center py-8 text-gray-500"
                           >
-                            No posts yet. Create your first post!
+                            No posts yet. 
                           </td>
                         </tr>
                       )}

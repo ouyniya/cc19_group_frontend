@@ -277,18 +277,19 @@ function CreatePostPage() {
     }
   };
 
+  // console.log(user)
 
   return (
     <>
-      <div className="flex justify-evenly items-center text-slate-800 pt-15 pb-25">
+      <div className="flex justify-evenly items-center text-slate-800 pb-25">
         <motion.div
-          className="flex flex-col items-center w-[80%] min-w-[900px] max-w-[1200px] rounded-xl bg-white"
+          className="flex flex-col items-center w-[900px] rounded-xl bg-white"
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
           <motion.p
-            className="text-[#086BAF] font-bold text-3xl pt-20"
+            className="text-[#086BAF] font-bold text-3xl pt-20 pb-7"
             initial={{ x: -100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -297,8 +298,8 @@ function CreatePostPage() {
           </motion.p>
           <div className="flex justify-evenly w-[85%] gap-10 pt-15 pb-25">
             <div className="flex items-center flex-col basis-1/4">
-              {user?.profileImage ? (
-                <div className="flex overflow-hidden rounded-full w-50 h-50 justify-center items-center">
+              {user?.profileImage && !user?.isGoogleUser ? (
+                <div className="flex overflow-hidden rounded-full w-50 h-50 justify-center items-center bg-gradient-to-r from-blue-300 to-blue-200">
                   <motion.img
                     src={user?.profileImage}
                     alt="Profile"
@@ -309,7 +310,7 @@ function CreatePostPage() {
                   />
                 </div>
               ) : (
-                <div className="flex overflow-hidden rounded-full w-50 h-50 justify-center items-center bg-slate-300">
+                <div className="flex overflow-hidden rounded-full w-50 h-50 justify-center items-center bg-gradient-to-r from-blue-300 to-blue-200">
                   <User size={100} color="white" />
                 </div>
               )}
@@ -336,7 +337,9 @@ function CreatePostPage() {
               {/* check img */}
 
               <div className="flex flex-col items-center">
-                <h2 className="text-2xl font-bold text-[#086BAF]">Image Upload</h2>
+                <h2 className="text-2xl font-semibold text-[#086BAF]">
+                  Image Upload
+                </h2>
                 <p className="text-xs">Add an Image to Your Post</p>
 
                 <ImageUploader

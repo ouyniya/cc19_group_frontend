@@ -127,7 +127,7 @@ function WishList() {
                 <strong>Your wishlist is empty!</strong> Find something amazing
                 and add it to your wishlist!
               </span>
-              <Link to="/home">
+              <Link to="/filter-page?placeName=&province=&district=&page=1">
                 <div className="btn btn-info btn-xs">here</div>
               </Link>
             </div>

@@ -12,8 +12,8 @@ function ErrorUnauthorized() {
   const navigate = useNavigate();
 
   return (
-    <div className="">
-      <div className="flex flex-row items-center ">
+    <div className="max-w-[90%] max-h-screen flex justify-center items-center">
+      <div className="flex flex-row items-center">
         <div className="ml-60 mt-15 ">
           <h1 className="title">Forbidden</h1>
 
@@ -22,7 +22,7 @@ function ErrorUnauthorized() {
           </p>
           <button
             className="btn glass  mt-10  text-2xl text-white bg-[#5caff0] h-12 rounded-2xl ml-55"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
           >
             Go to Home
           </button>
