@@ -14,8 +14,8 @@ const iconMap = {
   marketShopping: "https://cdn-icons-png.flaticon.com/128/3081/3081648.png",     
   zooWildlife: "https://www.svgrepo.com/show/485149/lion.svg",          
   viewpointScenic: "https://www.svgrepo.com/show/383774/binocular-market-watch.svg",      
-  default: "https://cdn-icons-png.flaticon.com/128/9128/9128984.png",            
-};
+  default: "https://cdn-icons-png.flaticon.com/128/9128/9128984.png",           
+}
 
 // Get Leaflet icon by category
 const getCategoryIcon = (category) => {
