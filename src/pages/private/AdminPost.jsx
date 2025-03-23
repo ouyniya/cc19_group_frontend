@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FaEllipsisV } from "react-icons/fa";
 import useAdminPostStores from "../../stores/useAdminPostStores";
 import moment from "moment";
-import { Trash2 } from "lucide-react";
+import { Eye, Trash2 } from "lucide-react";
 import { Link } from "react-router";
 import { FcNext, FcPrevious } from "react-icons/fc";
 
@@ -11,7 +11,8 @@ export default function PostTable() {
   const [itemDel, setItemDel] = useState({ id: "", title: "" });
 
   const store = useAdminPostStores();
-  const { allPost, totalPages, totalPosts, actionAllPost, actionDeletePost } = store;
+  const { allPost, totalPages, totalPosts, actionAllPost, actionDeletePost } =
+    store;
 
   const fetchAllPosts = async () => {
     try {
@@ -35,36 +36,54 @@ export default function PostTable() {
     }
   };
 
+  // console.log(allPost)
+
   return (
     <div className="p-4 bg-gray-100 w-full text-sm">
       <table className="w-full border-collapse text-gray-700 bg-white shadow-sm rounded-lg overflow-hidden">
         <thead className="bg-gray-200">
           <tr className="text-left">
-            <th className="p-3 w-10">#</th>
-            <th className="p-3">Post Title</th>
-            <th className="p-3">Author</th>
-            <th className="p-3">Place</th>
-            <th className="p-3">Budget</th>
-            <th className="p-3">Created Date</th>
-            <th className="p-3 w-10">Actions</th>
+            <th className="p-3 w-5">#</th>
+            <th className="p-3 w-1/3">Post Title</th>
+            <th className="p-3 w-1/18">Author</th>
+            <th className="p-3 w-2/9">Place</th>
+            <th className="p-3 w-1/9 text-right">Budget (THB)</th>
+            <th className="p-3 w-1/9 text-right">View</th>
+            <th className="p-3 w-1/9 text-right">Created Date</th>
+            <th className="p-3 w-10 text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
           {allPost?.map((post, index) => (
-            <tr key={index} className="border-b border-slate-300 hover:bg-gray-100 text-gray-600">
+            <tr
+              key={index}
+              className="border-b border-slate-300 hover:bg-gray-100 text-gray-600"
+            >
               <td className="p-3 w-10 text-center font-semibold">{post.id}</td>
               <td className="p-3 font-bold text-[var(--btnMain)]">
                 <Link to={`/post/${post.id}`}>{post.title}</Link>
               </td>
               <td className="p-3 font-semibold">
                 <Link to={`/user-dashboard/${post.user.id}`}>
-                  <div className="badge badge-soft badge-info">{post.user.username}</div>
+                  <div className="badge badge-soft badge-info">
+                    {post.user.username}
+                  </div>
                 </Link>
               </td>
               <td className="p-3">{post.place.name}</td>
-              <td className="p-3 text-right font-bold">{post.budget.toLocaleString()}</td>
-              <td className="p-3 text-slate-400 text-xs">{moment(post.user.createdAt).format("YYYY-MM-DD")}</td>
-              <td className="p-3 flex justify-center items-center w-full">
+              <td className="p-3 font-semibold text-right">
+                {post.budget.toLocaleString()}
+              </td>
+              <td className="p-3 font-semibold text-sky-700 text-right">
+                <div className=" flex gap-1 justify-end">
+                  <Eye size={19} className="opacity-35" />
+                  {post.view.toLocaleString()}
+                </div>
+              </td>
+              <td className="p-3 text-slate-400 text-right text-xs">
+                {moment(post.user.createdAt).format("YYYY-MM-DD")}
+              </td>
+              <td className="p-3 text-center">
                 <button
                   className="btn-ghost rounded-xl hover:cursor-pointer"
                   onClick={() => {
@@ -80,8 +99,20 @@ export default function PostTable() {
                     <p className="py-4">Are you sure you want to delete?</p>
                     <p>Post Title: {itemDel.title}</p>
                     <div className="modal-action gap-2">
-                      <button className="btn" onClick={() => document.getElementById("my_modal_1").close()}>CLOSE</button>
-                      <button className="btn" onClick={() => hdlDeleteUser(itemDel.id)}>SUBMIT</button>
+                      <button
+                        className="btn"
+                        onClick={() =>
+                          document.getElementById("my_modal_1").close()
+                        }
+                      >
+                        CLOSE
+                      </button>
+                      <button
+                        className="btn"
+                        onClick={() => hdlDeleteUser(itemDel.id)}
+                      >
+                        SUBMIT
+                      </button>
                     </div>
                   </div>
                 </dialog>
@@ -92,7 +123,7 @@ export default function PostTable() {
       </table>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center mt-4 text-black">
+      {/* <div className="flex justify-between items-center mt-4 text-black">
         <button
           className="btn btn-sm bg-gray-100"
           disabled={currentPage === 1}
@@ -117,6 +148,108 @@ export default function PostTable() {
           onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
         >
           <FcNext />
+        </button>
+      </div> */}
+
+      <div className="flex justify-between items-center mt-4 text-black">
+        <button
+          className="btn btn-sm bg-gray-100"
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage(1)}
+        >
+          &laquo;
+        </button>
+
+        <div className="flex gap-2">
+          <button
+            className="btn btn-sm bg-gray-100"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          >
+            <FcPrevious />
+          </button>
+
+          <div className="flex gap-2">
+            {(() => {
+              const maxPagesToShow = 5;
+              let startPage = Math.max(currentPage - 2, 1);
+              let endPage = Math.min(
+                startPage + maxPagesToShow - 1,
+                totalPages
+              );
+
+              if (endPage - startPage + 1 < maxPagesToShow) {
+                startPage = Math.max(endPage - maxPagesToShow + 1, 1);
+              }
+
+              let pages = [];
+              if (startPage > 1) {
+                pages.push(
+                  <button
+                    key={1}
+                    className={`btn btn-sm bg-gray-100`}
+                    onClick={() => setCurrentPage(1)}
+                  >
+                    1
+                  </button>
+                );
+                if (startPage > 2) {
+                  pages.push(<span key="startEllipsis">...</span>);
+                }
+              }
+
+              for (let i = startPage; i <= endPage; i++) {
+                pages.push(
+                  <button
+                    key={i}
+                    className={`btn btn-sm ${
+                      currentPage === i
+                        ? "bg-[var(--btnMain)] text-white"
+                        : "bg-gray-100"
+                    }`}
+                    onClick={() => setCurrentPage(i)}
+                  >
+                    {i}
+                  </button>
+                );
+              }
+
+              if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                  pages.push(<span key="endEllipsis">...</span>);
+                }
+                pages.push(
+                  <button
+                    key={totalPages}
+                    className="btn btn-sm bg-gray-100"
+                    onClick={() => setCurrentPage(totalPages)}
+                  >
+                    {totalPages}
+                  </button>
+                );
+              }
+
+              return pages;
+            })()}
+          </div>
+
+          <button
+            className="btn btn-sm bg-gray-100"
+            disabled={currentPage === totalPages}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+          >
+            <FcNext />
+          </button>
+        </div>
+
+        <button
+          className="btn btn-sm bg-gray-100"
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage(totalPages)}
+        >
+          &raquo;
         </button>
       </div>
     </div>

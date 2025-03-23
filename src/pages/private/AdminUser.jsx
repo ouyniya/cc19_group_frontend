@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { FaEllipsisV } from "react-icons/fa";
 import useAdminStoresUser from "../../stores/useAdminStoresUser";
-import { Trash, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 export default function AdminUserTable() {
   /* state เก็บ ข้อมูลจากหลังบ้าน */
@@ -62,7 +61,7 @@ export default function AdminUserTable() {
 
   return (
     <div className="p-4 bg-gray-100 w-full text-sm text-slate-700">
-      <table className="w-full border-collapse text-black bg-white shadow-md rounded-lg overflow-hidden">
+      <table className="w-full border-collapse text-black bg-white shadow-sm rounded-lg overflow-hidden">
         <thead className="bg-gray-200">
           <tr className="text-left">
             <th className="p-3 w-10">no.</th>
@@ -74,7 +73,7 @@ export default function AdminUserTable() {
         </thead>
         <tbody>
           {data?.allUsers?.map((user, index) => (
-            <tr key={index} className="border-b hover:bg-gray-100 relative">
+            <tr key={index} className="border-b border-slate-300 hover:bg-gray-100 relative">
               <td className="p-3 w-10 text-center font-semibold">{user.id}</td>
               <td className="p-3 font-bold">{user.username}</td>
               <td className="p-3">{user.email}</td>
@@ -82,7 +81,7 @@ export default function AdminUserTable() {
                 {
                   <select
                     className={`btn btn-xs px-3 py-1 rounded-full text-white text-sm ${
-                      user.role === "Admin" ? "bg-red-500" : "bg-sky-400"
+                      user.role === "ADMIN" ? "bg-amber-500" : "bg-sky-400"
                     }`}
                     onChange={(e) => hdlUpdateRole(user.id, e.target.value)}
                     defaultValue={user.role}
