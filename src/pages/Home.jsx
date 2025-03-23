@@ -34,7 +34,7 @@ function Home() {
       {/* header */}
       {/* <NavbarHeader /> */}
       {/* Body1 */}
-      <div>
+      <div className="max-w-[1500px] m-auto">
         {/* Body top */}
         <div>
           {/* Where is your destination */}
@@ -70,7 +70,7 @@ function Home() {
       </div>
 
       {/* Body2 */}
-      <div>
+      <div className="max-w-[1500px] m-auto">
         {/* Top locations on Voyager  */}
         <div className="mt-15">
           {/* text */}
@@ -86,20 +86,19 @@ function Home() {
         {/* The most beautiful places */}
         <Region />
 
-        <div>
-        </div>
+        <div></div>
         {/* footer */}
-        <div className="mt-5">
+        {/* <div className="mt-5">
           <div className="bg-[#97BEE2] py-8">
             <div className="flex flex-wrap justify-center md:justify-around gap-8 md:gap-20 px-4  ">
-              {/* left text */}
+             
               <div className="w-full md:w-1/2 lg:w-1/3 text-white text-base md:text-lg lg:text-xl text-center md:text-left">
                 <p>
                   VOYAGER: A website that compiles information on tourist
                   attractions in Thailand
                 </p>
               </div>
-              {/* right text */}
+              
 
               <div className=" w-full md:w-1/4 text-white text-base md:text-lg lg:text-xl text-center md:text-left">
                 <p>Advertising Inquiries:</p>
@@ -107,6 +106,33 @@ function Home() {
               </div>
             </div>
           </div>
+        </div> */}
+      </div>
+
+      <div className="bg-[var(--darkGray)]">
+        <div className="max-w-[1500px] m-auto">
+          <footer className="footer sm:footer-horizontal sm:pl-[16%] bg-[var(--darkGray)] text-neutral-content p-10 mt-12">
+            <nav>
+              <h6 className="footer-title">Services</h6>
+              <a className="link link-hover">Branding</a>
+              <a className="link link-hover">Design</a>
+              <a className="link link-hover">Marketing</a>
+              <a className="link link-hover">Advertisement</a>
+            </nav>
+            <nav>
+              <h6 className="footer-title">Company</h6>
+              <a className="link link-hover">About us</a>
+              <a className="link link-hover">Contact</a>
+              <a className="link link-hover">Jobs</a>
+              <a className="link link-hover">Press kit</a>
+            </nav>
+            <nav>
+              <h6 className="footer-title">Legal</h6>
+              <a className="link link-hover">Terms of use</a>
+              <a className="link link-hover">Privacy policy</a>
+              <a className="link link-hover">Cookie policy</a>
+            </nav>
+          </footer>
         </div>
       </div>
     </>
