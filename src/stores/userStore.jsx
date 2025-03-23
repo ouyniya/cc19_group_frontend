@@ -96,6 +96,7 @@ const useUserStore = create(
           });
           set({ token: "", user: null, googleLoginSuccessful: false });
           localStorage.removeItem("state");
+          // createAlert("success", "You have successfully logged out!");
         } catch (error) {
           console.error("Logout Error:", error);
         }
@@ -131,7 +132,7 @@ const useUserStore = create(
         set({ isLoading: true });
         try {
           const { data } = await profileApi.actionGetUserPosts(userId);
-          set({ posts: data.post })
+          set({ posts: data.post });
         } catch (error) {
           console.log(error);
         } finally {
@@ -157,8 +158,10 @@ const useUserStore = create(
       actionGetUserInfoForDashboard: async (userId) => {
         set({ isLoading: true });
         try {
-          const { data } = await profileApi.actionGetUserInfoForDashboard(userId);
-          set({ userPublicInfo: data })
+          const { data } = await profileApi.actionGetUserInfoForDashboard(
+            userId
+          );
+          set({ userPublicInfo: data });
         } catch (error) {
           console.log(error);
         } finally {

@@ -90,21 +90,21 @@ function Login() {
 
         {/* Right Section */}
         <div className="flex flex-col h-full w-150 justify-center font-bold gap-1">
-          <div className="flex flex-col min-h-100 py-13 w-130 bg-[#f4f9fb] rounded-4xl items-center justify-center gap-7 shadow-md">
-            <form onSubmit={handleSubmit}>
+          <div className="flex flex-col min-h-100 py-13 bg-[#f4f9fb] rounded-4xl items-center justify-center gap-7 shadow-md">
+            <form onSubmit={handleSubmit} className="w-[360px]">
               <p className="text-4xl font-bold text-[#2f6b97] mb-7 text-center">
                 Login
               </p>
               <div className="flex flex-col items-baseline gap-4">
                 {/* Email */}
-                <label className="input validator">
+                <label className="input validator w-[360px]">
                   <Mail color="lightgray" />
                   <input
                     onChange={handleChange}
                     type="email"
                     name="email"
                     placeholder="mail@site.com"
-                    className="border-[#086BAF] py-4  input-lg placeholder:text-lg placeholder:font-medium"
+                    className="border-[#086BAF] py-4 input-lg placeholder:text-lg placeholder:font-medium"
                     required
                   />
                 </label>
@@ -113,7 +113,7 @@ function Login() {
                 </div>
 
                 {/* Password */}
-                <label className="input validator">
+                <label className="input validator w-[360px]">
                   <KeyRound color="lightgray" />
                   <input
                     onChange={handleChange}
