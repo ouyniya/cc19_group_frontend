@@ -42,7 +42,7 @@ function TopLocation() {
               <img
                 src={el?.imageUrl}
                 alt={el?.name}
-                className="w-full h-48 object-cover rounded-2xl"
+                className="w-full h-48 object-cover rounded-xl"
               />
               <p className="font-bold mt-2 text-xl">{el?.name}</p>
             </Link>

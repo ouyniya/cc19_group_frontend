@@ -38,7 +38,7 @@ const generateSquares = () => {
       key={sq.id}
       layout
       transition={{ duration: 1.2, type: "spring" }}
-      className="w-full h-full rounded-2xl overflow-hidden shadow-md"
+      className="w-full h-full rounded-lg overflow-hidden shadow-md"
     >
       <img src={sq.src} alt="place" className="w-full h-full object-cover" />
     </motion.div>

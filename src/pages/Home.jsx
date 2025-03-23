@@ -9,6 +9,7 @@ import MoreExplore from "../components/Home/MoreExplore";
 import Region from "../components/Home/Region";
 import useUserStore from "../stores/userStore";
 import MapCanvasExample from "../components/MapCanvasExample";
+import HomePageTestimonials from "../components/HomePageTestimonials";
 
 function Home() {
   const navigate = useNavigate();
@@ -61,32 +62,46 @@ function Home() {
           </div>
         </div>
 
-        {/* Body get post */}
-        <Post />
-        {/* pagination */}
-        <div className="flex justify-center mt-3 ">
-          <img src={pagination} alt="pagination logo" className="w-20 " />
+        <div className="max-w-[1500px] m-auto">
+          {/* Body get post */}
+          <Post />
+          {/* pagination */}
+          <div className="flex justify-center mt-3 ">
+            <img src={pagination} alt="pagination logo" className="w-20 " />
+          </div>
         </div>
       </div>
 
-      {/* Body2 */}
-      <div className="max-w-[1500px] m-auto">
-        {/* Top locations on Voyager  */}
-        <div className="mt-15">
-          {/* text */}
-          <div className="flex">
-            <p className="text-xl font-bold ml-37">Top locations on Voyager </p>
-            <img src={logo} alt="icon destination" className="h-10 -mt-2" />
+        {/* Body2 */}
+        <div className="max-w-[1500px] m-auto">
+          {/* Top locations on Voyager  */}
+          <div className="mt-15">
+            {/* text */}
+            <div className="flex">
+              <p className="text-xl font-bold ml-37">
+                Top locations on Voyager{" "}
+              </p>
+              <img src={logo} alt="icon destination" className="h-10 -mt-2" />
+            </div>
+            {/* post */}
+            <TopLocation />
           </div>
-          {/* post */}
-          <TopLocation />
         </div>
-        {/* More to explore */}
-        <MoreExplore />
-        {/* The most beautiful places */}
-        <Region />
 
-        <div></div>
+    <div className="bg-gradient-to-b from-white via-sky-100 to-white mt-[50px]">
+
+        <div className="max-w-[1200px] m-auto">
+          <HomePageTestimonials />
+        </div>
+
+    </div>
+
+        <div className="max-w-[1500px] m-auto">
+          {/* More to explore */}
+          <MoreExplore />
+          {/* The most beautiful places */}
+          <Region />
+        </div>
         {/* footer */}
         {/* <div className="mt-5">
           <div className="bg-[#97BEE2] py-8">
@@ -107,7 +122,7 @@ function Home() {
             </div>
           </div>
         </div> */}
-      </div>
+
 
       <div className="bg-[var(--darkGray)]">
         <div className="max-w-[1500px] m-auto">
