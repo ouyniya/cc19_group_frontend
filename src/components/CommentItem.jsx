@@ -118,7 +118,7 @@ const CommentItem = ({ comment }) => {
       <div className="bg-gray-100 p-3 rounded-lg shadow-sm">
         <div className="flex gap-2 items-center">
           {/* profile Image */}
-          <Link onClick={() => hdlProfileLink(comment?.userId)}>
+          <Link onClick={() => hdlProfileLink(comment?.userId)} className="flex gap-2">
             <div className="w-10 h-10 mask mask-squircle bg-gradient-to-r from-blue-300 to-blue-200 flex justify-center items-center">
               {comment?.user?.profileImage && !user?.isGoogleUser ? (
                 <img
@@ -130,7 +130,6 @@ const CommentItem = ({ comment }) => {
                 <UserIcon size={20} color="white" />
               )}
             </div>
-          </Link>
 
           {/* username */}
           <div>
@@ -141,6 +140,7 @@ const CommentItem = ({ comment }) => {
               {moment(comment.createdAt).fromNow()}
             </p>
           </div>
+          </Link>
         </div>
 
         {isEditing ? (
