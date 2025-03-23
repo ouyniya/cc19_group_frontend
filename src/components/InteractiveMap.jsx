@@ -4,18 +4,21 @@ import "leaflet/dist/leaflet.css";
 import { useState, useEffect, useRef } from "react";
 import BaseMap from "../components/layer/BaseMap";
 import axios from "axios";
+import useMapStores from "../stores/useMapStores";
 
 // Category icons
 const iconMap = {
-  temple: "https://www.svgrepo.com/show/215358/great-buddha-of-thailand-thailand.svg",               
-  nationalPark: "https://www.svgrepo.com/show/513475/tree-evergreen.svg",         
-  historicalSite: "https://www.svgrepo.com/show/296635/castle-beach.svg",    
-  beachIsland: "https://www.svgrepo.com/show/295677/wave.svg",                 
-  marketShopping: "https://cdn-icons-png.flaticon.com/128/3081/3081648.png",     
-  zooWildlife: "https://www.svgrepo.com/show/485149/lion.svg",          
-  viewpointScenic: "https://www.svgrepo.com/show/383774/binocular-market-watch.svg",      
-  default: "https://cdn-icons-png.flaticon.com/128/9128/9128984.png",           
-}
+  temple:
+    "https://www.svgrepo.com/show/215358/great-buddha-of-thailand-thailand.svg",
+  nationalPark: "https://www.svgrepo.com/show/513475/tree-evergreen.svg",
+  historicalSite: "https://www.svgrepo.com/show/296635/castle-beach.svg",
+  beachIsland: "https://www.svgrepo.com/show/295677/wave.svg",
+  marketShopping: "https://cdn-icons-png.flaticon.com/128/3081/3081648.png",
+  zooWildlife: "https://www.svgrepo.com/show/485149/lion.svg",
+  viewpointScenic:
+    "https://www.svgrepo.com/show/383774/binocular-market-watch.svg",
+  default: "https://cdn-icons-png.flaticon.com/128/9128/9128984.png",
+};
 
 // Get Leaflet icon by category
 const getCategoryIcon = (category) => {
@@ -32,17 +35,18 @@ const getCategoryIcon = (category) => {
 };
 
 function InteractiveMap() {
-  const [posts, setPosts] = useState([]);
+  const posts = useMapStores((state) => state.posts);
+  const actionGetMapPost = useMapStores((state) => state.actionGetMapPost);
+  // const [posts, setPosts] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const mapRef = useRef(null);
 
+  const callActionGetMapPost = async () => {
+    actionGetMapPost();
+  };
+
   useEffect(() => {
-    axios.get("http://localhost:8899/api/posts")
-      .then((res) => {
-        console.log("Fetched posts:", res.data.posts);
-        setPosts(res.data.posts);
-      })
-      .catch((err) => console.error("Failed to fetch posts", err));
+    callActionGetMapPost();
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -56,6 +60,8 @@ function InteractiveMap() {
       );
     }
   }, []);
+
+  console.log("post", posts);
 
   return (
     <div className="w-full h-[600px]">
@@ -88,7 +94,9 @@ function InteractiveMap() {
             >
               <Popup>
                 <div className="w-60">
-                  <h3 className="font-semibold text-base mb-1">{post.placeName}</h3>
+                  <h3 className="font-semibold text-base mb-1">
+                    {post.placeName}
+                  </h3>
                   {post.image && (
                     <img
                       src={post.image}
@@ -97,7 +105,9 @@ function InteractiveMap() {
                     />
                   )}
                   <p className="text-sm mb-1">{post.description}</p>
-                  <p className="text-xs font-medium">{post.province}, {post.district}</p>
+                  <p className="text-xs font-medium">
+                    {post.province}, {post.district}
+                  </p>
                 </div>
               </Popup>
             </Marker>

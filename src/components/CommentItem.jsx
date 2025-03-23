@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import CommentForm from "./CommentForm";
+import { useLocation, useNavigate } from "react-router";
 import useCommentStores from "../stores/useCommentStores";
 import useUserStore from "../stores/userStore";
 import Swal from "sweetalert2";
 import { createAlert } from "../utils/createAlert";
+import { UserIcon } from "lucide-react";
+import moment from "moment";
 
 const CommentItem = ({ comment }) => {
+  const navigate = useNavigate();
+  const location = useLocation(); // Get the current location
+
   const { postId } = useParams(); // ดึง postId จาก URL
 
   const [showReply, setShowReply] = useState(false);
@@ -18,9 +24,13 @@ const CommentItem = ({ comment }) => {
   const deleteComment = useCommentStores((state) => state.deleteComment);
   const getComments = useCommentStores((state) => state.getComments);
 
-  const actionGetMeOrGoogleLogin = useUserStore((state) => state.actionGetMeOrGoogleLogin);
+  const actionGetMeOrGoogleLogin = useUserStore(
+    (state) => state.actionGetMeOrGoogleLogin
+  );
   const user = useUserStore((state) => state.user);
-  const googleLoginSuccessful = useUserStore((state) => state.googleLoginSuccessful);
+  const googleLoginSuccessful = useUserStore(
+    (state) => state.googleLoginSuccessful
+  );
 
   useEffect(() => {
     if (!user && !googleLoginSuccessful) {
@@ -30,14 +40,26 @@ const CommentItem = ({ comment }) => {
     }
   }, []);
 
-  // console.log(user)
+  const hdlProfileLink = (id) => {
+    const targetPath = `/user-dashboard/${id}`; // Replace with dynamic user ID
+    console.log("Target Path:", targetPath);
+
+    // Only navigate if the current location does not match the target path
+    if (location.pathname !== targetPath) {
+      navigate(targetPath);
+      navigate(0); // This will reload the current page and trigger a re-render
+    } else {
+      // If already on the target route, force re-navigation
+      navigate(targetPath);
+    }
+  };
+
+  // console.log(comment);
 
   const handleReply = async (newReply) => {
     try {
       await addReply(newReply);
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   };
 
   const handleEdit = async () => {
@@ -85,6 +107,8 @@ const CommentItem = ({ comment }) => {
     }
   };
 
+  console.log(comment)
+
   return (
     <div
       className={`ml-${
@@ -92,12 +116,35 @@ const CommentItem = ({ comment }) => {
       } border-l-2 border-gray-300 pl-4 py-2 text-gray-900`}
     >
       <div className="bg-gray-100 p-3 rounded-lg shadow-sm">
-        <p className="text-sm text-gray-600">
-          <strong>{comment.user.username}</strong>
-        </p>
+        <div className="flex gap-2 items-center">
+          {/* profile Image */}
+          <Link onClick={() => hdlProfileLink(comment?.userId)}>
+            <div className="w-10 h-10 mask mask-squircle bg-gradient-to-r from-blue-300 to-blue-200 flex justify-center items-center">
+              {comment?.user?.profileImage && !user?.isGoogleUser ? (
+                <img
+                  src={comment.user?.profileImage}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <UserIcon size={20} color="white" />
+              )}
+            </div>
+          </Link>
+
+          {/* username */}
+          <div>
+            <p className="text-md text-gray-700">
+              <strong>{comment.user.username}</strong>
+            </p>
+            <p className="text-xs text-gray-500">
+              {moment(comment.createdAt).fromNow()}
+            </p>
+          </div>
+        </div>
 
         {isEditing ? (
-          <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-center gap-2 mt-3">
             <input
               type="text"
               value={editContent}
@@ -109,15 +156,13 @@ const CommentItem = ({ comment }) => {
             </button>
             <button
               className="btn btn-outline"
-              onClick={() => setIsEditing(false)} 
+              onClick={() => setIsEditing(false)}
             >
               Cancel
             </button>
           </div>
         ) : (
-          <p className="text-gray-800">
-            {comment.content}
-          </p>
+          <p className="text-gray-800 mt-4 mb-4">{comment.content}</p>
         )}
 
         <div className="flex gap-2 mt-2">
@@ -165,3 +210,4 @@ const CommentItem = ({ comment }) => {
 };
 
 export default CommentItem;
+

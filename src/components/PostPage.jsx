@@ -14,10 +14,10 @@ import MapCanvasShow from "./MapCanvasShow";
 import view from "../icons/view.png";
 
 const PostPage = ({ postId }) => {
+  const navigate = useNavigate();
   const actionGetPostByPostId = useLocationStores(
     (state) => state.actionGetPostByPostId
   );
-  const navigate = useNavigate();
   const publicPost = useLocationStores((state) => state.publicPost);
   const postImage = useLocationStores((state) => state.postImage);
 

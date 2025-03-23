@@ -11,24 +11,22 @@ function ProtectRoute({ el, allows }) {
   const { user } = useUserStore();
 
   const hdlLoading = async () => {
-    console.log("Loading animation")
+    // console.log("Loading animation");
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 750))
+    await new Promise((resolve) => setTimeout(resolve, 750));
     try {
       setLoading(true);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    
-    console.log("bello")
     const authorized = allows.includes(user?.role);
     setIsAuthorized(authorized);
-    hdlLoading()
+    hdlLoading();
   }, []);
 
   // console.log(isAuthorized);
@@ -43,9 +41,7 @@ function ProtectRoute({ el, allows }) {
     return <ErrorUnauthorized />;
   }
 
-  return <>
-    {loading ? <LoadingAnimation /> :  el }
-  </>;
+  return <>{loading ? <LoadingAnimation /> : el}</>;
 }
 
 export default ProtectRoute;

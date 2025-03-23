@@ -60,7 +60,7 @@ export default function AnalysisDashboard() {
     topDestination,
   };
 
-  console.log(topDestination)
+  // console.log(topDestination)
 
   return (
     <>

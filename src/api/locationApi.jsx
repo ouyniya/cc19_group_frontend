@@ -14,4 +14,10 @@ locationApi.actionGetDistrict = async (provinceId) => {
   });
 };
 
+locationApi.actionGetTopProvinces = async () => {
+  return axios.get(`/api/track-view/place/top/provinces`, {
+    headers: { Authorization: `Bearer ${getAccessToken()}` },
+  });
+};
+
 export default locationApi;

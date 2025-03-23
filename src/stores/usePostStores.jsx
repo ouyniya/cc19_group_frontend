@@ -37,6 +37,7 @@ const usePostStores = create((set, get) => ({
 
       const res = await postApi.actionGetEachPost(id);
       set({ curentPost: res.data.post });
+      return res.data
     } catch (error) {
       const errorMsg = error?.response?.data?.message;
       createAlert("info", errorMsg);
