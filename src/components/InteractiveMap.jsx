@@ -61,7 +61,7 @@ function InteractiveMap() {
     }
   }, []);
 
-  console.log("post", posts);
+  // console.log("post", posts);
 
   return (
     <div className="w-full h-[600px]">

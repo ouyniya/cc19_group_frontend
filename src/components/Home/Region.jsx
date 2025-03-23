@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Map from "../../pictures/ThaiMap.png";
 import WatArun from "../../pictures/WatArun.png";
 import NorthEast from "../../pictures/Northeast.png";
@@ -9,6 +9,8 @@ import South from "../../pictures/South.png";
 import MapCanvasExample from "../MapCanvasExample";
 import InteractiveMap from "../InteractiveMap";
 import useAdminStores from "../../stores/useAdminStores";
+import useLocationStores from "../../stores/useLocationStores";
+import { Link } from "react-router";
 
 function Region() {
   const regions = [
@@ -19,6 +21,23 @@ function Region() {
     { src: West, label: "West" },
     { src: South, label: "South" },
   ];
+
+  const store = useLocationStores();
+  const { actionGetTopProvinces, topLocation } = store;
+
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        await actionGetTopProvinces();
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
+
+    fetchAllUsers();
+  }, [actionGetTopProvinces]);
+
+  console.log(topLocation?.topProvinces);
 
   return (
     <div className="max-w-[80%] mx-auto mt-20 flex flex-col gap-5">
@@ -35,24 +54,26 @@ function Region() {
         {/* Region Images */}
         <div className="w-full md:w-2/3">
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {regions.map((region, index) => (
-              <div
-                key={index}
-                className="relative hover:cursor-pointer h-40 overflow-hidden rounded-lg"
-              >
-                <img
-                  src={region.src}
-                  alt={region.label}
-                  className="w-full h-full object-cover"
-                />
+            {topLocation?.topProvinces?.slice(0, 6)?.map((region, index) => (
+              <Link to={`/filter-page?placeName=&province=${region.name}&district=&page=1`}>
+                <div
+                  key={index}
+                  className="relative hover:cursor-pointer h-40 overflow-hidden rounded-lg"
+                >
+                  <img
+                    src={region.imageUrl}
+                    alt={region.name}
+                    className="w-full h-full object-cover"
+                  />
 
-                {/* Overlay Black Gradient */}
-                <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-2 sm:p-4">
-                  <p className="font-bold text-sm sm:text-base text-white">
-                    {region.label}
-                  </p>
+                  {/* Overlay Black Gradient */}
+                  <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-2 sm:p-4">
+                    <p className="font-bold text-sm sm:text-base text-white">
+                      {region.name}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

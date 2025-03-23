@@ -29,6 +29,7 @@ import SuccessPost from "../pages/SuccessPost";
 import EditPost from "../pages/EditPost";
 import TermsAndConditions from "../pages/TermsAndConditions";
 import PrivacyPolicy from "../pages/PrivacyPolicy";
+import FilterPage from "../pages/FilterPage";
 
 // Route ใช้ในการกำหนดเส้นทาง (route) เฉพาะหนึ่งเส้นทาง
 // Routes จะตรวจสอบว่า URL ตรงกับ path ไหน และแสดงคอมโพเนนต์ที่ตรงกับเส้นทางนั้น
@@ -47,7 +48,7 @@ function AppRoutes() {
           <Route path="home" element={<Home />} />
           <Route path="terms" element={<TermsAndConditions />} />
           <Route path="privacy" element={<PrivacyPolicy />} />
-          <Route path="filter-page" element={<FilterPageDraft />} />
+          <Route path="filter-page" element={<FilterPage />} />
 
           {/* soft protect */}
 
