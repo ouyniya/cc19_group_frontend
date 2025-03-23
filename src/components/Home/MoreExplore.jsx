@@ -1,43 +1,83 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import yingyong from "../../pictures/Yingyong.png";
 import KhaoLung from "../../pictures/KhaoLung.png";
 import Namtok from "../../pictures/Namtok.png";
+import bangtaoBeach from "../../pictures/bangtaoBeach.png";
+import watArun from "../../pictures/watArun.png";
+import watRongKhun from "../../pictures/watRongKhun.png";
 import SearchLogo from "../../icons/search.png";
 
-const posts = [
-  { id: 1, image: yingyong },
-  { id: 2, image: Namtok },
-  { id: 3, image: KhaoLung },
+const squareData = [
+  { id: 1, src: yingyong },
+  { id: 2, src: Namtok },
+  { id: 3, src: KhaoLung },
+  { id: 4, src: watArun },
+  { id: 5, src: bangtaoBeach },
+  { id: 6, src: watRongKhun },
 ];
 
-function MoreExplore() {
+const shuffle = (array) => {
+  let currentIndex = array.length,
+    randomIndex;
+
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+  return array;
+};
+
+const generateSquares = () => {
+  return shuffle([...squareData]).map((sq) => (
+    <motion.div
+      key={sq.id}
+      layout
+      transition={{ duration: 1.2, type: "spring" }}
+      className="w-full h-full rounded-2xl overflow-hidden shadow-md"
+    >
+      <img src={sq.src} alt="place" className="w-full h-full object-cover" />
+    </motion.div>
+  ));
+};
+
+const AlbumGrid = () => {
+  const [squares, setSquares] = useState(generateSquares());
+  const timeoutRef = useRef(null);
+
+  useEffect(() => {
+    shuffleSquares();
+    return () => clearTimeout(timeoutRef.current);
+  }, []);
+
+  const shuffleSquares = () => {
+    setSquares(generateSquares());
+    timeoutRef.current = setTimeout(shuffleSquares, 4000);
+  };
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
+      {squares}
+    </div>
+  );
+};
+
+function Album() {
   return (
     <div className="max-w-[80%] mx-auto mt-20">
-      {/* More to explore */}
-      <div>
-        {/* Header */}
-        <div className="flex gap-2 items-center">
-          <p className="text-xl font-bold">More to explore</p>
-          <img src={SearchLogo} alt="icon search" className="h-7" />
-        </div>
-
-        {/* Grid for posts */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
-          {posts.map((el, index) => (
-            <div key={index} className="w-full">
-              <div className="h-60 w-full">
-                <img
-                  src={el.image}
-                  alt="place image"
-                  className="rounded-2xl w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Header */}
+      <div className="flex gap-2 items-center">
+        <p className="text-xl font-bold">Album</p>
       </div>
+
+      {/* Animated Album Grid */}
+      <AlbumGrid />
     </div>
   );
 }
 
-export default MoreExplore;
+export default Album;
