@@ -12,6 +12,11 @@ wishlistApi.actionDeleteWishlist = async (wishlistId) => {
     headers: { Authorization: `Bearer ${getAccessToken()}` },
   });
 };
+wishlistApi.actionDeleteWishlistByPostId = async (postId) => {
+  return axios.delete(`/api/wishlists/post/${postId}`, {
+    headers: { Authorization: `Bearer ${getAccessToken()}` },
+  });
+};
 wishlistApi.actionAddWishlist = async (input) => {
   return axios.post(`/api/wishlists/`, input, {
     headers: { Authorization: `Bearer ${getAccessToken()}` },
