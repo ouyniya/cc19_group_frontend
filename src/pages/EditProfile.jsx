@@ -1,19 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-
-import profile from "../pictures/profile.png";
-import picture from "../icons/picture.png";
-import ChangeProfile from "../components/UserDashboard/ChangeProfile";
-import { updateProfile } from "../utils/validators";
+import { Edit2Icon, Camera, Save, X, User } from "lucide-react";
 import useUserStore from "../stores/userStore";
+import { updateProfile } from "../utils/validators";
 import { AxiosError } from "axios";
 import { ZodError } from "zod";
 import { createAlert } from "../utils/createAlert";
-import { Edit2Icon } from "lucide-react";
+import ChangeProfile from "../components/UserDashboard/ChangeProfile";
+import { div } from "@tensorflow/tfjs-core";
 
 function EditProfile() {
   const navigate = useNavigate();
-
   const actionUpdateProfileInfo = useUserStore(
     (state) => state.actionUpdateProfileInfo
   );
@@ -49,7 +46,6 @@ function EditProfile() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      //validate
       updateProfile.parse(input);
       if (
         input.username.trim() === user.username.trim() &&
@@ -58,27 +54,14 @@ function EditProfile() {
         return createAlert("info", "Nothing changed.");
       }
 
-      // connect to db
       await actionUpdateProfileInfo(input);
       await getCurrentUser();
-
-      // console.log("Update success");
-      createAlert("success", "Update success");
+      createAlert("success", "Profile updated successfully");
     } catch (error) {
       console.log(error);
       if (error instanceof AxiosError) {
         console.log("error axios", error.response.data);
       }
-      // if (error instanceof ZodError) {
-      //   const errMsg = error.errors.reduce((acc, cur) => {
-      //     acc[cur.path] = cur.message;
-      //     console.log(acc.email)
-      //     createAlert(`info`, ` ${acc.email} `)
-      //     return acc;
-      //   }, {});
-      //   setInputError(errMsg);
-      //   return;
-      // }
       if (error instanceof ZodError) {
         const errMsg = error.errors.reduce((acc, cur) => {
           acc[cur.path] = cur.message;
@@ -95,103 +78,153 @@ function EditProfile() {
 
   const handleCancel = () => {
     navigate(`/user-dashboard/${user?.id}`);
-    // setInput({
-    //   username: user.username,
-    //   email: user.email,
-    // });
   };
 
+  console.log(user);
+
   return (
-    <div className="flex flex-col items-center mt-10 h-100 w-screen">
-      <div className="bg-blue-50 px-20 py-10 rounded-4xl">
-        <p className="font-bold text-2xl text-[#086BAF] mt-5 text-center">
-          Edit Profile
-        </p>
-        <div className="flex h-80 w-120">
-          {/* Left */}
-          <div className="flex flex-col">
-            <div className="w-30 h-30 rounded-full overflow-hidden mt-10">
-              <img
-                src={user?.profileImage}
-                alt="Profile"
-                className="w-full h-full object-cover" // Ensure the image fills the circle without distortion
-              />
-              <div className="flex flex-col ml-12 -mt-25">
-                <div
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className="bg-gradient-to-br from-[var(--btnMain)] to-sky-600 py-6 px-8">
+          <h1 className="text-2xl font-bold text-white text-center">
+            Edit Profile
+          </h1>
+        </div>
+
+        <div className="p-8">
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            {/* Profile Image Section */}
+            <div className="flex flex-col items-center">
+              <div className="relative group">
+                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-blue-100 shadow-md bg-blue-50">
+                  {!user?.profileImage || user?.isGoogleUser ? (
+                    <div className="flex overflow-hidden rounded-full w-full h-full justify-center items-center bg-gradient-to-r from-blue-300 to-blue-200">
+                    <User size={50} color="white" />
+                  </div>
+                  ) : (
+                    <img
+                      src={user?.profileImage}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                </div>
+
+                <button
                   onClick={() =>
-                    document.getElementById("my_modal_5").showModal()
+                    document.getElementById("profile_modal").showModal()
                   }
+                  className="absolute bottom-0 right-0 p-2 bg-sky-500 text-white rounded-full shadow-lg hover:bg-sky-600 transition-all transform hover:scale-105"
                 >
-                  <div className="btn btn-circle absolute left-2 bottom-100 badge badge-info">
-                    <Edit2Icon size={16} color="white" />
+                  <Camera size={18} />
+                </button>
+              </div>
+              <p className="mt-4 text-sky-600 font-medium">{user?.username}</p>
+            </div>
+
+            {/* Form Section */}
+            <div className="flex-1 w-full">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label
+                    htmlFor="username"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Username
+                  </label>
+                  <div className="relative">
+                    <input
+                      id="username"
+                      name="username"
+                      type="text"
+                      required
+                      minLength="3"
+                      maxLength="30"
+                      value={input.username}
+                      onChange={handleChange}
+                      className="block w-full px-4 py-3 bg-blue-50 border border-blue-100 rounded-xl focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition-all focus:outline-none"
+                      placeholder="Your username"
+                    />
+                    {inputError.username && (
+                      <p className="mt-1 text-sm text-red-500">
+                        {inputError.username}
+                      </p>
+                    )}
+                    <p className="mt-1 text-xs text-gray-500">
+                      Must be 3 to 30 characters
+                    </p>
                   </div>
                 </div>
-              </div>
-            </div>
-            {/* change photo icon */}
-          </div>
-          {/* Right */}
-          <form onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-2 ml-5 mt-8">
-              <p className="font-bold text-xl text-[#086BAF]">Username</p>
-              <input
-                type="text"
-                className="text-black bg-white rounded-lg h-10 w-70 border-1 border-[#9BA2A5] pl-3"
-                placeholder="Username"
-                name="username"
-                onChange={handleChange}
-                value={input.username}
-              />
-              {inputError.username && (
-                <span className="text-xs text-red-500">
-                  {inputError.username}
-                </span>
-              )}
 
-              <p className="font-bold text-xl text-[#086BAF] mt-2">
-                Email Address
-              </p>
-              <input
-                type="text"
-                className="text-black bg-white rounded-lg h-10 w-70 border-1 border-[#9BA2A5] pl-3"
-                placeholder="Add your email address"
-                name="email"
-                onChange={handleChange}
-                value={input.email}
-              />
-              {inputError.email && (
-                <span className="text-xs text-red-500">{inputError.email}</span>
-              )}
-            </div>
-            <div className="flex justify-center mt-8 gap-2 ">
-              <button className="btn border-0 bg-[#086BAF] rounded-full text-white">
-                Save
-              </button>
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="btn text-[#9BA2A5] bg-white border-2 border-[#086BAF] rounded-full"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-        {/* Modal change profile */}
-        <dialog id="my_modal_5" className="modal">
-          <div className="modal-box w-150">
-            <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
-              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                ✕
-              </button>
-            </form>
-            <div>
-              <ChangeProfile />
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      value={input.email}
+                      onChange={handleChange}
+                      className="block w-full px-4 py-3 bg-blue-50 border border-blue-100 rounded-xl focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition-all focus:outline-none"
+                      placeholder="mail@example.com"
+                    />
+                    {inputError.email && (
+                      <p className="mt-1 text-sm text-red-500">
+                        {inputError.email}
+                      </p>
+                    )}
+                    <p className="mt-1 text-xs text-gray-500">
+                      Enter a valid email address
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className="inline-flex items-center px-6 py-2.5 border border-gray-300 shadow-sm rounded-full text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  >
+                    <X size={16} className="mr-2" />
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="inline-flex items-center px-6 py-2.5 bg-gradient-to-b from-[var(--btnMain)] to-sky-600 hover:bg-sky-600 text-white font-medium rounded-full shadow transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  >
+                    <Save size={16} className="mr-2" />
+                    {isLoading ? "Saving..." : "Save Changes"}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-        </dialog>
+        </div>
       </div>
+
+      {/* Profile Image Change Modal */}
+      <dialog id="profile_modal" className="modal">
+        <div className="modal-box max-w-md bg-white rounded-2xl p-6">
+          <form method="dialog" className="absolute right-4 top-4">
+            <button className="btn btn-sm btn-circle bg-gray-100 hover:bg-gray-200 border-none text-gray-500">
+              ✕
+            </button>
+          </form>
+          <h3 className="text-xl font-bold text-gray-800 mb-6">
+            Change Profile Picture
+          </h3>
+          <div>
+            <ChangeProfile />
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 }

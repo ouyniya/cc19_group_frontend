@@ -1,170 +1,191 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { motion } from "framer-motion";
-import MapCanvas from "../components/MapCanvas";
-import useLocationStores from '../stores/useLocationStores';
-import { createAlert } from '../utils/createAlert';
 import usePostStores from '../stores/usePostStores';
+import { createAlert } from '../utils/createAlert';
 
 function EditPostComponent({ id }) {
+  const actionGetEachPost = usePostStores((state) => state.actionGetEachPost);
+  const actionUpdatePost = usePostStores((state) => state.actionUpdatePost);
+  const currentPost = usePostStores((state) => state.curentPost);
 
+  const [input, setInput] = useState({
+    title: currentPost.title || '',
+    content: currentPost.content || '',
+    budget: currentPost.budget || '',
+  });
 
-    const actionGetEachPost = usePostStores((state) => state.actionGetEachPost)
-    const actionUpdatePost = usePostStores((state) => state.actionUpdatePost)
-    const curentPost = usePostStores((state) => state.curentPost)
+  useEffect(() => {
+    actionGetEachPost(id);
+  }, []);
 
-    /* state เก็บ input */
-    const [input, setInput] = useState({
-        title: curentPost.title,
-        content: curentPost.content,
-        budget: curentPost.budget,
-    })
+  useEffect(() => {
+    setInput({
+      title: currentPost.title || '',
+      content: currentPost.content || '',
+      budget: currentPost.budget || '',
+    });
+  }, [currentPost]);
 
-    useEffect(() => {
-        actionGetEachPost(id)
-    }, []);
-    useEffect(() => {
-        setInput({
-            title: curentPost.title,
-            content: curentPost.content,
-            budget: curentPost.budget,
-        });
-    }, [curentPost]);
+  const hdlAddPost = async (e) => {
+    e.preventDefault();
+    try {
+      if (
+        input.title.trim() === currentPost.title?.trim() &&
+        input.content.trim() === currentPost.content?.trim() &&
+        input.budget === currentPost.budget
+      ) {
+        return createAlert("info", "Nothing changed.");
+      }
+      await actionUpdatePost(input, id);
+      createAlert("success", "Edit successfully!");
+    } catch (error) {
+      if (error.errors) {
+        const errMsg = error.errors.reduce((acc, cur) => {
+          acc[cur.path] = cur.message;
+          return acc;
+        }, {});
+        createAlert("info", errMsg.message);
+      } else {
+        createAlert("error", "An unexpected error occurred");
+      }
+    } finally {
+        window.history.back()
+    }
+  };
 
-    const hdlAddPost = async (e) => {
-        e.preventDefault();
-        try {
-            if (
-                input.title.trim() === curentPost.title.trim() &&
-                input.content.trim() === curentPost.content.trim() &&
-                input.budget === curentPost.budget
-                
-            ) {
-                return createAlert("info", "Nothing changed.");
-            }
-            await actionUpdatePost(input, id)
-            createAlert("success", "Edit successfully!");
-        } catch (error) {
-            const errMsg = error.errors.reduce((acc, cur) => {
-                acc[cur.path] = cur.message;
-                return acc;
-            });
-            createAlert("info", errMsg.message);
-            setInputError(errMsg);
-        }
-    };
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        duration: 0.5,
+        staggerChildren: 0.1 
+      }
+    }
+  };
 
-    return (
-        <div className='min-h-screen flex flex-col items-center px-5 py-5 gap-2'>
-            <div className="flex flex-col items-center rounded-4xl mt-10 h-350 w-[1200px] bg-blue-50">
-                {/* Head */}
-                <motion.p
-                    className="text-[#086BAF] font-bold text-3xl mt-5"
-                    initial={{ x: -100, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    Edit your Post
-                </motion.p>
-                <div className="divider mt-4 mb-0"></div>
-                {/* Div Main */}
-                <div className="flex flex-col gap-2 items-center">
-                    {/* Div Form */}
-                    <motion.div
-                        className="flex flex-col gap-2 items-center w-[1000px] px-10 py-10 "
-                        initial={{ y: -100, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                    >
-                        {/* Form */}
-                        <motion.form
-                            onSubmit={hdlAddPost}
-                            className="flex flex-col w-[900px] gap-5"
-                            initial={{ y: 50, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.5 }}
-                        >
-                            <p className="font-bold text-lg text-[#086BAF] mt-2 -mb-3">
-                                Title
-                            </p>
-                            <motion.input
-                                type="text"
-                                className="bg-white rounded-xs h-10 w-full border-1 border-[#9BA2A5] p-2"
-                                placeholder="   Please fill your title"
-                                value={input.title}
-                                onChange={(e) => {
-                                    setInput({ ...input, title: e.target.value });
-                                    //     setInputError(initialInputError);
-                                }}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: 0.5 }}
-                            />
-                            <p className="font-bold text-lg text-[#086BAF] mt-2 -mb-3">
-                                Content
-                            </p>
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: { duration: 0.5 } 
+    }
+  };
 
-                            <motion.textarea
-                                className="bg-white rounded-xs h-30 w-full border-1 border-[#9BA2A5] p-2"
-                                placeholder="Content"
-                                value={input.content}
-                                onChange={(e) => {
-                                    setInput({ ...input, content: e.target.value });
-                                    //     setInputError(initialInputError);
-                                }}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: 0.5 }}
-                            />
-                            <p className="font-bold text-lg text-[#086BAF] mt-2 -mb-3">
-                                Budget
-                            </p>
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4">
+      <motion.div 
+        className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="bg-gradient-to-br from-[var(--btnMain)] to-sky-600 py-6 px-8">
+          <motion.h1 
+            className="text-3xl font-bold text-white"
+            initial={{ x: -30, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            Edit Your Post
+          </motion.h1>
+          <motion.p 
+            className="text-blue-100 mt-2"
+            initial={{ x: -30, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            Update your post details below
+          </motion.p>
+        </div>
 
-                            <motion.input
-                                type="number"
-                                className="bg-white rounded-xs h-10 w-full border-1 border-[#9BA2A5] p-2"
-                                placeholder="Budget"
-                                value={input.budget}
-                                onChange={(e) => {
-                                    setInput({ ...input, budget: e.target.value });
-                                    //     setInputError(initialInputError);
-                                }}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: 0.5 }}
-                            />
+        <motion.div 
+          className="p-8"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <form onSubmit={hdlAddPost}>
+            <motion.div className="mb-6" variants={itemVariants}>
+              <label 
+                htmlFor="title" 
+                className="block text-gray-700 font-semibold mb-2"
+              >
+                Title
+              </label>
+              <input
+                id="title"
+                type="text"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                placeholder="Enter post title"
+                value={input.title}
+                onChange={(e) => setInput({ ...input, title: e.target.value })}
+              />
+            </motion.div>
 
-                            {/* div button Cornfirm */}
-                            <div className='flex justify-center w-full '>
-                                <motion.button
-                                    onClick={hdlAddPost}
-                                    // disabled={!isSafe}
-                                    type="submit"
-                                    className='mt-4 p-3 rounded-xl text-white font-bold bg-[#086BAF] w-30'
-                                    // className={`mt-4 p-3 rounded-xl text-white font-bold ${isSafe || !file
-                                    //     ? "bg-[#086BAF]"
-                                    //     : "bg-red-500 cursor-not-allowed"
-                                    //     }`}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                >
-                                    Cornfirm
-                                    {/* {isSafe || !file ? "Create Post" : "NSFW Content Detected!"} */}
-                                </motion.button>
+            <motion.div className="mb-6" variants={itemVariants}>
+              <label 
+                htmlFor="content" 
+                className="block text-gray-700 font-semibold mb-2"
+              >
+                Content
+              </label>
+              <textarea
+                id="content"
+                rows="6"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                placeholder="Write your post content here..."
+                value={input.content}
+                onChange={(e) => setInput({ ...input, content: e.target.value })}
+              />
+            </motion.div>
 
-                            </div>
-
-
-                        </motion.form>
-
-                    </motion.div>
+            <motion.div className="mb-8" variants={itemVariants}>
+              <label 
+                htmlFor="budget" 
+                className="block text-gray-700 font-semibold mb-2"
+              >
+                Budget
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span className="text-gray-500">฿</span>
                 </div>
+                <input
+                  id="budget"
+                  type="number"
+                  className="w-full pl-8 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  placeholder="Enter your budget"
+                  value={input.budget}
+                  onChange={(e) => setInput({ ...input, budget: e.target.value })}
+                />
+              </div>
+            </motion.div>
 
-
-            </div>
-
-
-        </div >
-    )
+            <motion.div className="flex justify-end gap-3" variants={itemVariants}>
+              <button
+                type="button"
+                className="inline-flex items-center px-6 py-2.5 border border-gray-300 shadow-sm rounded-full text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                onClick={() => window.history.back()}
+              >
+                Cancel
+              </button>
+              <motion.button
+                type="submit"
+                className="inline-flex items-center px-6 py-2.5 bg-gradient-to-b from-[var(--btnMain)] to-sky-600 hover:bg-sky-600 text-white font-medium rounded-full shadow transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Save Changes
+              </motion.button>
+            </motion.div>
+          </form>
+        </motion.div>
+      </motion.div>
+    </div>
+  );
 }
 
-export default EditPostComponent
+export default EditPostComponent;

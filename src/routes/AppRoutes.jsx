@@ -27,6 +27,9 @@ import ProfanityFilter from "../pages/Badword";
 import FilterPageDraft from "../pages/FilterPageDraft";
 import SuccessPost from "../pages/SuccessPost";
 import EditPost from "../pages/EditPost";
+import TermsAndConditions from "../pages/TermsAndConditions";
+import PrivacyPolicy from "../pages/PrivacyPolicy";
+import FilterPage from "../pages/FilterPage";
 
 // Route ใช้ในการกำหนดเส้นทาง (route) เฉพาะหนึ่งเส้นทาง
 // Routes จะตรวจสอบว่า URL ตรงกับ path ไหน และแสดงคอมโพเนนต์ที่ตรงกับเส้นทางนั้น
@@ -39,14 +42,13 @@ function AppRoutes() {
         {/* public */}
         <Route path="/" element={<Outlet />}>
           <Route index element={<LandingPage />} />
-
-          </Route>
-
-
+        </Route>
 
         <Route path="/" element={<Layout />}>
           <Route path="home" element={<Home />} />
-          <Route path="filter-page" element={<FilterPageDraft/>} />
+          <Route path="terms" element={<TermsAndConditions />} />
+          <Route path="privacy" element={<PrivacyPolicy />} />
+          <Route path="filter-page" element={<FilterPage />} />
 
           {/* soft protect */}
 
@@ -72,8 +74,8 @@ function AppRoutes() {
           <Route path="plan" element={<AIPlanning />} />
           <Route path="create-post" element={<CreatePostPage />} />
           <Route path="edit-profile" element={<EditProfile />} />
-          <Route path="badword" element={<ProfanityFilter/>} />
-          <Route path="success-post" element={<SuccessPost/>} />
+          <Route path="badword" element={<ProfanityFilter />} />
+          <Route path="success-post" element={<SuccessPost />} />
           <Route path="edit-post/:id" element={<EditPost />} />
         </Route>
 

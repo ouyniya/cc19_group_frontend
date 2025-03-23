@@ -9,12 +9,14 @@ import {
   FaUser,
 } from "react-icons/fa";
 import useLocationStores from "../stores/usePublicPostStores";
-import { useNavigate } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router";
 import MapCanvasShow from "./MapCanvasShow";
 import view from "../icons/view.png";
 
 const PostPage = ({ postId }) => {
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current location
+
   const actionGetPostByPostId = useLocationStores(
     (state) => state.actionGetPostByPostId
   );
@@ -54,9 +56,23 @@ const PostPage = ({ postId }) => {
     setIsPopupOpen(false);
   };
 
-  console.log(publicPost);
+  // console.log(publicPost);
   let latitude = publicPost?.post?.place?.latitude;
   let longitude = publicPost?.post?.place?.longitude;
+
+  const hdlProfileLink = (id) => {
+    const targetPath = `/user-dashboard/${id}`; // Replace with dynamic user ID
+    console.log("Target Path:", targetPath);
+
+    // Only navigate if the current location does not match the target path
+    if (location.pathname !== targetPath) {
+      navigate(targetPath);
+      navigate(0); // This will reload the current page and trigger a re-render
+    } else {
+      // If already on the target route, force re-navigation
+      navigate(targetPath);
+    }
+  };
 
   // console.log(latitude)
 
@@ -77,14 +93,16 @@ const PostPage = ({ postId }) => {
 
       <div className="flex items-center mt-4">
         <FaUser className="text-gray-600 mr-2" />
-        <span
-          className="text-sky-600 cursor-pointer"
-          onClick={() =>
-            navigate(`/user-dashboard/${publicPost?.post?.userId}`)
-          }
-        >
-          {publicPost?.post?.user?.username}
-        </span>
+        <Link onClick={() => hdlProfileLink(publicPost?.post?.user?.id)}>
+          <span
+            className="text-sky-600 cursor-pointer"
+            // onClick={() =>
+            //   navigate(`/user-dashboard/${publicPost?.post?.userId}`)
+            // }
+          >
+            {publicPost?.post?.user?.username}
+          </span>
+        </Link>
       </div>
 
       {/* Image Slider */}

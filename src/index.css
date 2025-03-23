@@ -2,7 +2,7 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap'); */
 /* @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap'); */
 /* @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap'); */
-/* @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
 @import "tailwindcss";
 @plugin "daisyui";
 @plugin "daisyui" {
@@ -13,4 +13,6 @@
     --bgGround: #f4f9fb;
     --btnMain: #086BB0;
     --white: #ffffff;
+    --darkGray: #4a5568;
+    font-family: "Quicksand", sans-serif;
   }
