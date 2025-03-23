@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import logo from "../icons/logo.png";
 
 import pagination from "../icons/pagination.png";
@@ -128,9 +128,8 @@ function Home() {
             </nav>
             <nav>
               <h6 className="footer-title">Legal</h6>
-              <a className="link link-hover">Terms of use</a>
-              <a className="link link-hover">Privacy policy</a>
-              <a className="link link-hover">Cookie policy</a>
+              <Link to="/terms" className="link link-hover">Terms and Conditions</Link>
+              <Link to="/privacy" className="link link-hover">Privacy policy</Link>
             </nav>
           </footer>
         </div>
