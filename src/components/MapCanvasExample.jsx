@@ -29,7 +29,7 @@ function MapCanvasExample() {
     <div>
       <MapContainer
         style={{ height: "400px", width: "100vw" }}
-        center={[13, 101]}
+        center={[12, 101]}
         zoom={5}
       >
         <BaseMap />

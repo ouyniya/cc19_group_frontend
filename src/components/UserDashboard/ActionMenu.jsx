@@ -7,10 +7,13 @@ import {
 } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import usePostStores from "../../stores/usePostStores";
 import useUserStore from "../../stores/userStore";
+import { useNavigate } from "react-router";
+
 
 const ActionMenu = ({ id }) => {
+  const navigate = useNavigate();
+
   const [open, setOpen] = useState(false);
 
   const actionDeletePost = useUserStore((state) => state.actionDeletePost);
@@ -38,7 +41,7 @@ const ActionMenu = ({ id }) => {
             setOpen={setOpen}
             Icon={FiEdit}
             text="Edit"
-            onClick={() => console.log(id)}
+            onClick={() => navigate(`/user/edit-post/${id}`)}
           />
           {/* <Option setOpen={setOpen} Icon={FiPlusSquare} text="Duplicate" />
           <Option setOpen={setOpen} Icon={FiShare} text="Share" /> */}

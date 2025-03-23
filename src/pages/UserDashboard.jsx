@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import Profile from "../pictures/profile.png";
 import Edit from "../icons/edit.png";
 import useUserStore from "../stores/userStore";
-import { Coins, Crown, Edit2, Edit3Icon, User2 } from "lucide-react";
+import { Coins, Crown, Edit3Icon, User2 } from "lucide-react";
 import { Link } from "react-router";
 import { useLocation, useNavigate } from "react-router";
-import Menu from "../components/UserDashboard/ActionMenu";
 import ActionMenu from "../components/UserDashboard/ActionMenu";
 
 function UserDashboard({ userId }) {

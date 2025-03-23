@@ -236,7 +236,7 @@ function CreatePostPage() {
 
     const foundToxic = await checkToxicity(input.content);
     if (foundToxic) {
-      createAlert("error", "❌ Inappropriate content detected! Please revise.");
+      createAlert("error", "Inappropriate content detected! Please revise.");
       setIsToxic(true);
       return;
     }
@@ -252,8 +252,8 @@ function CreatePostPage() {
         budget: Number(input.budget), // Convert budget to number
         latitude: Number(input.latitude), // Convert latitude to number
         longitude: Number(input.longitude), // Convert longitude to number
-        provinceId: Number(1), // Convert provinceId to number (input.provinceId)
-        districtId: Number(1), // Convert districtId to number (input.districtId)
+        provinceId: Number(input.provinceId), // Convert provinceId to number (input.provinceId)
+        districtId: Number(input.districtId), // Convert districtId to number (input.districtId)
       };
 
       // Validate the input using Zod schema
@@ -634,7 +634,7 @@ function CreatePostPage() {
                   disabled={!isSafe}
                   type="submit"
                   className={`mt-4 p-3 rounded-xl text-white font-bold ${isSafe || !file
-                    ? "bg-[#086BAF]"
+                    ? "bg-gradient-to-b from-[var(--btnMain)] to-sky-600 hover:bg-sky-600"
                     : "bg-red-500 cursor-not-allowed"
                     }`}
                   whileHover={{ scale: 1.05 }}

@@ -54,7 +54,7 @@ function Home() {
             />
             <button
               onClick={(e) => hdlSearch(e)}
-              className="btn rounded-full bg-[#086BB0] text-white text-xl h-12 w-25 border-0"
+              className="inline-flex items-center px-6 py-2.5 bg-gradient-to-b from-[var(--btnMain)] to-sky-600 hover:bg-sky-600 text-white font-medium rounded-full shadow transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300"
             >
               Search
             </button>
@@ -128,8 +128,12 @@ function Home() {
             </nav>
             <nav>
               <h6 className="footer-title">Legal</h6>
-              <Link to="/terms" className="link link-hover">Terms and Conditions</Link>
-              <Link to="/privacy" className="link link-hover">Privacy policy</Link>
+              <Link to="/terms" className="link link-hover">
+                Terms and Conditions
+              </Link>
+              <Link to="/privacy" className="link link-hover">
+                Privacy policy
+              </Link>
             </nav>
           </footer>
         </div>
