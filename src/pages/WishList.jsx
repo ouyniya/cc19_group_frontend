@@ -71,8 +71,9 @@ function WishList() {
     <>
       {/* header */}
       {/* <NavbarHeader /> */}
+    <div className="max-w-7xl m-auto">
 
-      <div className="flex flex-wrap justify-start gap-2 px-3 my-10">
+         <div className="flex flex-wrap justify-start gap-3 px-3 py-3 my-10">
         {wishlists?.result?.length > 0 && !isLoading ? (
           wishlists?.result?.map((el, index) => (
             <div key={index} className="flex  flex-col">
@@ -81,7 +82,7 @@ function WishList() {
                 <img
                   src={el?.post?.postImage}
                   alt="Post image"
-                  className="h-70 w-88 bg-slate-200 rounded-2xl object-cover"
+                  className="h-50 w-60 bg-slate-200 rounded-2xl object-cover"
                 />
               ) : (
                 <div className="h-70 w-88 bg-gray-300 rounded-2xl flex items-center justify-center">
@@ -89,21 +90,23 @@ function WishList() {
                   {/* Placeholder icon */}
                 </div>
               )}
-              <div onClick={() => hdlDelete(el?.id)}>
+              <div onClick={() => hdlDelete(el?.id)}
+                className="w-[210px]">
                 <img
                   src={redheart}
                   alt="Red heart"
-                  className="w-10 -mt-65 ml-72 hover:cursor-pointer"
-                />
+                  className="w-7 -mt-[190px] ml-50 hover:cursor-pointer"
+                  />
               </div>
-              <Link to={`/post/${el?.post?.id}`}>
-                <p className="ml-2 font-semibold text-sm text-[#0C4A6E]">
+                  <Link to={`/post/${el?.post?.id}`}
+              className="w-[210px]">
+                <p className="ml-2 font-semibold text-[16px] text-[var(--btnMain)] mt-3 mb-1">
                   {el?.post?.title}
                 </p>
               </Link>
-              <div className="flex gap-2 ml-2">
+              <div className="flex gap-2 ml-2 mb-5">
                 <img src={view} alt="view icon" className="h-6" />
-                <p className="text-[#A3B3BB]">{el?.post?.view}</p>
+                <p className="text-[#A3B3BB]">{el?.post?.view.toLocaleString()}</p>
               </div>
             </div>
           ))
@@ -134,6 +137,8 @@ function WishList() {
           </div>
         )}
       </div>
+    </div>
+   
     </>
   );
 }
