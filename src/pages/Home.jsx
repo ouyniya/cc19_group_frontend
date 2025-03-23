@@ -10,6 +10,8 @@ import Region from "../components/Home/Region";
 import useUserStore from "../stores/userStore";
 import MapCanvasExample from "../components/MapCanvasExample";
 import HomePageTestimonials from "../components/HomePageTestimonials";
+import Features from "../components/Features";
+import { FeatureMenu } from "../components/FeatureMenu";
 
 function Home() {
   const navigate = useNavigate();
@@ -27,7 +29,8 @@ function Home() {
   const hdlSearch = (e) => {
     setSearchText(e.target.value);
     // console.log(searchText)
-    navigate(`/filter-page?placeName=${searchText}&province=&district=&page=1`);
+    window.open(`/filter-page?placeName=${searchText}&province=&district=&page=1`, '_blank', 'noopener,noreferrer');
+    // navigate(`/filter-page?placeName=${searchText}&province=&district=&page=1`);
   };
 
   return (
@@ -88,7 +91,12 @@ function Home() {
           </div>
         </div>
 
-    <div className="bg-gradient-to-b from-white via-sky-100 to-white mt-[50px]">
+
+        
+        {/* <FeatureMenu /> */}
+        <Features />
+
+    <div className="bg-gradient-to-b from-white via-sky-200 to-white">
 
         <div className="max-w-[1200px] m-auto">
           <HomePageTestimonials />

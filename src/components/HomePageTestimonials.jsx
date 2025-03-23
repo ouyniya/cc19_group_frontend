@@ -74,7 +74,7 @@ const HomePageTestimonials = () => {
         </div>
         <Link to="/filter-page">
           <button className="mt-10 inline-flex items-center px-6 py-2.5 bg-gradient-to-b from-[var(--btnMain)] to-sky-600 hover:bg-sky-600 text-white font-medium rounded-full shadow transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300">
-            VIEW MORE
+            View More
           </button>
         </Link>
       </div>
