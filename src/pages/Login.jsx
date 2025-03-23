@@ -161,7 +161,7 @@ function Login() {
                 onClick={googleAuth}
               >
                 <FcGoogle className="w-6 h-6 mr-2" />
-                Sign Up with Google
+                Sign In with Google
               </button>
             </div>
           </div>
