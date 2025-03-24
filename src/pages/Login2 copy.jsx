@@ -15,7 +15,7 @@ const initialInput = {
   password: "",
 };
 
-function Login() {
+function Login2() {
   const [input, setInput] = useState(initialInput);
   const [errorInput, setErrorInput] = useState(initialInput);
   const [isLoading, setIsLoading] = useState(false);
@@ -178,4 +178,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Login2;
