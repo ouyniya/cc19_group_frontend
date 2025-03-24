@@ -31,12 +31,14 @@ function ProfanityFilter() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-100">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold text-blue-700 mb-4">🔍 ตรวจจับคำไม่เหมาะสม</h2>
+        <h2 className="text-2xl font-bold text-blue-700 mb-4">
+          🔍 Inappropriate word detection
+        </h2>
 
         <textarea
           className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
           rows="4"
-          placeholder="พิมพ์ข้อความที่นี่..."
+          placeholder="Text here..."
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
@@ -46,18 +48,18 @@ function ProfanityFilter() {
           onClick={checkToxicity}
           disabled={loading}
         >
-          {loading ? "กำลังโหลดโมเดล..." : "🔍 ตรวจสอบข้อความ"}
+          {loading ? "Loading..." : "🔍 "}
         </button>
 
         {isToxic && text && (
           <div className="mt-4 p-3 bg-red-100 border-l-4 border-red-500 text-red-700">
-            ❌ พบคำไม่เหมาะสมในข้อความของคุณ!
+            Inappropriate content detected! Please revise.
           </div>
         )}
 
         {!isToxic && text && (
           <div className="mt-4 p-3 bg-green-100 border-l-4 border-green-500 text-green-700">
-            ✅ ข้อความของคุณปลอดภัย!
+            Your content is ok.
           </div>
         )}
       </div>
