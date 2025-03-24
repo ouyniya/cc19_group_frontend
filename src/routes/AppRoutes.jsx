@@ -30,6 +30,8 @@ import EditPost from "../pages/EditPost";
 import TermsAndConditions from "../pages/TermsAndConditions";
 import PrivacyPolicy from "../pages/PrivacyPolicy";
 import FilterPage from "../pages/FilterPage";
+import Login2 from "../pages/Login2";
+import LoginV1 from "../pages/LoginV1";
 
 // Route ใช้ในการกำหนดเส้นทาง (route) เฉพาะหนึ่งเส้นทาง
 // Routes จะตรวจสอบว่า URL ตรงกับ path ไหน และแสดงคอมโพเนนต์ที่ตรงกับเส้นทางนั้น
@@ -56,7 +58,8 @@ function AppRoutes() {
             path="register"
             element={<ProtectRoutesGuest el={<Register />} />}
           />
-          <Route path="login" element={<ProtectRoutesGuest el={<Login />} />} />
+          <Route path="login" element={<ProtectRoutesGuest el={<Login2 />} />} />
+          <Route path="login-less-secure" element={<ProtectRoutesGuest el={<LoginV1 />} />} />
           <Route
             path="user-dashboard/:userId"
             element={<UserDashboardShow />}

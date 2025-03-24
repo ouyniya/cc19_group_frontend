@@ -107,7 +107,7 @@ const CommentItem = ({ comment }) => {
     }
   };
 
-  console.log(comment)
+  // console.log(comment)
 
   return (
     <div

@@ -80,7 +80,7 @@ function EditProfile() {
     navigate(`/user-dashboard/${user?.id}`);
   };
 
-  console.log(user);
+  // console.log(user);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">

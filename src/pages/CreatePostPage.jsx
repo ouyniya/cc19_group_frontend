@@ -260,7 +260,7 @@ function CreatePostPage() {
       createPostSchema.parse(validatedInput);
 
       let formData = new FormData();
-      console.log(input);
+      // console.log(input);
       Object.entries(input).forEach(([key, value]) => {
         formData.append(key, value);
       });

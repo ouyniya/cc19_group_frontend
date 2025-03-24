@@ -1,181 +1,104 @@
-import React, { useEffect, useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import logo from "../icons/logo.png";
-import destination from "../icons/destination.png";
-import useUserStore from "../stores/userStore";
-import { useNavigate } from "react-router";
-import { ZodError } from "zod";
-import { login } from "../utils/validators";
-import { createAlert } from "../utils/createAlert";
-import { KeyRound, Mail } from "lucide-react";
-import { axios } from "../configs/axiosInstance";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
+import useUserStore from '../stores/userStore'; // Adjust path as needed
+import OTPVerification from '../components/OTPVerification'; // Your OTP component
 
-const initialInput = {
-  email: "",
-  password: "",
-};
-
-function Login() {
-  const [input, setInput] = useState(initialInput);
-  const [errorInput, setErrorInput] = useState(initialInput);
-  const [isLoading, setIsLoading] = useState(false);
-
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  
   const navigate = useNavigate();
-  const actionLogin = useUserStore((state) => state.actionLogin);
-  const actionGetMe = useUserStore((state) => state.actionGetMe);
-  const actionGetMeOrGoogleLogin = useUserStore(
-    (state) => state.actionGetMeOrGoogleLogin
-  );
-
-  const baseUrl = axios.defaults.baseURL;
-
-  const googleAuth = () => {
-    window.open(`${baseUrl}/auth/google/callback`, "_self");
-  };
-
-  const handleChange = (e) => {
-    setInput((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    setErrorInput((prev) => ({ ...prev, [e.target.name]: "" }));
-  };
-
+  
+  // Get state and actions from Zustand
+  const {
+    actionLogin,
+    isLoading,
+    otpVerificationRequired,
+    otpUserEmail
+  } = useUserStore();
+  
+  // Redirect if already logged in
+  useEffect(() => {
+    const user = useUserStore.getState().user;
+    // console.log("user...", user)
+    if (user) {
+      navigate('/home');
+    }
+  }, [navigate]);
+  
   const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    
     try {
-      setIsLoading(true);
-      e.preventDefault();
-      login.parse(input);
-      await actionLogin(input);
-      await actionGetMeOrGoogleLogin();
-      createAlert("success", `Login Success`);
-      navigate("/home");
-    } catch (error) {
-      const errorMsg = error?.response?.data?.message;
-      createAlert("info", errorMsg);
-
-      if (error instanceof ZodError) {
-        const errMsg = error.errors.reduce((acc, cur) => {
-          acc[cur.path] = cur.message;
-          return acc;
-        }, {});
-        setErrorInput(errMsg);
+      await actionLogin({ email, password });
+      
+      // If no OTP required, the store will already have the token and user
+      // and redirection will happen in the next useEffect render
+      if (!otpVerificationRequired) {
+        // console.log("otpVerificationRequired...", otpVerificationRequired)
+        navigate('/login');
       }
-    } finally {
-      setIsLoading(false);
+    } catch (error) {
+      setError(error.response?.data?.message || 'Login failed');
     }
   };
-
+  
+  // If OTP verification is required, show OTP component
+  if (otpVerificationRequired) {
+    return <OTPVerification email={otpUserEmail} />;
+  }
+  
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Content */}
-      <div className="flex flex-grow justify-center gap-20 items-center px-4">
-        {/* Left Section */}
-        <div className="flex flex-col h-full min-w-100 w-150 gap-5">
-          {/* Logo */}
-          <div className="flex flex-row mt-10">
-            <p className="text-6xl font-bold text-[#086FB6] ml-2">V</p>
-            <img src={logo} alt="logo voyager" className="w-22 -mt-4 -ml-1" />
-            <p className="text-6xl font-bold text-[#086FB6] -ml-2">YAGER</p>
-          </div>
-
-          {/* Slogan */}
-          <p className="text-[#78AAD7] text-xl ml-20 mr-15">
-            "This is a space where the spirit of adventure meets the art of
-            storytelling, inviting you to discover the world through our eyes."
-          </p>
-
-          {/* Destination Image */}
-          <div className="flex justify-end mr-20">
-            <img src={destination} alt="destination logo" className="h-60" />
-          </div>
+    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold text-center mb-6">Log In</h2>
+      
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {error}
         </div>
-
-        {/* Right Section */}
-        <div className="flex flex-col h-full w-150 justify-center font-bold gap-1">
-          <div className="flex flex-col min-h-100 py-13 bg-[#f4f9fb] rounded-4xl items-center justify-center gap-7 shadow-md">
-            <form onSubmit={handleSubmit} className="w-[360px]">
-              <p className="text-4xl font-bold text-[#2f6b97] mb-7 text-center">
-                Login
-              </p>
-              <div className="flex flex-col items-baseline gap-4">
-                {/* Email */}
-                <label className="input validator w-[360px]">
-                  <Mail color="lightgray" />
-                  <input
-                    onChange={handleChange}
-                    type="email"
-                    name="email"
-                    placeholder="mail@site.com"
-                    className="border-[#086BAF] py-4 input-lg placeholder:text-lg placeholder:font-medium"
-                    required
-                  />
-                </label>
-                <div className="validator-hint hidden -mt-2">
-                  Enter valid email address
-                </div>
-
-                {/* Password */}
-                <label className="input validator w-[360px]">
-                  <KeyRound color="lightgray" />
-                  <input
-                    onChange={handleChange}
-                    type="password"
-                    name="password"
-                    required
-                    placeholder="password"
-                    minLength={6}
-                    className="border-[#086BAF] py-4  input-lg placeholder:text-lg placeholder:font-medium"
-                  />
-                </label>
-                <div className="validator-hint hidden -mt-2">
-                Must be more than 6 characters
-                </div>
-              
-
-                {/* Login Button */}
-                <button
-                  disabled={isLoading}
-                  className="btn border-0 text-[18px] font-medium text-white w-full bg-[#086BAF] mt-2 h-[46px] rounded-lg shadow-sm hover:bg-sky-600 transition-all duration-500"
-                >
-                  {isLoading ? "Loading..." : "Login"}
-                </button>
-
-                {/* or */}
-                <h2 className="relative w-full text-center border-b border-slate-300 my-4">
-                  <span className="absolute bg-[#f4f9fb] px-2 inline-block -mt-3 left-[50%] -translate-x-[50%] font-light text-slate-400 ">
-                    or
-                  </span>
-                </h2>
-              </div>
-            </form>
-
-            {/* Signup and Google */}
-            <div className="flex flex-col w-full gap-4 justify-center items-center -mt-3">
-              <button
-                onClick={() => navigate("/register")}
-                type="button"
-                className="btn border-0 text-[18px] font-medium text-white px-4 py-2 bg-[#87b2ce] h-[45px] rounded-lg shadow-sm hover:bg-[#679abc] transition-all duration-500 w-[60%]"
-              >
-                Sign Up
-              </button>
-              <button
-                className="flex items-center justify-center w-[60%] max-w-sm px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all duration-500 hover:cursor-pointer"
-                onClick={googleAuth}
-              >
-                <FcGoogle className="w-6 h-6 mr-2" />
-                Sign In with Google
-              </button>
-            </div>
-          </div>
+      )}
+      
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="email">
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
         </div>
-      </div>
-
-      {/* ✅ Fixed Footer (Always at bottom) */}
-      <footer className="bg-[#064D7E] h-20 flex justify-center items-center">
-        <p className="text-blue-200">
-          EST 1997 - Voyager website by CC19 student
-        </p>
-      </footer>
+        
+        <div className="mb-6">
+          <label className="block text-gray-700 mb-2" htmlFor="password">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+        
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:bg-blue-300"
+        >
+          {isLoading ? 'Logging in...' : 'Log In'}
+        </button>
+      </form>
     </div>
   );
-}
+};
 
 export default Login;

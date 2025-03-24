@@ -16,15 +16,21 @@ const useUserStore = create(
       currentUser: null,
       posts: [],
       userPublicInfo: [],
+
+      // OTP related state
+      otpVerificationRequired: false,
+      otpUserId: null,
+      otpUserEmail: null,
+      
       // Get the current user
       getCurrentUser: () => get().user,
 
       // Login action
-      actionLogin: async (input) => {
+      actionLoginLessSecure: async (input) => {
         set({ isLoading: true });
 
         try {
-          const { data } = await userApi.actionLogin(input);
+          const { data } = await userApi.loginLessSecure(input);
           set({ token: data.token, user: data.user });
           return { token: data.token, user: data.user };
         } catch (error) {
@@ -33,6 +39,87 @@ const useUserStore = create(
         } finally {
           set({ isLoading: false });
         }
+      },
+
+      // Login action (updated to handle OTP)
+      actionLogin: async (input) => {
+        set({ isLoading: true });
+
+        try {
+          const { data } = await userApi.actionLogin(input);
+
+          // console.log(data)
+          
+          // Check if OTP verification is required
+          if (data.requiresOTP) {
+            set({ 
+              otpVerificationRequired: true,
+              otpUserId: data.userId,
+              otpUserEmail: data.email
+            });
+            return { requiresOTP: true, userId: data.userId, email: data.email };
+          } else {
+            // Regular login (no OTP required)
+            set({ token: data.token, user: data.user });
+            return { token: data.token, user: data.user };
+          }
+        } catch (error) {
+          throw error;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+      
+      // Verify OTP action
+      verifyOTP: async (otp) => {
+        set({ isLoading: true });
+        
+        try {
+          const { data } = await userApi.verifyOTP({
+            userId: get().otpUserId,
+            otp
+          });
+          
+          // Store user and token after successful verification
+          set({ 
+            token: data.token, 
+            user: data.user,
+            otpVerificationRequired: false,
+            otpUserId: null,
+            otpUserEmail: null
+          });
+          
+          return { token: data.token, user: data.user };
+        } catch (error) {
+          throw error;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+      
+      // Resend OTP action
+      resendOTP: async () => {
+        set({ isLoading: true });
+        
+        try {
+          await userApi.resendOTP({
+            userId: get().otpUserId
+          });
+          return true;
+        } catch (error) {
+          throw error;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+      
+      // Reset OTP state (e.g., when user cancels OTP verification)
+      resetOTPState: () => {
+        set({
+          otpVerificationRequired: false,
+          otpUserId: null,
+          otpUserEmail: null
+        });
       },
 
       // Register action
@@ -62,7 +149,7 @@ const useUserStore = create(
       },
 
       actionGetMeOrGoogleLogin: async () => {
-        set({ isLoading: true });
+        // set({ isLoading: true });
 
         try {
           // Try to get the current user

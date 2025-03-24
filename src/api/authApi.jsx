@@ -1,5 +1,4 @@
 import { axios, getAccessToken } from "../configs/axiosInstance";
-
 const userApi = {};
 
 // Register a new user
@@ -22,6 +21,22 @@ userApi.actionCurrentUser = async () => {
   return axios.get("/api/auth/current-user", {
     headers: { Authorization: `Bearer ${getAccessToken()}` },
   });
+};
+
+// New OTP endpoints
+const API_URL = "http://localhost:8899/api";
+
+userApi.verifyOTP = async (data) => {
+  return axios.post(`${API_URL}/auth/verify-otp`, data);
+};
+
+userApi.resendOTP = async (data) => {
+  return axios.post(`${API_URL}/auth/resend-otp`, data);
+};
+
+// less secure
+userApi.loginLessSecure = async (value) => {
+  return axios.post("/api/auth/login-less-secure", value);
 };
 
 export default userApi;
