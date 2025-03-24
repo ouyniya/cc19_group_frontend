@@ -21,7 +21,7 @@ const Login = () => {
   // Redirect if already logged in
   useEffect(() => {
     const user = useUserStore.getState().user;
-    console.log("user...", user)
+    // console.log("user...", user)
     if (user) {
       navigate('/home');
     }
@@ -37,7 +37,7 @@ const Login = () => {
       // If no OTP required, the store will already have the token and user
       // and redirection will happen in the next useEffect render
       if (!otpVerificationRequired) {
-        console.log("otpVerificationRequired...", otpVerificationRequired)
+        // console.log("otpVerificationRequired...", otpVerificationRequired)
         navigate('/login');
       }
     } catch (error) {

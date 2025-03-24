@@ -38,7 +38,7 @@ const HomePageTestimonials = () => {
     getComments(87);
   }, []);
 
-  console.log(comments);
+  // console.log(comments);
 
   return (
     <section className="py-16">

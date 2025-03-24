@@ -26,7 +26,7 @@ function Rightbar() {
   }, []);
 
   useEffect(() => {
-    console.log("Location changed to:", location.pathname);
+    // console.log("Location changed to:", location.pathname);
   }, [location]);
 
   // Function to handle logout

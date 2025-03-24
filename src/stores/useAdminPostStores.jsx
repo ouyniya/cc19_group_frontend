@@ -22,7 +22,7 @@ const useAdminPostStores = create((set, get) => ({
     actionDeletePost: async (id) => {
         set({ isLoading: true })
         try {
-            console.log("actionDeletePost")
+            // console.log("actionDeletePost")
             const result = await adminApiPost.actionDeletePost(id)
         } catch (error) {
             console.log(error)

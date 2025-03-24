@@ -39,7 +39,7 @@ export default function AdminUserTable() {
       console.log({ id, role });
       const res = await actionUpdateRole02({ id, role });
       // console.log("res hdlUpdateRole")
-      console.log(res);
+      // console.log(res);
     } catch (error) {
       console.log(error);
     }
@@ -47,12 +47,12 @@ export default function AdminUserTable() {
   /* Delete user */
   const hdlDeleteUser = async (id) => {
     try {
-      console.log("id hdlDeleteUser");
-      console.log(id);
+      // console.log("id hdlDeleteUser");
+      // console.log(id);
       const res = await actionDeleteUser02(id);
       fetchAllUsers();
       console.log("id hdlDeleteUser after delete");
-      console.log(id);
+      // console.log(id);
       document.getElementById("my_modal_1").close();
     } catch (error) {
       console.log(error);

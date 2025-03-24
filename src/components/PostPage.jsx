@@ -62,7 +62,7 @@ const PostPage = ({ postId }) => {
 
   const hdlProfileLink = (id) => {
     const targetPath = `/user-dashboard/${id}`; // Replace with dynamic user ID
-    console.log("Target Path:", targetPath);
+    // console.log("Target Path:", targetPath);
 
     // Only navigate if the current location does not match the target path
     if (location.pathname !== targetPath) {

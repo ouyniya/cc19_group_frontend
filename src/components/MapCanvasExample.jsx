@@ -17,7 +17,7 @@ function MapCanvasExample() {
     useMapEvents({
       click: (e) => {
         onClick(e.latlng);
-        console.log(e.latlng);
+        // console.log(e.latlng);
       },
     });
     return null;
