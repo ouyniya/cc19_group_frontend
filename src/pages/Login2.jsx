@@ -3,12 +3,13 @@ import { FcGoogle } from "react-icons/fc";
 import logo from "../icons/logo.png";
 import destination from "../icons/destination.png";
 import useUserStore from "../stores/userStore";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { ZodError } from "zod";
 import { login } from "../utils/validators";
 import { createAlert } from "../utils/createAlert";
 import { KeyRound, Mail } from "lucide-react";
 import { axios } from "../configs/axiosInstance";
+import Swal from "sweetalert2";
 
 const initialInput = {
   email: "",
@@ -20,14 +21,14 @@ function Login2() {
   const [errorInput, setErrorInput] = useState(initialInput);
   const [isLoading, setIsLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
-  const [otpError, setOtpError] = useState('');
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otpError, setOtpError] = useState("");
   const [resendDisabled, setResendDisabled] = useState(false);
   const [countdown, setCountdown] = useState(0);
-  
+
   const inputRefs = useRef([]);
   const navigate = useNavigate();
-  
+
   const actionLogin = useUserStore((state) => state.actionLogin);
   const actionGetMe = useUserStore((state) => state.actionGetMe);
   const actionGetMeOrGoogleLogin = useUserStore(
@@ -59,19 +60,41 @@ function Login2() {
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (input.email.trim() !== "voyager.cc19@gmail.com") {
+      return Swal.fire({
+        icon: "info",
+        html: `
+          Your account is not set up for <b>2FA authentication</b> yet. Please log in using the lower-security option.
+          <br>
+          <a href="/login-less-secure" autofocus><b>➔ Click here</b></a>
+        `,
+        showCloseButton: true,
+        showCancelButton: true,
+        focusConfirm: false,
+        confirmButtonText: `
+          <i class="fa fa-thumbs-up"></i> OK
+        `,
+        confirmButtonAriaLabel: "Thumbs up, great!",
+       
+      });
+      
+      // createAlert("info", "Your account is not set up for 2FA authentication yet. Please log in using the lower-security option.")
+    }
+
     try {
       setIsLoading(true);
-      e.preventDefault();
       login.parse(input);
       const response = await actionLogin(input);
-      
+
       // Check if OTP verification is required
       if (response && response.requiresOTP) {
         setShowOTP(true);
         setIsLoading(false);
         return;
       }
-      
+
       await actionGetMeOrGoogleLogin();
       createAlert("success", `Login Success`);
       navigate("/home");
@@ -94,95 +117,95 @@ function Login2() {
   // OTP input handling functions
   const handleInputChange = (index, event) => {
     const value = event.target.value;
-    
+
     // Only allow numbers
     if (!/^\d*$/.test(value)) return;
-    
+
     // Update the OTP array
     const newOtp = [...otp];
     newOtp[index] = value.slice(0, 1); // Only take the first character
     setOtp(newOtp);
-    
+
     // Auto-focus next input field if current field is filled
     if (value && index < 5) {
       inputRefs.current[index + 1].focus();
     }
   };
-  
+
   const handleKeyDown = (index, event) => {
     // Move to previous input field on backspace if current field is empty
-    if (event.key === 'Backspace' && !otp[index] && index > 0) {
+    if (event.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1].focus();
     }
   };
-  
+
   const handlePaste = (event) => {
     event.preventDefault();
-    const pastedData = event.clipboardData.getData('text');
-    
+    const pastedData = event.clipboardData.getData("text");
+
     // Check if pasted content contains only numbers
     if (!/^\d+$/.test(pastedData)) return;
-    
-    const pastedOtp = pastedData.slice(0, 6).split('');
+
+    const pastedOtp = pastedData.slice(0, 6).split("");
     const newOtp = [...otp];
-    
+
     for (let i = 0; i < pastedOtp.length; i++) {
       if (i < 6) {
         newOtp[i] = pastedOtp[i];
       }
     }
-    
+
     setOtp(newOtp);
-    
+
     // Focus the next empty field or the last field if all are filled
-    const nextEmptyIndex = newOtp.findIndex(digit => !digit);
+    const nextEmptyIndex = newOtp.findIndex((digit) => !digit);
     if (nextEmptyIndex !== -1) {
       inputRefs.current[nextEmptyIndex].focus();
     } else if (inputRefs.current[5]) {
       inputRefs.current[5].focus();
     }
   };
-  
+
   const handleVerifyOTP = async () => {
-    const otpValue = otp.join('');
-    
+    const otpValue = otp.join("");
+
     if (otpValue.length !== 6) {
-      setOtpError('Please enter all 6 digits');
+      setOtpError("Please enter all 6 digits");
       return;
     }
-    
-    setOtpError('');
+
+    setOtpError("");
     setIsLoading(true);
-    
+
     try {
       await verifyOTP(otpValue);
       await actionGetMeOrGoogleLogin();
       createAlert("success", `Login Success`);
       navigate("/home");
     } catch (error) {
-      setOtpError(error.response?.data?.message || 'Failed to verify OTP');
+      setOtpError(error.response?.data?.message || "Failed to verify OTP");
     } finally {
       setIsLoading(false);
     }
   };
-  
+
   const handleResendOTP = async () => {
-    setOtpError('');
+    setOtpError("");
     setResendDisabled(true);
     setCountdown(60); // 60 seconds cooldown
-    
+
     try {
       await resendOTP();
-      setOtp(['', '', '', '', '', '']);
+      setOtp(["", "", "", "", "", ""]);
       inputRefs.current[0].focus();
       createAlert("success", `OTP resent successfully`);
     } catch (error) {
-      setOtpError(error.response?.data?.message || 'Failed to resend OTP');
+      setOtpError(error.response?.data?.message || "Failed to resend OTP");
       setResendDisabled(false);
       setCountdown(0);
     }
   };
-  
+
   const handleBackToLogin = () => {
     setShowOTP(false);
     resetOTPState();
@@ -196,16 +219,16 @@ function Login2() {
           <p className="text-4xl font-bold text-[#2f6b97] mb-7 text-center">
             Verify OTP
           </p>
-          
+
           <p className="text-center mb-6 text-gray-600">
             We've sent a 6-digit OTP to <strong>{input.email}</strong>
           </p>
-          
+
           <div className="flex justify-center space-x-2 mb-6">
             {otp.map((digit, index) => (
               <input
                 key={index}
-                ref={el => inputRefs.current[index] = el}
+                ref={(el) => (inputRefs.current[index] = el)}
                 type="text"
                 maxLength="1"
                 value={digit}
@@ -216,13 +239,11 @@ function Login2() {
               />
             ))}
           </div>
-          
+
           {otpError && (
-            <div className="text-red-500 text-center mb-4">
-              {otpError}
-            </div>
+            <div className="text-red-500 text-center mb-4">{otpError}</div>
           )}
-          
+
           <button
             onClick={handleVerifyOTP}
             disabled={isLoading}
@@ -230,7 +251,7 @@ function Login2() {
           >
             {isLoading ? "Verifying..." : "Verify OTP"}
           </button>
-          
+
           <div className="text-center mt-4">
             <p className="text-gray-600">Didn't receive the code?</p>
             <button
@@ -238,10 +259,10 @@ function Login2() {
               disabled={resendDisabled || isLoading}
               className="text-[#086BAF] hover:text-[#064D7E] disabled:text-gray-400"
             >
-              {resendDisabled ? `Resend in ${countdown}s` : 'Resend OTP'}
+              {resendDisabled ? `Resend in ${countdown}s` : "Resend OTP"}
             </button>
           </div>
-          
+
           <div className="text-center mt-4">
             <button
               onClick={handleBackToLogin}
@@ -276,7 +297,11 @@ function Login2() {
                 required
               />
             </label>
-            <div className={`validator-hint ${errorInput.email ? 'block' : 'hidden'} -mt-2 text-red-500`}>
+            <div
+              className={`validator-hint ${
+                errorInput.email ? "block" : "hidden"
+              } -mt-2 text-red-500`}
+            >
               {errorInput.email || "Enter valid email address"}
             </div>
 
@@ -293,7 +318,11 @@ function Login2() {
                 className="border-[#086BAF] py-4 input-lg placeholder:text-lg placeholder:font-medium"
               />
             </label>
-            <div className={`validator-hint ${errorInput.password ? 'block' : 'hidden'} -mt-2 text-red-500`}>
+            <div
+              className={`validator-hint ${
+                errorInput.password ? "block" : "hidden"
+              } -mt-2 text-red-500`}
+            >
               {errorInput.password || "Must be more than 6 characters"}
             </div>
 
@@ -304,6 +333,12 @@ function Login2() {
             >
               {isLoading ? "Loading..." : "Login"}
             </button>
+            <Link className="text-center w-full flex gap-2 justify-center" to="/login-less-secure">
+            {/* <input type="checkbox" className="checkbox checkbox-info" /> */}
+            <p className=" text-sky-700">
+              Lower-Security Login
+              </p>
+            </Link>
 
             {/* or */}
             <h2 className="relative w-full text-center border-b border-slate-300 my-4">

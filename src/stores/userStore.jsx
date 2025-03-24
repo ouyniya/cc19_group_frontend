@@ -25,6 +25,22 @@ const useUserStore = create(
       // Get the current user
       getCurrentUser: () => get().user,
 
+      // Login action
+      actionLoginLessSecure: async (input) => {
+        set({ isLoading: true });
+
+        try {
+          const { data } = await userApi.loginLessSecure(input);
+          set({ token: data.token, user: data.user });
+          return { token: data.token, user: data.user };
+        } catch (error) {
+          // console.error("Login Error:", error);
+          throw error;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
       // Login action (updated to handle OTP)
       actionLogin: async (input) => {
         set({ isLoading: true });

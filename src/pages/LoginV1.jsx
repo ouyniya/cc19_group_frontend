@@ -15,13 +15,13 @@ const initialInput = {
   password: "",
 };
 
-function Login2() {
+function LoginV1() {
   const [input, setInput] = useState(initialInput);
   const [errorInput, setErrorInput] = useState(initialInput);
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  const actionLogin = useUserStore((state) => state.actionLogin);
+  const actionLoginLessSecure = useUserStore((state) => state.actionLoginLessSecure);
   const actionGetMe = useUserStore((state) => state.actionGetMe);
   const actionGetMeOrGoogleLogin = useUserStore(
     (state) => state.actionGetMeOrGoogleLogin
@@ -43,7 +43,7 @@ function Login2() {
       setIsLoading(true);
       e.preventDefault();
       login.parse(input);
-      await actionLogin(input);
+      await actionLoginLessSecure(input);
       await actionGetMeOrGoogleLogin();
       createAlert("success", `Login Success`);
       navigate("/home");
@@ -92,8 +92,8 @@ function Login2() {
         <div className="flex flex-col h-full w-150 justify-center font-bold gap-1">
           <div className="flex flex-col min-h-100 py-13 bg-[#f4f9fb] rounded-4xl items-center justify-center gap-7 shadow-md">
             <form onSubmit={handleSubmit} className="w-[360px]">
-              <p className="text-4xl font-bold text-[#2f6b97] mb-7 text-center">
-                Login
+              <p className="text-3xl font-bold text-[#2f6b97] mb-7 text-center">
+              Lower-Security Login
               </p>
               <div className="flex flex-col items-baseline gap-4">
                 {/* Email */}
@@ -178,4 +178,4 @@ function Login2() {
   );
 }
 
-export default Login2;
+export default LoginV1;

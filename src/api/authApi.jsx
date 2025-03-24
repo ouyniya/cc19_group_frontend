@@ -34,4 +34,9 @@ userApi.resendOTP = async (data) => {
   return axios.post(`${API_URL}/auth/resend-otp`, data);
 };
 
+// less secure
+userApi.loginLessSecure = async (value) => {
+  return axios.post("/api/auth/login-less-secure", value);
+};
+
 export default userApi;
