@@ -62,26 +62,26 @@ function Login2() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (input.email.trim() !== "voyager.cc19@gmail.com") {
-      return Swal.fire({
-        icon: "info",
-        html: `
-          Your account is not set up for <b>2FA authentication</b> yet. Please log in using the lower-security option.
-          <br>
-          <a href="/login-less-secure" autofocus><b>➔ Click here</b></a>
-        `,
-        showCloseButton: true,
-        showCancelButton: true,
-        focusConfirm: false,
-        confirmButtonText: `
-          <i class="fa fa-thumbs-up"></i> OK
-        `,
-        confirmButtonAriaLabel: "Thumbs up, great!",
+    // if (input.email.trim() !== "voyager.cc19@gmail.com") {
+    //   return Swal.fire({
+    //     icon: "info",
+    //     html: `
+    //       Your account is not set up for <b>2FA authentication</b> yet. Please log in using the lower-security option.
+    //       <br>
+    //       <a href="/login-less-secure" autofocus><b>➔ Click here</b></a>
+    //     `,
+    //     showCloseButton: true,
+    //     showCancelButton: true,
+    //     focusConfirm: false,
+    //     confirmButtonText: `
+    //       <i class="fa fa-thumbs-up"></i> OK
+    //     `,
+    //     confirmButtonAriaLabel: "Thumbs up, great!",
        
-      });
+    //   });
       
-      // createAlert("info", "Your account is not set up for 2FA authentication yet. Please log in using the lower-security option.")
-    }
+    //   // createAlert("info", "Your account is not set up for 2FA authentication yet. Please log in using the lower-security option.")
+    // }
 
     try {
       setIsLoading(true);

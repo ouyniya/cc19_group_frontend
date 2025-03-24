@@ -154,8 +154,8 @@ const PostPage = ({ postId }) => {
         <div className="flex items-center">
           <FaMapMarkerAlt className="text-red-500 mr-2" />
           <span>
-            {publicPost?.post?.place?.latitude} ,{" "}
-            {publicPost?.post?.place?.longitude}
+            {publicPost?.post?.place?.latitude?.toFixed(6)} ,{" "}
+            {publicPost?.post?.place?.longitude?.toFixed(6)}
           </span>
         </div>
         <div className="font-semibold text-gray-600">
