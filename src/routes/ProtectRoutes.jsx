@@ -37,7 +37,7 @@ function ProtectRoute({ el, allows }) {
   // }
 
   // If no user is available or user is unauthorized, show the error page
-  if (!user || !isAuthorized) {
+  if (!user || isAuthorized === false) {
     return <ErrorUnauthorized />;
   }
 
