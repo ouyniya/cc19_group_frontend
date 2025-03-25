@@ -222,7 +222,7 @@ function FilterPage() {
           </h1>
 
           <div className="flex flex-col justify-center items-center gap-4 mb-15">
-            <div className="w-full flex justify-center">
+            <div className="w-full flex justify-center gap-5">
               <div className="relative">
                 <input
                   type="search"
@@ -233,36 +233,32 @@ function FilterPage() {
                 />
                 <FaSearch className="absolute left-4 top-4 text-gray-400" />
               </div>
+              <div className="flex gap-5">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Province"
+                    value={province}
+                    onChange={(e) => setProvince(e.target.value)}
+                    className="input input-lg w-[230px] rounded-full pl-10 pr-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+                  />
+                  <FaSearch className="absolute left-3 top-3 text-gray-400" />
+                </div>
 
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="District"
+                    value={district}
+                    onChange={(e) => setDistrict(e.target.value)}
+                    className="input input-lg w-[230px] rounded-full pl-10 pr-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+                  />
+                  <FaSearch className="absolute left-3 top-3 text-gray-400" />
+                </div>
+              </div>
             </div>
 
-
-
-
             {/* Search Inputs */}
-            {/* <div className="flex gap-5">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Province"
-                  value={province}
-                  onChange={(e) => setProvince(e.target.value)}
-                  className="input input-lg w-[230px] rounded-full pl-10 pr-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
-                />
-                <FaSearch className="absolute left-3 top-3 text-gray-400" />
-              </div>
-
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="District"
-                  value={district}
-                  onChange={(e) => setDistrict(e.target.value)}
-                  className="input input-lg w-[230px] rounded-full pl-10 pr-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
-                />
-                <FaSearch className="absolute left-3 top-3 text-gray-400" />
-              </div>
-            </div> */}
 
             {/* <button
               onClick={handleSearch}

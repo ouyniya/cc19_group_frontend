@@ -41,7 +41,7 @@ const HomePageTestimonials = () => {
   // console.log(comments);
 
   return (
-    <section className="py-16">
+    <section className="pt-25 pb-10">
       <div className="container mx-auto text-center">
         <h2 className="text-3xl font-semibold mb-8 text-slate-600">
           Read what our members comment
@@ -73,7 +73,7 @@ const HomePageTestimonials = () => {
           ))}
         </div>
         <Link to="/filter-page">
-          <button className="mt-10 inline-flex items-center px-6 py-2.5 bg-gradient-to-b from-[var(--btnMain)] to-sky-600 hover:bg-sky-600 text-white font-medium rounded-full shadow transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300">
+          <button className="mt-20 inline-flex items-center px-6 py-2.5 bg-gradient-to-b from-[var(--btnMain)] to-sky-600 hover:bg-sky-600 text-white font-medium rounded-full shadow transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300">
             View More
           </button>
         </Link>

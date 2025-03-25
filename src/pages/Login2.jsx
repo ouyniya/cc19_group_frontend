@@ -333,12 +333,12 @@ function Login2() {
             >
               {isLoading ? "Loading..." : "Login"}
             </button>
-            <Link className="text-center w-full flex gap-2 justify-center" to="/login-less-secure">
-            {/* <input type="checkbox" className="checkbox checkbox-info" /> */}
+            {/* <Link className="text-center w-full flex gap-2 justify-center" to="/login-less-secure">
             <p className=" text-sky-700">
               Lower-Security Login
               </p>
-            </Link>
+            </Link> */}
+            {/* <input type="checkbox" className="checkbox checkbox-info" /> */}
 
             {/* or */}
             <h2 className="relative w-full text-center border-b border-slate-300 my-4">

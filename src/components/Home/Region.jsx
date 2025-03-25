@@ -92,7 +92,7 @@ function Region() {
       </div>
 
       {/* Interactive Map */}
-      <div className="w-full h-96 overflow-hidden rounded-xl mt-4">
+      <div className="w-full h-120 overflow-hidden rounded-xl mt-4">
         <div className="w-full h-full">
           <InteractiveMap />
         </div>
