@@ -81,7 +81,7 @@ export default function AdminUserTable() {
                 {
                   <select
                     className={`btn btn-xs px-3 py-1 rounded-full text-white text-sm ${
-                      user.role === "ADMIN" ? "bg-amber-500" : "bg-sky-400"
+                      user.role === "ADMIN" ? "bg-sky-400" : "bg-sky-400"
                     }`}
                     onChange={(e) => hdlUpdateRole(user.id, e.target.value)}
                     defaultValue={user.role}

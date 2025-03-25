@@ -1,216 +1,140 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { FiArrowRight, FiMail, FiMapPin } from "react-icons/fi";
-// import { SiGithub, SiTiktok, SiTwitter, SiYoutube } from "react-icons/si";
+import React, { useState } from "react";
+import {
+  Rocket,
+  Camera,
+  MessageCircle,
+  Globe,
+  ShieldCheck,
+  MapPin,
+  Zap,
+  TrendingUp,
+  ChevronRight,
+} from "lucide-react";
 
-export const FeatureMenu = () => {
+const FeatureMenu = () => {
+  const [activeFeature, setActiveFeature] = useState(null);
+
+  const featureSections = [
+    {
+      icon: <Rocket className="w-12 h-12 text-sky-600" />,
+      title: "Seamless User Experience",
+      features: [
+        "Google Login & Two-Factor Authentication (2FA)",
+        "Personalized User Profiles",
+      ],
+      // bgGradient: "white"
+    },
+    {
+      icon: <Camera className="w-12 h-12 text-sky-700" />,
+      title: "Engaging Travel Content",
+      features: ["Post & Share Travel Experiences", "Edit & Manage Posts"],
+      // bgGradient: "from-blue-100 to-blue-200"
+    },
+    {
+      icon: <MessageCircle className="w-12 h-12 text-sky-800" />,
+      title: "Interactive Community",
+      features: ["Comment & Reply System", "Wishlist Feature"],
+      // bgGradient: "from-blue-200 to-blue-300"
+    },
+    {
+      icon: <Zap className="w-12 h-12 text-sky-900" />,
+      title: "Smart AI-Powered Recommendations",
+      features: [
+        "AI-Driven Travel Suggestions",
+        "Location Ideas Based on Budget & Preferences",
+      ],
+      // bgGradient: "from-blue-300 to-blue-400"
+    },
+    {
+      icon: <ShieldCheck className="w-12 h-12 text-sky-600" />,
+      title: "Admin & Moderation System",
+      features: [
+        "Content Moderation with AI",
+        "User & Role Management",
+        "Data Analytics Dashboard",
+      ],
+      // bgGradient: "from-blue-400 to-blue-500"
+    },
+    {
+      icon: <Globe className="w-12 h-12 text-sky-700" />,
+      title: "Heat Map of Popular Destinations",
+      features: ["Visualize Trending Locations", "Dynamic Travel Hotspots"],
+      // bgGradient: "from-blue-500 to-blue-600"
+    },
+  ];
+
   return (
-    <div className="mt-[80px] px-4 py-12 text-zinc-50 bg-gradient-to-b from-white to-sky-200">
-      {/* <Logo /> */}
-      <motion.div
-        initial="initial"
-        animate="animate"
-        transition={{
-          staggerChildren: 0.05,
-        }}
-        className="mx-auto grid max-w-[1200px] grid-flow-dense grid-cols-12 gap-4 mt-[48px]"
-      >
-        <HeaderBlock />
-        <SocialsBlock />
-        {/* <AboutBlock /> */}
-        <LocationBlock />
-        <EmailListBlock />
-      </motion.div>
-      <Footer />
+    <div className="pt-20 pb-0 px-4">
+      <div className="container mx-auto">
+        <h2 className="text-4xl text-center mb-10 font-bold text-sky-900 tracking-tight">
+          Travel Platform Features
+        </h2>
+        {/* <p className="text-center text-xl">
+          This is a space where the spirit of adventure meets the art of
+          storytelling, <br />inviting you to discover the world through our eyes.
+        </p> */}
+
+        {/* <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {featureSections.map((section, index) => (
+            <div 
+              key={index} 
+              className={`
+                relative bg-gradient-to-br ${section.bgGradient} 
+                rounded-3xl p-6
+                transform transition-all duration-300 
+                ${activeFeature === index 
+                  ? 'scale-105 shadow-2xl ring-2 ring-sky-500/50' 
+                  : 'hover:scale-105 hover:shadow-xl hover:shadow-sky-500'}
+                cursor-pointer
+              `}
+              onMouseEnter={() => setActiveFeature(index)}
+              onMouseLeave={() => setActiveFeature(null)}
+            >
+              <div className="flex items-center mb-4">
+                {section.icon}
+                <h2 className="ml-4 text-xl font-semibold text-sky-900">
+                  {section.title}
+                </h2>
+              </div>
+              <ul className="space-y-2">
+                {section.features.map((feature, featureIndex) => (
+                  <li 
+                    key={featureIndex} 
+                    className="flex items-center text-sky-800 space-x-2 group"
+                  >
+                    <MapPin className="w-4 h-4 text-sky-600 group-hover:animate-pulse" />
+                    <span className="group-hover:text-blue-950 transition-colors">
+                      {feature}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                <ChevronRight className="w-6 h-6 text-sky-900 animate-bounce" />
+              </div>
+            </div>
+          ))}
+        </div> */}
+
+        {/* <div className="mt-16 text-center">
+          <button className="
+            bg-sky-600 text-white 
+            px-10 py-4 
+            rounded-full 
+            text-lg font-semibold 
+            hover:bg-sky-700 
+            transition-colors 
+            shadow-lg 
+            hover:shadow-xl 
+            hover:translate-y-[-5px]
+            active:scale-95
+          ">
+            Explore More Features
+          </button>
+        </div> */}
+      </div>
     </div>
   );
 };
 
-const Block = ({ className, ...rest }) => {
-  return (
-    <motion.div
-      variants={{
-        initial: {
-          scale: 0.5,
-          y: 50,
-          opacity: 0,
-        },
-        animate: {
-          scale: 1,
-          y: 0,
-          opacity: 1,
-        },
-      }}
-      transition={{
-        type: "spring",
-        mass: 3,
-        stiffness: 400,
-        damping: 50,
-      }}
-      className={`col-span-4 rounded-lg bg-sky-50 shadow-xs border p-6 ${className || ""}`}
-      {...rest}
-    />
-  );
-};
-
-const HeaderBlock = () => (
-  <Block className="col-span-12 row-span-2 md:col-span-6 bg-gradient-to-b from-[var(--btnMain)] to-sky-600 hover:bg-sky-600 text-white font-medium rounded-full shadow transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300">
-
-    <img
-      src="https://api.dicebear.com/8.x/lorelei-neutral/svg?seed=John"
-      alt="avatar"
-      className="mb-4 size-14 rounded-full"
-    />
-    <h1 className="mb-12 text-4xl font-medium leading-tight">
-      Hi, I'm Tom.{" "}
-      <span className="text-zinc-400">
-        I build cool websites like this one.
-      </span>
-    </h1>
-    <a
-      href="#"
-      className="flex items-center gap-1 text-red-300 hover:underline"
-    >
-      Contact me <FiArrowRight />
-    </a>
-  </Block>
-);
-
-const SocialsBlock = () => (
-  <>
-    <Block
-      whileHover={{
-        rotate: "2.5deg",
-        scale: 1.1,
-      }}
-      className="col-span-6 bg-red-500 md:col-span-3"
-    >
-      <a
-        href="#"
-        className="grid h-full place-content-center text-3xl text-white"
-      >
-        {/* <SiYoutube /> */}
-      </a>
-    </Block>
-    <Block
-      whileHover={{
-        rotate: "-2.5deg",
-        scale: 1.1,
-      }}
-      className="col-span-6 bg-green-600 md:col-span-3"
-    >
-      <a
-        href="#"
-        className="grid h-full place-content-center text-3xl text-white"
-      >
-        {/* <SiGithub /> */}
-      </a>
-    </Block>
-    <Block
-      whileHover={{
-        rotate: "-2.5deg",
-        scale: 1.1,
-      }}
-      className="col-span-6 bg-zinc-50 md:col-span-3"
-    >
-      <a
-        href="#"
-        className="grid h-full place-content-center text-3xl text-black"
-      >
-        {/* <SiTiktok /> */}
-      </a>
-    </Block>
-    <Block
-      whileHover={{
-        rotate: "2.5deg",
-        scale: 1.1,
-      }}
-      className="col-span-6 bg-blue-500 md:col-span-3"
-    >
-      <a
-        href="#"
-        className="grid h-full place-content-center text-3xl text-white"
-      >
-        {/* <SiTwitter /> */}
-      </a>
-    </Block>
-  </>
-);
-
-const AboutBlock = () => (
-  <Block className="col-span-12 text-3xl leading-snug">
-    <p>
-      My passion is building cool stuff.{" "}
-      <span className="text-zinc-400">
-        I build primarily with React, Tailwind CSS, and Framer Motion. I love
-        this stack so much that I even built a website about it. I've made over
-        a hundred videos on the subject across YouTube and TikTok.
-      </span>
-    </p>
-  </Block>
-);
-
-const LocationBlock = () => (
-  <Block className="col-span-12 flex flex-col items-center gap-4 md:col-span-3">
-    <FiMapPin className="text-3xl" />
-    <p className="text-center text-lg text-zinc-400">Cyberspace</p>
-  </Block>
-);
-
-const EmailListBlock = () => (
-  <Block className="col-span-12 md:col-span-9">
-    <p className="mb-3 text-lg">Join my mailing list</p>
-    <form
-      onSubmit={(e) => e.preventDefault()}
-      className="flex items-center gap-2"
-    >
-      <input
-        type="email"
-        placeholder="Enter your email"
-        className="w-full rounded border border-zinc-700 px-3 py-1.5 transition-colors focus:border-red-300 focus:outline-0"
-      />
-      <button
-        type="submit"
-        className="flex items-center gap-2 whitespace-nowrap rounded bg-zinc-50 px-3 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-300"
-      >
-        <FiMail /> Join the list
-      </button>
-    </form>
-  </Block>
-);
-
-const Logo = () => {
-  // Temp logo from https://logoipsum.com/
-  return (
-    <svg
-      width="40"
-      height="auto"
-      viewBox="0 0 50 39"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="mx-auto mb-12 fill-zinc-50"
-    >
-      <path
-        d="M16.4992 2H37.5808L22.0816 24.9729H1L16.4992 2Z"
-        stopColor="#000000"
-      ></path>
-      <path
-        d="M17.4224 27.102L11.4192 36H33.5008L49 13.0271H32.7024L23.2064 27.102H17.4224Z"
-        stopColor="#000000"
-      ></path>
-    </svg>
-  );
-};
-
-const Footer = () => {
-  return (
-    <footer className="mt-12">
-      <p className="text-center text-zinc-400">
-        Made with ❤️ by{" "}
-        <a href="#" className="text-red-300 hover:underline">
-          @tomisloading
-        </a>
-      </p>
-    </footer>
-  );
-};
+export default FeatureMenu;

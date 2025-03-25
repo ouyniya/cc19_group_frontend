@@ -11,7 +11,8 @@ import useUserStore from "../stores/userStore";
 import MapCanvasExample from "../components/MapCanvasExample";
 import HomePageTestimonials from "../components/HomePageTestimonials";
 import Features from "../components/Features";
-import { FeatureMenu } from "../components/FeatureMenu";
+import FeatureMenu from "../components/FeatureMenu";
+import { FeatureMenuV2 } from "../components/FeatureMenuV2";
 
 function Home() {
   const navigate = useNavigate();
@@ -29,7 +30,11 @@ function Home() {
   const hdlSearch = (e) => {
     setSearchText(e.target.value);
     // console.log(searchText)
-    window.open(`/filter-page?placeName=${searchText}&province=&district=&page=1`, '_blank', 'noopener,noreferrer');
+    window.open(
+      `/filter-page?placeName=${searchText}&province=&district=&page=1`,
+      "_blank",
+      "noopener,noreferrer"
+    );
     // navigate(`/filter-page?placeName=${searchText}&province=&district=&page=1`);
   };
 
@@ -75,43 +80,46 @@ function Home() {
         </div>
       </div>
 
-        {/* Body2 */}
-        <div className="max-w-[1500px] m-auto">
-          {/* Top locations on Voyager  */}
-          <div className="mt-15">
-            {/* text */}
-            <div className="flex">
-              <p className="text-xl font-bold ml-37">
-                Top locations on Voyager{" "}
-              </p>
-              <img src={logo} alt="icon destination" className="h-10 -mt-2" />
-            </div>
-            {/* post */}
-            <TopLocation />
+      {/* Body2 */}
+      <div className="max-w-[1500px] m-auto">
+        {/* Top locations on Voyager  */}
+        <div className="mt-15">
+          {/* text */}
+          <div className="flex">
+            <p className="text-xl font-bold ml-37">Top locations on Voyager </p>
+            <img src={logo} alt="icon destination" className="h-10 -mt-2" />
           </div>
+          {/* post */}
+          <TopLocation />
         </div>
+      </div>
 
+      {/* <Features /> */}
+      <div className="bg-white mt-10">
+        <div className="max-w-[1200px] m-auto">
+          <FeatureMenu />
+          <FeatureMenuV2 />
+        </div>
+      </div>
 
-        
-        {/* <FeatureMenu /> */}
-        <Features />
-
-    <div className="bg-gradient-to-b from-white via-sky-200 to-white">
-
+      <div className="bg-gradient-to-b from-white via-sky-100 to-white">
         <div className="max-w-[1200px] m-auto">
           <HomePageTestimonials />
         </div>
+      </div>
 
-    </div>
+      <div className="max-w-[1500px] m-auto">
+        {/* The most beautiful places */}
+        <Region />
+      </div>
 
-        <div className="max-w-[1500px] m-auto">
-          {/* More to explore */}
-          <MoreExplore />
-          {/* The most beautiful places */}
-          <Region />
-        </div>
-        {/* footer */}
-        {/* <div className="mt-5">
+      <div className="max-w-[1500px] m-auto">
+        {/* More to explore */}
+        <MoreExplore />
+      </div>
+
+      {/* footer */}
+      {/* <div className="mt-5">
           <div className="bg-[#97BEE2] py-8">
             <div className="flex flex-wrap justify-center md:justify-around gap-8 md:gap-20 px-4  ">
              
@@ -131,23 +139,19 @@ function Home() {
           </div>
         </div> */}
 
-
       <div className="bg-[var(--darkGray)]">
         <div className="max-w-[1500px] m-auto">
           <footer className="footer sm:footer-horizontal sm:pl-[16%] bg-[var(--darkGray)] text-neutral-content p-10 mt-12">
             <nav>
               <h6 className="footer-title">Services</h6>
-              <a className="link link-hover">Branding</a>
-              <a className="link link-hover">Design</a>
-              <a className="link link-hover">Marketing</a>
-              <a className="link link-hover">Advertisement</a>
+              <a className="link link-hover">AI Planning</a>
+              <a className="link link-hover">Search</a>
+              <a className="link link-hover">Heat Map</a>
             </nav>
             <nav>
               <h6 className="footer-title">Company</h6>
               <a className="link link-hover">About us</a>
               <a className="link link-hover">Contact</a>
-              <a className="link link-hover">Jobs</a>
-              <a className="link link-hover">Press kit</a>
             </nav>
             <nav>
               <h6 className="footer-title">Legal</h6>
