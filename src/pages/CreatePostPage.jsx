@@ -91,7 +91,7 @@ function CreatePostPage() {
 
   useEffect(() => {
     const loadToxicityModel = async () => {
-      const loadedModel = await toxicity.load(0.9);
+      const loadedModel = await toxicity.load(0.95);
       setModel(loadedModel);
       setLoadingModel(false);
     };

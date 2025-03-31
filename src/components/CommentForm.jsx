@@ -45,7 +45,7 @@ const CommentForm = ({ postId, parentId = null, setShowReply }) => {
     e.preventDefault();
     const foundToxic = await checkToxicity(content);
     if (foundToxic) {
-      createAlert("error", "❌ พบคำไม่เหมาะสม! กรุณาใช้คำที่เหมาะสม");
+      createAlert("error", "Inappropriate words detected");
       return;
     }
     if (!content.trim()) return createAlert("info", "Please add some comments.");
