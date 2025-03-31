@@ -34,7 +34,7 @@ export default function AnalysisDashboard() {
     actionAllViews,
     actionTopDestination,
     topDestination,
-    isLoading
+    isLoading,
   } = store;
 
   useEffect(() => {
@@ -60,6 +60,21 @@ export default function AnalysisDashboard() {
     topDestination,
   };
 
+  const requests = 250000;
+  const tokenPerRequest = 1500;
+  const flashPrice = 0.027;
+  const flashLitePrice = 0.02025;
+
+  const calculateCost = (req, price) => {
+    return (req * price).toLocaleString("en-US", {
+      style: "currency",
+      currency: "THB",
+    });
+  };
+
+  const flashCost = calculateCost(requests, flashPrice);
+  const flashLiteCost = calculateCost(requests, flashLitePrice);
+
   // console.log(topDestination)
 
   return (
@@ -68,13 +83,17 @@ export default function AnalysisDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200 ">
             <h2 className="stat-title font-bold text-lg">Total Users</h2>
-            <p className="stat-value text-sky-400">{data?.allUsers?.toLocaleString()}</p>
+            <p className="stat-value text-sky-400">
+              {data?.allUsers?.toLocaleString()}
+            </p>
             <p className="stat-title">Updated from latest data</p>
           </div>
           <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200">
             <h2 className="stat-title  font-bold text-lg">Total Views</h2>
             {/* <p className="stat-value text-sky-400">{data?.totalViews?.toLocaleString()}</p> */}
-            <p className="stat-value text-sky-400">{(184125 + data?.totalViews)?.toLocaleString()}</p>
+            <p className="stat-value text-sky-400">
+              {(184125 + data?.totalViews)?.toLocaleString()}
+            </p>
             <p className="stat-title">Updated from latest data</p>
           </div>
           <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200">
@@ -158,6 +177,176 @@ export default function AnalysisDashboard() {
                     </li>
                   ))}
               </ul>
+            </div>
+          </div>
+        </div>
+
+        <h1 className="text-2xl font-bold mt-5 ml-2 text-slate-600">
+          AI Planning
+        </h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+          <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200 ">
+            <h2 className="stat-title font-bold text-lg">
+              Popular Travel Result
+            </h2>
+
+            <div className="flex justify-between w-[90%] mb-2 mt-3 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">Bangkok</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                30%
+              </p>
+            </div>
+            <div className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">Chiang Mai</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                20%
+              </p>
+            </div>
+            <div className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">Phuket</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                15%
+              </p>
+            </div>
+            <div className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">Nan</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                10%
+              </p>
+            </div>
+            <div className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">Pattaya</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                8%
+              </p>
+            </div>
+            <div className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">Other</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                17%
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200 ">
+            <h2 className="stat-title font-bold text-lg">
+              Budget Distribution
+            </h2>
+
+            <div className="flex justify-between w-[90%] mb-2 mt-3 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">{"< 1,000"}</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                35%
+              </p>
+            </div>
+            <div className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">1,000 - 3,000</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                20%
+              </p>
+            </div>
+            <div className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">3,000 - 5,000</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                16%
+              </p>
+            </div>
+            <div className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">5,000 - 10,000</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                14%
+              </p>
+            </div>
+            <div className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">10,000 - 20,000</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                10%
+              </p>
+            </div>
+            <div className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">{"> 20,000"}</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                5%
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200 ">
+            <h2 className="stat-title font-bold text-lg">User Preferences</h2>
+
+            <div className="flex justify-between w-[90%] mb-2 mt-3 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">Relaxing</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                25%
+              </p>
+            </div>
+            <div className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">Adventure</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                20%
+              </p>
+            </div>
+            <div className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">Luxury</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                20%
+              </p>
+            </div>
+            <div className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">Nature</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                20%
+              </p>
+            </div>
+            <div className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">Comfort</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                10%
+              </p>
+            </div>
+            <div className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+              <p className="stat-title text-[16px]">Other</p>
+              <p className="stat-title text-[16px] text-sky-500 font-bold">
+                5%
+              </p>
+            </div>
+          </div>
+
+          {/* <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200">
+            <h2 className="stat-title  font-bold text-lg">Total Views</h2>
+            <p className="stat-value text-sky-400">
+              {(184125 + data?.totalViews)?.toLocaleString()}
+            </p>
+            <p className="stat-title">Updated from latest data</p>
+          </div>
+          <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200">
+            <h2 className="stat-title  font-bold text-lg">Top Destination</h2>
+            <p className="stat-value text-sky-400">
+              {data?.topDestination?.topProvinces?.[0]?.name}
+            </p>
+            <p className="stat-title">Updated from latest data</p>
+          </div> */}
+        </div>
+
+        <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200 ">
+          <h2 className="stat-title font-bold text-lg">AI API Cost Overview</h2>
+
+          <p className="mt-3">
+            Estimated cost based on {tokenPerRequest.toLocaleString()} tokens
+            per request:
+          </p>
+
+          <div className="w-[40%] mt-5 h-[80px]">
+            <div className="flex justify-between">
+              <div>
+                <h3 className="font-bold text-xl">Gemini 2.0 Flash</h3>
+                <p className="font-bold text-2xl text-sky-500">250,000</p>
+                <p className="stat-title">requests</p>
+              </div>
+              <div>
+                <h3 className="font-bold text-xl">Total cost</h3>
+                <p className="font-bold text-2xl text-sky-500">{flashCost}</p>
+              </div>
             </div>
           </div>
         </div>
