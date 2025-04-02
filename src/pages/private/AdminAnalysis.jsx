@@ -25,6 +25,54 @@ ChartJS.register(
   Legend
 );
 
+const mockAiRequests = [
+  {
+    id: 1,
+    period: 3,
+    transportation: "Car",
+    numberOfTravellers: 2,
+    budget: 5000,
+    moodAndTone: "Relaxing",
+    createdAt: new Date("2023-10-26T10:00:00Z"),
+  },
+  {
+    id: 2,
+    period: 5,
+    transportation: "Plane",
+    numberOfTravellers: 4,
+    budget: 12000,
+    moodAndTone: "Adventure",
+    createdAt: new Date("2023-10-26T11:00:00Z"),
+  },
+  {
+    id: 3,
+    period: 2,
+    transportation: "Train",
+    numberOfTravellers: 1,
+    budget: 2500,
+    moodAndTone: "Luxury",
+    createdAt: new Date("2023-10-26T12:00:00Z"),
+  },
+  {
+    id: 4,
+    period: 7,
+    transportation: "Car",
+    numberOfTravellers: 3,
+    budget: 8000,
+    moodAndTone: "Nature",
+    createdAt: new Date("2023-10-26T13:00:00Z"),
+  },
+  {
+    id: 5,
+    period: 4,
+    transportation: "Bus",
+    numberOfTravellers: 2,
+    budget: 3500,
+    moodAndTone: "Comfort",
+    createdAt: new Date("2023-10-26T14:00:00Z"),
+  },
+];
+
 export default function AnalysisDashboard() {
   const store = useAdminStores();
   const {
@@ -60,7 +108,10 @@ export default function AnalysisDashboard() {
     topDestination,
   };
 
+  // Calculate statistics from mock data
+  const totalRequests = mockAiRequests.length;
   const requests = 250000;
+
   const tokenPerRequest = 1500;
   const flashPrice = 0.027;
   const flashLitePrice = 0.02025;
@@ -74,6 +125,38 @@ export default function AnalysisDashboard() {
 
   const flashCost = calculateCost(requests, flashPrice);
   const flashLiteCost = calculateCost(requests, flashLitePrice);
+
+  const budgetDistribution = mockAiRequests.reduce((acc, request) => {
+    if (request.budget < 1000) acc["< 1,000"] = (acc["< 1,000"] || 0) + 1;
+    else if (request.budget >= 1000 && request.budget < 3000)
+      acc["1,000 - 3,000"] = (acc["1,000 - 3,000"] || 0) + 1;
+    else if (request.budget >= 3000 && request.budget < 5000)
+      acc["3,000 - 5,000"] = (acc["3,000 - 5,000"] || 0) + 1;
+    else if (request.budget >= 5000 && request.budget < 10000)
+      acc["5,000 - 10,000"] = (acc["5,000 - 10,000"] || 0) + 1;
+    else if (request.budget >= 10000 && request.budget < 20000)
+      acc["10,000 - 20,000"] = (acc["10,000 - 20,000"] || 0) + 1;
+    else acc["> 20,000"] = (acc["> 20,000"] || 0) + 1;
+    return acc;
+  }, {});
+
+  const moodPreferences = mockAiRequests.reduce((acc, request) => {
+    acc[request.moodAndTone] = (acc[request.moodAndTone] || 0) + 1;
+    return acc;
+  }, {});
+
+  const popularTravelResults = {
+    Bangkok: 0.3,
+    ChiangMai: 0.2,
+    Phuket: 0.15,
+    Nan: 0.1,
+    Pattaya: 0.08,
+    Other: 0.17,
+  };
+
+  const calculatePercentage = (value, total) => {
+    return ((value / total) * 100).toFixed(0) + "%";
+  };
 
   // console.log(topDestination)
 
@@ -186,6 +269,38 @@ export default function AnalysisDashboard() {
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+      <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200 ">
+        <h2 className="stat-title font-bold text-lg">Popular Travel Result</h2>
+        {Object.entries(popularTravelResults).map(([name, percentage]) => (
+          <div key={name} className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+            <p className="stat-title text-[16px]">{name}</p>
+            <p className="stat-title text-[16px] text-sky-500 font-bold">{calculatePercentage(percentage, 1)}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200 ">
+        <h2 className="stat-title font-bold text-lg">Budget Distribution</h2>
+        {Object.entries(budgetDistribution).map(([range, count]) => (
+          <div key={range} className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+            <p className="stat-title text-[16px]">{range}</p>
+            <p className="stat-title text-[16px] text-sky-500 font-bold">{calculatePercentage(count, totalRequests)}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200 ">
+        <h2 className="stat-title font-bold text-lg">User Preferences</h2>
+        {Object.entries(moodPreferences).map(([mood, count]) => (
+          <div key={mood} className="flex justify-between w-[90%] my-2 pb-2 border-b-slate-300 border-b-1">
+            <p className="stat-title text-[16px]">{mood}</p>
+            <p className="stat-title text-[16px] text-sky-500 font-bold">{calculatePercentage(count, totalRequests)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
           <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200 ">
             <h2 className="stat-title font-bold text-lg">
               Popular Travel Result
@@ -311,22 +426,7 @@ export default function AnalysisDashboard() {
               </p>
             </div>
           </div>
-
-          {/* <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200">
-            <h2 className="stat-title  font-bold text-lg">Total Views</h2>
-            <p className="stat-value text-sky-400">
-              {(184125 + data?.totalViews)?.toLocaleString()}
-            </p>
-            <p className="stat-title">Updated from latest data</p>
-          </div>
-          <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200">
-            <h2 className="stat-title  font-bold text-lg">Top Destination</h2>
-            <p className="stat-value text-sky-400">
-              {data?.topDestination?.topProvinces?.[0]?.name}
-            </p>
-            <p className="stat-title">Updated from latest data</p>
-          </div> */}
-        </div>
+        </div> */}
 
         <div className="flex flex-col items-center p-6 bg-white shadow-xs rounded-xl border border-gray-200 ">
           <h2 className="stat-title font-bold text-lg">AI API Cost Overview</h2>

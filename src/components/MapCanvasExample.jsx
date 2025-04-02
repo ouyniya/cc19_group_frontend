@@ -6,6 +6,7 @@ import {
   TileLayer,
   useMap,
   useMapEvents,
+  GeoJSON, // Import GeoJSON here
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useState } from "react";
@@ -13,13 +14,39 @@ import BaseMap from "../components/layer/BaseMap";
 import Province from "../components/layer/Province";
 
 function MapCanvasExample() {
+  // function ClickHandler({ onClick }) {
+  //   useMapEvents({
+  //     click: (e) => {
+  //       onClick(e.latlng);
+  //       // console.log(e.latlng);
+  //     },
+  //   });
+  //   return null;
+  // }
+
   function ClickHandler({ onClick }) {
+    const map = useMap();
+
     useMapEvents({
       click: (e) => {
         onClick(e.latlng);
-        // console.log(e.latlng);
+
+        // Iterate over map layers
+        map.eachLayer((layer) => {
+          if (layer.options && layer.feature) {
+            // Check if the clicked point is inside the province boundary
+            if (layer.getBounds?.().contains(e.latlng)) {
+              const provinceName = layer.feature.properties?.ADM1_EN;
+              if (provinceName) {
+                console.log("Province Name:", provinceName);
+                window.location.href = `/filter-page?placeName=&province=${provinceName}&district=&page=1`;
+              }
+            }
+          }
+        });
       },
     });
+
     return null;
   }
 
